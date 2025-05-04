@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:lakbay/components/text_form_field.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+
+
+  LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -14,20 +26,20 @@ class LoginPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 25),
               child: Column(
               children: [
+
+                SizedBox(height: 20),
                 // logo
                 Image.asset('assets/logo.png', 
                 height: 350.67,
                 ),
 
                 //email textfield
-                Text("Login"),
+                
+                TextformField(hintText: "Username", obscureText: false, controller: emailController, icon: Icon(Icons.person)),
 
-                TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: "username",
-                    border: OutlineInputBorder(),
-                  )
-                ),
+                TextformField(hintText: "Password", obscureText: true, controller: passwordController, icon: Icon(Icons.lock)),
+
+
 
 
                 //password textfield
