@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// setting up the form field  as a component to reuse it and edit it easier.
+
 class TextformField extends StatelessWidget{
 
   final String hintText;
