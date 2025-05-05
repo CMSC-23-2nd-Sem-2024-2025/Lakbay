@@ -8,12 +8,14 @@ class TextformField extends StatelessWidget{
   final bool obscureText;
   final TextEditingController controller;
   final Icon? icon;
+  final IconButton? sufIcon;
   const TextformField ({
     super.key,
     required this.hintText,
     required this.obscureText,
     required this.controller,
     this.icon,
+    this.sufIcon,
 
 
     });
@@ -32,6 +34,7 @@ class TextformField extends StatelessWidget{
         filled: true,
         fillColor: Color(0xFF79BAAA),
         prefixIcon: icon,
+        suffixIcon: sufIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
         ),
