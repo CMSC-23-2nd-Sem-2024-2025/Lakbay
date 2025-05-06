@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lakbay/providers/auth_provider.dart';
+import 'package:lakbay/screens/home_page.dart';
 import 'package:lakbay/screens/starting_page.dart';
 import 'package:provider/provider.dart';
 
@@ -131,12 +132,33 @@ class _LoginDetailsState extends State<LoginDetails> {
                                       .signIn(email!, password!);
 
                                   setState(() {
-                                    if (message.isNotEmpty) {
-                                      showSignInErrorMessage = true;
-                                    } else {
-                                      showSignInErrorMessage = false;
-                                    }
+                                    showSignInErrorMessage = message != null;
                                   });
+
+                                  // Show a SnackBar with the result
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        message == null
+                                            ? 'Login successful! User exists in Firebase.'
+                                            : 'Login failed: Invalid email or password.',
+                                      ),
+                                      backgroundColor:
+                                          message == null
+                                              ? Colors.green
+                                              : Colors.red,
+                                    ),
+                                  );
+
+                                  // Navigate to the homepage if login is successful
+                                  if (message == null) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => HomePage(),
+                                      ),
+                                    );
+                                  }
                                 }
                               },
                               style: ElevatedButton.styleFrom(

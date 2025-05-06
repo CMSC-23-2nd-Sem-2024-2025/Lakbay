@@ -115,11 +115,7 @@ class _SignInPageState extends State<SignInPage> {
         );
 
         setState(() {
-          if (message.isNotEmpty) {
-            showSignInErrorMessage = true;
-          } else {
-            showSignInErrorMessage = false;
-          }
+          showSignInErrorMessage = message != null;
         });
       }
     },

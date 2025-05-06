@@ -11,10 +11,10 @@ class FirebaseAuthAPI {
     return auth.authStateChanges();
   }
 
-  Future<String> signIn(String email, String password) async {
+  Future<String?> signIn(String email, String password) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
-      return "Successfully signed in!"; // <-- always returns a non-empty string
+      return null; // null means success
     } on FirebaseAuthException catch (e) {
       return "Failed with error '${e.code}: ${e.message}";
     }

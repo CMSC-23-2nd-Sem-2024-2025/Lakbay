@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lakbay/screens/starting_page.dart';
 
 class SignupDetails extends StatefulWidget {
   const SignupDetails({super.key});
@@ -95,8 +96,6 @@ class SignupDetailsState extends State<SignupDetails> {
                           ),
                         ),
 
-
-
                         // Email TextFormField
                         TextFormField(
                           decoration: InputDecoration(
@@ -149,24 +148,28 @@ class SignupDetailsState extends State<SignupDetails> {
                           width: 315,
                           height: 70,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StartingPage(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.transparent, 
-                              shadowColor: Colors.transparent, 
-                              elevation: 0, 
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50),
-                                side:
-                                    BorderSide.none, 
+                                side: BorderSide.none,
                               ),
                             ),
                             child: Text(
                               "Back",
                               style: TextStyle(
                                 fontSize: 18,
-                                color: Color(0xFF000000), 
-
+                                color: Color(0xFF000000),
                               ),
                             ),
                           ),

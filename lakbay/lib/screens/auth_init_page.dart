@@ -18,35 +18,23 @@ class _AuthInitPage extends State<AuthenticationInitPage> {
   @override
   Widget build(BuildContext context) {
     // used context.read to get the stream once
-    // to avoid unecessary rebuilds
-
-    // listens to the authentication state changes
+    // to avoid unnecessary rebuilds
     Stream<User?> userStream = context.read<AuthProvider>().userStream;
 
-    return StreamBuilder(
+    return StreamBuilder<User?>(
       stream: userStream,
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(child: Text("Error encountered! ${snapshot.error}")),
-          );
-        }
-
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        // condition: checks if there is all ready a user signed in
-        // if the stream emits null
         if (!snapshot.hasData) {
-          return StartingPage(); // navigate to Sign-In Page if no user is signed in
+          return StartingPage(); // No user signed in
         }
 
-        // condition: directs of there is already a user signed in
-        // if the stream emits a user object
-        return const HomePage(); // navigate to ExpenseInitPage if user is signed in
+        return const HomePage(); // User signed in
       },
     );
   }

@@ -27,8 +27,10 @@ class AuthProvider with ChangeNotifier {
       } else {
         print("Auth state changed: ${user.email}");
       }
-      userObj = user; // update the user object
-      notifyListeners();
+      if (userObj != user) {
+        userObj = user; // Update the user object
+        notifyListeners(); // Notify listeners of the state change
+      }
     });
   }
 
@@ -65,9 +67,10 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signIn(String email, String password) async {
-    await authService.signIn(email, password);
+  Future<String?> signIn(String email, String password) async {
+    final result = await authService.signIn(email, password);
     notifyListeners();
+    return result;
   }
 
   Future<void> signOut() async {
