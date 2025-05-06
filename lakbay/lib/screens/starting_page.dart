@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 // import 'package:lakbay/components/text_form_field.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lakbay/screens/login_details.dart';
+import 'package:lakbay/screens/signup_details.dart';
 
 // make a stateful widget of the log in page
-class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+class StartingPage extends StatefulWidget {
+  StartingPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<StartingPage> createState() => _StartingPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _StartingPageState extends State<StartingPage> {
   // text editing controller for email and password
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -139,7 +141,14 @@ class _LoginPageState extends State<LoginPage> {
                           width: 315,
                           height: 70,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginDetails(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               // side: BorderSide(
                               //   color: Color(),
@@ -169,7 +178,14 @@ class _LoginPageState extends State<LoginPage> {
                           width: 315,
                           height: 70,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SignupDetails(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               side: BorderSide(
                                 color: Color(0xFF8DA2E6),
