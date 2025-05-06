@@ -16,8 +16,8 @@ class MyButtons extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 282.8,
-      height: 65.82,
+      width: 315,
+      height: 70,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: color,

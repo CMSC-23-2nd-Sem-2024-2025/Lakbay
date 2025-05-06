@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lakbay/components/buttons.dart';
-import 'package:lakbay/components/text_form_field.dart';
+// import 'package:lakbay/components/buttons.dart';
+// import 'package:lakbay/components/text_form_field.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // make a stateful widget of the log in page
 class LoginPage extends StatefulWidget {
@@ -19,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2F6D5E),
+      backgroundColor: Color(0xFF5F7CF6),
       // safe area as body for the widgets to not overflow outside
       body: SafeArea(
         child: SingleChildScrollView(
@@ -36,33 +38,42 @@ class _LoginPageState extends State<LoginPage> {
                 Image.asset('assets/logo.png', height: 350.67),
 
                 // add email text field field (this is not a formfield yet)
-                TextformField(
-                  hintText: "Username",
-                  obscureText: false,
-                  controller: emailController,
-                  icon: Icon(Icons.person),
-                ),
+                // TextformField(
+                //   hintText: "Username",
+                //   obscureText: false,
+                //   controller: emailController,
+                //   icon: Icon(Icons.person),
+                // ),
 
-                // add password text field (this is not a formfield yet)
-                TextformField(
-                  hintText: "Password",
-                  obscureText:
-                      !_passwordVisible, 
-                  controller: passwordController,
-                  icon: Icon(Icons.lock),
-                  sufIcon: IconButton(
-                    icon: Icon(
-                      _passwordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _passwordVisible = !_passwordVisible;
-                      });
-                    },
+                // // add password text field (this is not a formfield yet)
+                // TextformField(
+                //   hintText: "Password",
+                //   obscureText:
+                //       !_passwordVisible,
+                //   controller: passwordController,
+                //   icon: Icon(Icons.lock),
+                //   sufIcon: IconButton(
+                //     icon: Icon(
+                //       _passwordVisible
+                //           ? Icons.visibility
+                //           : Icons.visibility_off,
+                //     ),
+                //     onPressed: () {
+                //       setState(() {
+                //         _passwordVisible = !_passwordVisible;
+                //       });
+                //     },
+                //   ),
+                // ),
+                Text(
+                  "Plan your\nnext journey with us!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                ),
+                ).animate().fadeIn(duration: 500.ms).fadeIn(delay: 800.ms),
               ],
             ),
           ),
@@ -75,52 +86,116 @@ class _LoginPageState extends State<LoginPage> {
           begin: Offset(0, 1), // start off screen
           end: Offset(0, 0), // end on the current position
         ),
-        duration: Duration(milliseconds: 2000), // animation will take 2 secs
+        duration: Duration(milliseconds: 700), // animation will take 2 secs
         builder: (context, offset, child) {
           return Transform.translate(
             offset: Offset(
               0,
               offset.dy * MediaQuery.of(context).size.height,
             ), // vertical multiplied by the size of the screen for it to go forward frame by frame
-            child: Container(
-              width: double.infinity, // make the container extend to the sides
-              height: 325, // set a height
-              decoration: BoxDecoration(
-                color: Color(
-                  0xFFE7F4EA,
-                ), // add color and make the edges circular
-                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-              ),
+            child: Stack(
+              children: [
+                
+                Container(
 
-              child: Column(
-                children: [
-                  SizedBox(height: 40),
+                  
+                  height: 395,
+                  width: double.infinity,
 
-                  // log in button
-                  MyButtons(
-                    label: "Log in",
-                    color: Color(0xFF7BC678),
-                    onPressed: () {
-                      // wala pa implementation
-                    },
+                  decoration: BoxDecoration(
+                    color: Color(
+                      0xFF8DA2E6,
+                    ), // add color and make the edges circular
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(80),
+                    ),
                   ),
+                ),
 
-                  SizedBox(height: 10),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    width:
+                        double
+                            .infinity, // make the container extend to the sides
+                    height: 340, // set a height
+                    decoration: BoxDecoration(
+                      color: Color(
+                        0xFFFBFBFB,
+                      ), // add color and make the edges circular
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(80),
+                      ),
+                    ),
 
-                  Text("or", style: TextStyle(fontSize: 26)),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 80),
 
-                  SizedBox(height: 10),
+                        // log in button
+                        SizedBox(
+                          width: 315,
+                          height: 70,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              // side: BorderSide(
+                              //   color: Color(),
+                              //   width: 2,
+                              // ),
+                              backgroundColor: Color(0xFF5F7CF6),
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                            child: Text(
+                              "Log In",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Color(0xFFFFFFFF),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
 
-                  // sign up button
-                  MyButtons(
-                    label: "Sign up",
-                    color: Color(0xFF7BC678),
-                    onPressed: () {
-                      // wala pa implementation
-                    },
+                        SizedBox(height: 20),
+
+                        // sign up button
+                        SizedBox(
+                          width: 315,
+                          height: 70,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              side: BorderSide(
+                                color: Color(0xFF8DA2E6),
+                                width: 2,
+                              ),
+                              backgroundColor: Color(0xFFFFFFFF),
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                            child: Text(
+                              "Sign Up", // Capitalized "In" for consistency
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Color(0xFF5F7CF6),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },
