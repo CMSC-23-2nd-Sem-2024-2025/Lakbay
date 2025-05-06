@@ -41,48 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDtlllvtN3pO4rUl-viOVaI1CgkBH7Vupw',
-    appId: '1:840380700004:web:cda111cddbf3a5924b1671',
-    messagingSenderId: '840380700004',
-    projectId: 'exer08-data-persistence',
-    authDomain: 'exer08-data-persistence.firebaseapp.com',
-    storageBucket: 'exer08-data-persistence.firebasestorage.app',
-    measurementId: 'G-NBELLBNRXW',
+    apiKey: 'AIzaSyDHFNuB-SYi6OJxeMFWyCYso33cnP1EBVY',
+    appId: '1:78702604763:web:60759b6671f6f49ab737fe',
+    messagingSenderId: '78702604763',
+    projectId: 'project-cmsc23-lakbay',
+    authDomain: 'project-cmsc23-lakbay.firebaseapp.com',
+    storageBucket: 'project-cmsc23-lakbay.firebasestorage.app',
+    measurementId: 'G-GCLDENN109',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBQu54qS0RIV5ztIdkP7oA4XF92pgXLvzM',
-    appId: '1:840380700004:android:9148b6bb80e13af04b1671',
-    messagingSenderId: '840380700004',
-    projectId: 'exer08-data-persistence',
-    storageBucket: 'exer08-data-persistence.firebasestorage.app',
+    apiKey: 'AIzaSyCbtnWNTyPcu8g_itIhGHU_0B1jX-zPt8E',
+    appId: '1:78702604763:android:663f68c967909816b737fe',
+    messagingSenderId: '78702604763',
+    projectId: 'project-cmsc23-lakbay',
+    storageBucket: 'project-cmsc23-lakbay.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAJLgu3sfqd-V8nwWO7xPRMUkH38k30wuE',
-    appId: '1:727965490602:ios:afb94c96c666febdb19fd3',
-    messagingSenderId: '727965490602',
-    projectId: 'todo-demo-pcaragones',
-    storageBucket: 'todo-demo-pcaragones.firebasestorage.app',
-    iosBundleId: 'com.example.todoAppCd5l',
+    apiKey: 'AIzaSyCiYEfXp7xEjPXT04lB4YYe6YtLTI3oRw0',
+    appId: '1:78702604763:ios:c3940f2c7593fae5b737fe',
+    messagingSenderId: '78702604763',
+    projectId: 'project-cmsc23-lakbay',
+    storageBucket: 'project-cmsc23-lakbay.firebasestorage.app',
+    iosBundleId: 'com.example.exer08Tiamzon',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAJLgu3sfqd-V8nwWO7xPRMUkH38k30wuE',
-    appId: '1:727965490602:ios:afb94c96c666febdb19fd3',
-    messagingSenderId: '727965490602',
-    projectId: 'todo-demo-pcaragones',
-    storageBucket: 'todo-demo-pcaragones.firebasestorage.app',
-    iosBundleId: 'com.example.todoAppCd5l',
+    apiKey: 'AIzaSyCiYEfXp7xEjPXT04lB4YYe6YtLTI3oRw0',
+    appId: '1:78702604763:ios:c3940f2c7593fae5b737fe',
+    messagingSenderId: '78702604763',
+    projectId: 'project-cmsc23-lakbay',
+    storageBucket: 'project-cmsc23-lakbay.firebasestorage.app',
+    iosBundleId: 'com.example.exer08Tiamzon',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDTzH4t-7IuoaM3ofv1tc1_hNGyF__wYN0',
-    appId: '1:727965490602:web:ecfa6677ce919224b19fd3',
-    messagingSenderId: '727965490602',
-    projectId: 'todo-demo-pcaragones',
-    authDomain: 'todo-demo-pcaragones.firebaseapp.com',
-    storageBucket: 'todo-demo-pcaragones.firebasestorage.app',
-    measurementId: 'G-LTD6974HVX',
+    apiKey: 'AIzaSyDHFNuB-SYi6OJxeMFWyCYso33cnP1EBVY',
+    appId: '1:78702604763:web:55a3eef33f9f2af7b737fe',
+    messagingSenderId: '78702604763',
+    projectId: 'project-cmsc23-lakbay',
+    authDomain: 'project-cmsc23-lakbay.firebaseapp.com',
+    storageBucket: 'project-cmsc23-lakbay.firebasestorage.app',
+    measurementId: 'G-E8168D300D',
   );
+
 }

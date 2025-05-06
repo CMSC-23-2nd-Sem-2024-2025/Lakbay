@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "840380700004",
-    "project_id": "exer08-data-persistence",
-    "storage_bucket": "exer08-data-persistence.firebasestorage.app"
+    "project_number": "78702604763",
+    "project_id": "project-cmsc23-lakbay",
+    "storage_bucket": "project-cmsc23-lakbay.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:840380700004:android:9148b6bb80e13af04b1671",
+        "mobilesdk_app_id": "1:78702604763:android:663f68c967909816b737fe",
         "android_client_info": {
           "package_name": "com.example.exer08_tiamzon"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBQu54qS0RIV5ztIdkP7oA4XF92pgXLvzM"
+          "current_key": "AIzaSyCbtnWNTyPcu8g_itIhGHU_0B1jX-zPt8E"
         }
       ],
       "services": {
