@@ -16,10 +16,12 @@ class _LoginDetailsState extends State<LoginDetails> {
   String? email;
   String? password;
   bool showSignInErrorMessage = false;
+  bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF5F7CF6),
       body: SafeArea(
         child: SizedBox.expand(
@@ -96,11 +98,27 @@ class _LoginDetailsState extends State<LoginDetails> {
                             onSaved: (value) => email = value,
                           ),
 
+                          SizedBox(height: 10),
+
                           // Password TextFormField
                           TextFormField(
-                            obscureText: true,
+                            obscureText: !_passwordVisible,
                             decoration: InputDecoration(
                               hintText: 'Password',
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                                ),
+
+                                onPressed: (){
+                                  setState(() {
+                                    
+                                    _passwordVisible = !_passwordVisible;
+                                  });
+                                },
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Color(0xFF5F7CF6),

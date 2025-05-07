@@ -55,7 +55,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Expense Tracker',
+
+      debugShowCheckedModeBanner: false,
+      title: 'Lakbay',
       theme: ThemeData(
         fontFamily: 'Poppins', // Set Poppins as the default font
         textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Poppins'),
