@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:lakbay/screens/starting_page.dart';
+import '../providers/auth_provider.dart';
 
 class SignupDetails extends StatefulWidget {
   const SignupDetails({super.key});
 
   @override
-  State<SignupDetails> createState() => SignupDetailsState();
+  State<SignupDetails> createState() => _SignupDetailsState();
 }
 
-class SignupDetailsState extends State<SignupDetails> {
+class _SignupDetailsState extends State<SignupDetails> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController firstnameController = TextEditingController();
+  final TextEditingController lastnameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  String? prompt;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +29,7 @@ class SignupDetailsState extends State<SignupDetails> {
         child: SizedBox.expand(
           child: Stack(
             children: [
-              // Bottom layer
+              // Decorative Background
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -34,7 +45,6 @@ class SignupDetailsState extends State<SignupDetails> {
                 ),
               ),
 
-              // Top layer
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -48,133 +58,155 @@ class SignupDetailsState extends State<SignupDetails> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(50),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "SIGN UP",
-                          style: TextStyle(
-                            color: Color(0xFF5F7CF6),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40,
-                          ),
-                        ),
-                        Text(
-                          "CREATE YOUR ACCOUNT",
-                          style: TextStyle(
-                            color: Color(0xFF8DA2E6),
-                            fontSize: 25,
-                          ),
-                        ),
-                        SizedBox(height: 40),
-
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'First Name',
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF5F7CF6)),
+                    padding: const EdgeInsets.all(40),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "SIGN UP",
+                            style: TextStyle(
+                              color: Color(0xFF5F7CF6),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40,
                             ),
                           ),
-                        ),
-
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Last Name',
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF5F7CF6)),
+                          const Text(
+                            "CREATE YOUR ACCOUNT",
+                            style: TextStyle(
+                              color: Color(0xFF8DA2E6),
+                              fontSize: 20,
                             ),
                           ),
-                        ),
+                          const SizedBox(height: 20),
 
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Username',
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF5F7CF6)),
-                            ),
-                          ),
-                        ),
-
-                        // Email TextFormField
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF5F7CF6)),
-                            ),
-                          ),
-                        ),
-
-                        // Password TextFormField
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFF5F7CF6)),
-                            ),
-                          ),
-                        ),
-
-                        // Spacer to push button to the bottom
-                        Spacer(),
-
-                        // Log In Button
-                        SizedBox(
-                          width: 315,
-                          height: 70,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF5F7CF6),
-                              elevation: 8,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              ),
-                            ),
-                            child: Text(
-                              "Sign up",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Color(0xFFFFFFFF),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(
-                          width: 315,
-                          height: 70,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StartingPage(),
-                                ),
-                              );
+                          // First Name
+                          TextFormField(
+                            controller: firstnameController,
+                            decoration: const InputDecoration(hintText: 'First Name'),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please input a first name';
+                              }
+                              return null;
                             },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                                side: BorderSide.none,
+                          ),
+
+                          // Last Name
+                          TextFormField(
+                            controller: lastnameController,
+                            decoration: const InputDecoration(hintText: 'Last Name'),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please input a last name';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          // Username (Optional / or required)
+                          TextFormField(
+                            controller: usernameController,
+                            decoration: const InputDecoration(hintText: 'Username'),
+                          ),
+
+                          // Email
+                          TextFormField(
+                            controller: emailController,
+                            decoration: const InputDecoration(hintText: 'Email'),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Email is required';
+                              } else if (!EmailValidator.validate(value.trim())) {
+                                return 'Enter a valid email';
+                              }
+                              if (prompt != null) {
+                                final error = prompt;
+                                prompt = null;
+                                return error;
+                              }
+                              return null;
+                            },
+                          ),
+
+                          // Password
+                          TextFormField(
+                            controller: passwordController,
+                            obscureText: true,
+                            decoration: const InputDecoration(hintText: 'Password'),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Password is required';
+                              }
+                              final specpw = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$');
+                              if (!specpw.hasMatch(value)) {
+                                return 'Password too weak';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          const Spacer(),
+
+                          // Sign Up Button
+                          SizedBox(
+                            width: double.infinity,
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  String email = emailController.text.trim();
+                                  String password = passwordController.text.trim();
+                                  String firstName = firstnameController.text.trim();
+                                  String lastName = lastnameController.text.trim();
+
+                                  String? result = await context.read<AuthProvider>().signUp(
+                                    email,
+                                    password,
+                                    firstName,
+                                    lastName,
+                                  );
+
+                                  if (result != null) {
+                                    setState(() {
+                                      prompt = result;
+                                    });
+                                    _formKey.currentState!.validate();
+                                  } else if (context.mounted) {
+                                    Navigator.pop(context); // or push to login
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF5F7CF6),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                               ),
-                            ),
-                            child: Text(
-                              "Back",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Color(0xFF000000),
-                              ),
+                              child: const Text("Sign up", style: TextStyle(fontSize: 18)),
                             ),
                           ),
-                        ),
-                      ],
+
+                          const SizedBox(height: 10),
+
+                          // Back Button
+                          SizedBox(
+                            width: double.infinity,
+                            height: 60,
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => StartingPage()),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                              ),
+                              child: const Text("Back", style: TextStyle(fontSize: 18, color: Colors.black)),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

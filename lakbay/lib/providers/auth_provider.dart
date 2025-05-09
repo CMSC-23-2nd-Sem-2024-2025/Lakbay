@@ -34,19 +34,19 @@ class AuthProvider with ChangeNotifier {
     });
   }
 
-  // retrieves users details from firestore
+  
   Future<void> fetUserDetails() async {
     // current user logged in to the app
     User? currentUser = FirebaseAuthAPI.auth.currentUser;
 
     if (currentUser != null) {
-      // get the user's UID
-      // this identifies the user in the database
+      
       String uid = currentUser.uid;
 
       Map<String, dynamic>? userDetails = await FirebaseAuthAPI()
           .getNewUserInfo(uid);
 
+      // this is for debugging only.
       if (userDetails != null) {
         print("First Name: ${userDetails['firstName']}");
         print("Last Name: ${userDetails['lastName']}");
@@ -57,15 +57,21 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> signUp(
-    String email,
-    String password,
-    String firstName,
-    String lastName,
-  ) async {
-    await authService.signUp(email, password, firstName, lastName);
-    notifyListeners();
-  }
+  Future<String?> signUp(
+  String email,
+  String password,
+  String firstName,
+  String lastName,
+) async {
+  // Call the auth service and store the result
+  String? result = await authService.signUp(email, password, firstName, lastName);
+  
+  // Notify listeners after the sign-up attempt
+  notifyListeners();
+  
+  // Return the result (which could be an error message or null)
+  return result;
+}
 
   Future<String?> signIn(String email, String password) async {
     final result = await authService.signIn(email, password);
@@ -99,26 +105,3 @@ class AuthProvider with ChangeNotifier {
   }
 }
 
-
-// ADDED A NEW RULE
-// this allows access the users to read and write in the collection
-// ensures that only authenticated users can read and write to the userexpense collection
-
-/*
-
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    Allow read and write access to the `expensestracker` collection
-    match /expensestracker/{document=**} {
-      allow read, write: if true;
-    }
-
-    Allow read and write access to the `userexpense` collection
-    match /userexpense/{document=**} {
-      allow read, write: if request.auth != null; // Only allow authenticated users
-    }
-  }
-}
-
- */

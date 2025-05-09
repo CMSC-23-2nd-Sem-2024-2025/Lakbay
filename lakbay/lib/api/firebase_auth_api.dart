@@ -16,7 +16,8 @@ class FirebaseAuthAPI {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       return null; // null means success
     } on FirebaseAuthException catch (e) {
-      return "Failed with error '${e.code}: ${e.message}";
+      print("Sign-in error: ${e.code}, message: ${e.message}");
+      return "Failed with error '${e.code}': ${e.message}";
     }
   }
 
