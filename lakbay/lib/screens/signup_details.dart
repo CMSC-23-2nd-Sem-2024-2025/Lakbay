@@ -95,6 +95,8 @@ class _SignupDetailsState extends State<SignupDetails> {
                             },
                           ),
 
+                          SizedBox(width: 30, height: 30),
+
                           // Last Name
                           TextFormField(
                             controller: lastnameController,
@@ -108,6 +110,8 @@ class _SignupDetailsState extends State<SignupDetails> {
                               return null;
                             },
                           ),
+
+                          SizedBox(width: 30, height: 30),
 
                           // Username (Optional / or required)
                           TextFormField(
@@ -123,6 +127,8 @@ class _SignupDetailsState extends State<SignupDetails> {
                               return null;
                             },
                           ),
+
+                          SizedBox(width: 30, height: 30),
 
                           // Email
                           TextFormField(
@@ -146,6 +152,8 @@ class _SignupDetailsState extends State<SignupDetails> {
                               return null;
                             },
                           ),
+
+                          SizedBox(width: 30, height: 30),
 
                           // Password
                           TextFormField(
@@ -187,11 +195,11 @@ class _SignupDetailsState extends State<SignupDetails> {
 
                                   showDialog(
                                     context: context,
-                                    builder: (context){
+                                    builder: (context) {
                                       return const Center(
-                                        child: CircularProgressIndicator(),);
-                                    }
-
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    },
                                   );
 
                                   String? result = await context
@@ -223,7 +231,11 @@ class _SignupDetailsState extends State<SignupDetails> {
                               ),
                               child: const Text(
                                 "Sign up",
-                                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
