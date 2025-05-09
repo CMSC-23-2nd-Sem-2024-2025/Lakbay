@@ -166,14 +166,12 @@ class _LoginDetailsState extends State<LoginDetails> {
                                     showSignInErrorMessage = message != null;
                                   });
 
-                                  
-
                                   // Navigate to the homepage if login is successful
                                   if (message == null) {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ProfilePage(),
+                                        builder: (context) => HomePage(),
                                       ),
                                     );
                                   }

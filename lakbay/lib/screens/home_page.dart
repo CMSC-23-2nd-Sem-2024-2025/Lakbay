@@ -1,34 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:lakbay/common/app_drawer.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
+import '../providers/auth_provider.dart' as local_auth;
 import 'starting_page.dart';
-
-// EMTPY HOME PAGE
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, 
+        automaticallyImplyLeading: true, // Enables the default drawer icon
         title: const Text('Lakbay Home'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              
-              await context.read<AuthProvider>().signOut();
+              await context.read<local_auth.AuthProvider>().signOut();
 
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => StartingPage()),
-                (route) => false, 
+                (route) => false,
               );
             },
           ),
         ],
       ),
+
+      // Add the DrawerWidget
+      drawer: DrawerWidget(user: currentUser),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
