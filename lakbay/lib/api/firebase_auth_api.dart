@@ -21,7 +21,7 @@ class FirebaseAuthAPI {
     }
   }
 
-  Future<String> signUp(
+  Future<String?> signUp(
     String email,
     String password,
     String firstName,
@@ -46,6 +46,7 @@ class FirebaseAuthAPI {
         'firstName': firstName,
         'lastName': lastName,
         'email': email,
+        
       });
 
       // will automatically signed in the user after signing up
@@ -55,7 +56,7 @@ class FirebaseAuthAPI {
       print("User created in Firebase Authentication: $uid");
       print("User details saved in Firestore.");
 
-      return "Successfully signed up!";
+      return null;
     } on FirebaseAuthException catch (e) {
       return "Failed with error '${e.code}: ${e.message}'";
     }

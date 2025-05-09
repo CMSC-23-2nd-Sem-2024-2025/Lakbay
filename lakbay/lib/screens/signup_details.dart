@@ -115,6 +115,13 @@ class _SignupDetailsState extends State<SignupDetails> {
                             decoration: const InputDecoration(
                               hintText: 'Username',
                             ),
+
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Please input a username!';
+                              }
+                              return null;
+                            },
                           ),
 
                           // Email
@@ -178,6 +185,15 @@ class _SignupDetailsState extends State<SignupDetails> {
                                   String lastName =
                                       lastnameController.text.trim();
 
+                                  showDialog(
+                                    context: context,
+                                    builder: (context){
+                                      return const Center(
+                                        child: CircularProgressIndicator(),);
+                                    }
+
+                                  );
+
                                   String? result = await context
                                       .read<AuthProvider>()
                                       .signUp(
@@ -186,6 +202,8 @@ class _SignupDetailsState extends State<SignupDetails> {
                                         firstName,
                                         lastName,
                                       );
+
+                                  if (context.mounted) Navigator.pop(context);
 
                                   if (result != null) {
                                     setState(() {
@@ -205,7 +223,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                               ),
                               child: const Text(
                                 "Sign up",
-                                style: TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),

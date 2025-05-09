@@ -108,13 +108,12 @@ class _LoginDetailsState extends State<LoginDetails> {
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   _passwordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
 
-                                onPressed: (){
+                                onPressed: () {
                                   setState(() {
-                                    
                                     _passwordVisible = !_passwordVisible;
                                   });
                                 },
@@ -144,16 +143,28 @@ class _LoginDetailsState extends State<LoginDetails> {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
+
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    },
+                                  );
+
                                   String? message = await context
                                       .read<AuthProvider>()
                                       .authService
                                       .signIn(email!, password!);
 
+                                  if (context.mounted)
+                                    Navigator.of(context).pop();
+
                                   setState(() {
                                     showSignInErrorMessage = message != null;
                                   });
 
-                                  // Show a SnackBar with the result
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(

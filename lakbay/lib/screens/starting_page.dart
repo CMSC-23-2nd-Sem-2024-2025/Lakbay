@@ -39,34 +39,6 @@ class _StartingPageState extends State<StartingPage> {
                 SizedBox(height: 20),
                 Image.asset('assets/logo.png', height: 350.67),
 
-                // add email text field field (this is not a formfield yet)
-                // TextformField(
-                //   hintText: "Username",
-                //   obscureText: false,
-                //   controller: emailController,
-                //   icon: Icon(Icons.person),
-                // ),
-
-                // // add password text field (this is not a formfield yet)
-                // TextformField(
-                //   hintText: "Password",
-                //   obscureText:
-                //       !_passwordVisible,
-                //   controller: passwordController,
-                //   icon: Icon(Icons.lock),
-                //   sufIcon: IconButton(
-                //     icon: Icon(
-                //       _passwordVisible
-                //           ? Icons.visibility
-                //           : Icons.visibility_off,
-                //     ),
-                //     onPressed: () {
-                //       setState(() {
-                //         _passwordVisible = !_passwordVisible;
-                //       });
-                //     },
-                //   ),
-                // ),
                 Text(
                   "Plan your\nnext journey with us!",
                   textAlign: TextAlign.center,
@@ -97,10 +69,7 @@ class _StartingPageState extends State<StartingPage> {
             ), // vertical multiplied by the size of the screen for it to go forward frame by frame
             child: Stack(
               children: [
-                
                 Container(
-
-                  
                   height: 395,
                   width: double.infinity,
 

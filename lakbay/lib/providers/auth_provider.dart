@@ -84,24 +84,5 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> signUpUser(
-    String email,
-    String password,
-    String firstName,
-    String lastName,
-  ) async {
-    String result = await FirebaseAuthAPI().signUp(
-      email,
-      password,
-      firstName,
-      lastName,
-    );
-
-    if (result == "Sucessfully signed up!") {
-      print("User signed up and details saved in Firestore");
-    } else {
-      print(result);
-    }
-  }
 }
 
