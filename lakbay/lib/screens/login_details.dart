@@ -165,19 +165,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                                     showSignInErrorMessage = message != null;
                                   });
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        message == null
-                                            ? 'Login successful! User exists in Firebase.'
-                                            : 'Login failed: Invalid email or password.',
-                                      ),
-                                      backgroundColor:
-                                          message == null
-                                              ? Colors.green
-                                              : Colors.red,
-                                    ),
-                                  );
+                                  
 
                                   // Navigate to the homepage if login is successful
                                   if (message == null) {
@@ -213,7 +201,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                             height: 70,
                             child: ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => StartingPage(),
