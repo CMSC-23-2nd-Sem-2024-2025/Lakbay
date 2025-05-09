@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../api/firebase_auth_api.dart';
 
+
 class AuthProvider with ChangeNotifier {
   late FirebaseAuthAPI authService;
   late Stream<User?> uStream;
@@ -34,13 +35,11 @@ class AuthProvider with ChangeNotifier {
     });
   }
 
-  
   Future<void> fetUserDetails() async {
     // current user logged in to the app
     User? currentUser = FirebaseAuthAPI.auth.currentUser;
 
     if (currentUser != null) {
-      
       String uid = currentUser.uid;
 
       Map<String, dynamic>? userDetails = await FirebaseAuthAPI()
@@ -58,20 +57,25 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<String?> signUp(
-  String email,
-  String password,
-  String firstName,
-  String lastName,
-) async {
-  // Call the auth service and store the result
-  String? result = await authService.signUp(email, password, firstName, lastName);
-  
-  // Notify listeners after the sign-up attempt
-  notifyListeners();
-  
-  // Return the result (which could be an error message or null)
-  return result;
-}
+    String email,
+    String password,
+    String firstName,
+    String lastName,
+  ) async {
+    // Call the auth service and store the result
+    String? result = await authService.signUp(
+      email,
+      password,
+      firstName,
+      lastName,
+    );
+
+    // Notify listeners after the sign-up attempt
+    notifyListeners();
+
+    // Return the result (which could be an error message or null)
+    return result;
+  }
 
   Future<String?> signIn(String email, String password) async {
     final result = await authService.signIn(email, password);
@@ -83,6 +87,4 @@ class AuthProvider with ChangeNotifier {
     await authService.signOut();
     notifyListeners();
   }
-
 }
-

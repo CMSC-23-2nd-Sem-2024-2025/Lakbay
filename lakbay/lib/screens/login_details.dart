@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lakbay/providers/auth_provider.dart';
 import 'package:lakbay/screens/home_page.dart';
+import 'package:lakbay/screens/profile_page.dart';
 import 'package:lakbay/screens/starting_page.dart';
 import 'package:provider/provider.dart';
 
@@ -172,7 +173,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => HomePage(),
+                                        builder: (context) => ProfilePage(),
                                       ),
                                     );
                                   }

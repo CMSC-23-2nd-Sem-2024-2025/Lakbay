@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'starting_page.dart';
 
+// EMTPY HOME PAGE
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
