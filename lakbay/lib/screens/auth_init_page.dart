@@ -17,8 +17,9 @@ class AuthenticationInitPage extends StatefulWidget {
 class _AuthInitPage extends State<AuthenticationInitPage> {
   @override
   Widget build(BuildContext context) {
-    // used context.read to get the stream once
-    // to avoid unnecessary rebuilds
+    
+    //this checks if the user is currently logged in. if not, return to startingpage. this 
+    // this is done to save account
     Stream<User?> userStream = context.read<AuthProvider>().userStream;
 
     return StreamBuilder<User?>(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lakbay/screens/starting_page.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import 'starting_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -10,16 +10,19 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, 
         title: const Text('Lakbay Home'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
+              
               await context.read<AuthProvider>().signOut();
-              Navigator.pushReplacement(
-  context,
-  MaterialPageRoute(builder: (context) => StartingPage()),
-);
+
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => StartingPage()),
+                (route) => false, 
+              );
             },
           ),
         ],
@@ -28,7 +31,11 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.travel_explore, size: 100, color: Color(0xFF5F7CF6)),
+            const Icon(
+              Icons.travel_explore,
+              size: 100,
+              color: Color(0xFF5F7CF6),
+            ),
             const SizedBox(height: 20),
             const Text(
               'Welcome to Lakbay!',
