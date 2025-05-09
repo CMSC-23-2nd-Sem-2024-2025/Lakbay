@@ -23,7 +23,7 @@ class _StartingPageState extends State<StartingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF5F7CF6),
+      backgroundColor: Color(0xFFFFFFFF),
       // safe area as body for the widgets to not overflow outside
       body: SafeArea(
         child: SingleChildScrollView(
@@ -37,14 +37,14 @@ class _StartingPageState extends State<StartingPage> {
               children: [
                 // add the logo
                 SizedBox(height: 20),
-                Image.asset('assets/logo.png', height: 350.67),
+                Image.asset('assets/or.png', height: 350.67),
 
                 Text(
                   "Plan your\nnext journey with us!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.white,
+                    fontSize: 30,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ).animate().fadeIn(duration: 500.ms).fadeIn(delay: 800.ms),
@@ -74,11 +74,14 @@ class _StartingPageState extends State<StartingPage> {
                   width: double.infinity,
 
                   decoration: BoxDecoration(
-                    color: Color(
-                      0xFF8DA2E6,
+                    color: Color.fromARGB(
+                      255,
+                      254,
+                      202,
+                      141,
                     ), // add color and make the edges circular
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(80),
+                      topRight: Radius.circular(80),
                     ),
                   ),
                 ),
@@ -94,10 +97,10 @@ class _StartingPageState extends State<StartingPage> {
                     height: 340, // set a height
                     decoration: BoxDecoration(
                       color: Color(
-                        0xFFFBFBFB,
+                        0xFFF86400,
                       ), // add color and make the edges circular
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(80),
+                        topRight: Radius.circular(80),
                       ),
                     ),
 
@@ -123,7 +126,7 @@ class _StartingPageState extends State<StartingPage> {
                               //   color: Color(),
                               //   width: 2,
                               // ),
-                              backgroundColor: Color(0xFF5F7CF6),
+                              backgroundColor: Color(0xFF020B1B),
                               elevation: 8,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50),
@@ -157,7 +160,7 @@ class _StartingPageState extends State<StartingPage> {
                             },
                             style: ElevatedButton.styleFrom(
                               side: BorderSide(
-                                color: Color(0xFF8DA2E6),
+                                color: Color(0xFFFFFFFF),
                                 width: 2,
                               ),
                               backgroundColor: Color(0xFFFFFFFF),
@@ -170,7 +173,7 @@ class _StartingPageState extends State<StartingPage> {
                               "Sign Up", // Capitalized "In" for consistency
                               style: TextStyle(
                                 fontSize: 18,
-                                color: Color(0xFF5F7CF6),
+                                color: Color(0xFF020B1B),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

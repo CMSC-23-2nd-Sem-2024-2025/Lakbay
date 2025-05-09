@@ -24,27 +24,26 @@ class _SignupDetailsState extends State<SignupDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xFF5F7CF6),
+      backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
         child: SizedBox.expand(
           child: Stack(
             children: [
               // Decorative Background
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 800,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF8DA2E6),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(80),
-                    ),
-                  ),
-                ),
-              ),
-
+              // Positioned(
+              //   bottom: 0,
+              //   left: 0,
+              //   right: 0,
+              //   child: Container(
+              //     height: 800,
+              //     decoration: const BoxDecoration(
+              //       color: Color(0xFF8DA2E6),
+              //       borderRadius: BorderRadius.only(
+              //         topLeft: Radius.circular(80),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -65,18 +64,19 @@ class _SignupDetailsState extends State<SignupDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "SIGN UP",
+                            "Create a new",
                             style: TextStyle(
-                              color: Color(0xFF5F7CF6),
+                              color: Color(0xFF000000),
                               fontWeight: FontWeight.bold,
                               fontSize: 40,
                             ),
                           ),
                           const Text(
-                            "CREATE YOUR ACCOUNT",
+                            "account",
                             style: TextStyle(
-                              color: Color(0xFF8DA2E6),
-                              fontSize: 20,
+                              color: Color(0xFF000000),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40,
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -86,6 +86,11 @@ class _SignupDetailsState extends State<SignupDetails> {
                             controller: firstnameController,
                             decoration: const InputDecoration(
                               hintText: 'First Name',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFFF86400),
+                                ),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
@@ -102,6 +107,11 @@ class _SignupDetailsState extends State<SignupDetails> {
                             controller: lastnameController,
                             decoration: const InputDecoration(
                               hintText: 'Last Name',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFFF86400),
+                                ),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
@@ -118,6 +128,11 @@ class _SignupDetailsState extends State<SignupDetails> {
                             controller: usernameController,
                             decoration: const InputDecoration(
                               hintText: 'Username',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFFF86400),
+                                ),
+                              ),
                             ),
 
                             validator: (value) {
@@ -135,6 +150,11 @@ class _SignupDetailsState extends State<SignupDetails> {
                             controller: emailController,
                             decoration: const InputDecoration(
                               hintText: 'Email',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFFF86400),
+                                ),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
@@ -224,7 +244,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF5F7CF6),
+                                backgroundColor: const Color(0XFFF86400),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50),
                                 ),

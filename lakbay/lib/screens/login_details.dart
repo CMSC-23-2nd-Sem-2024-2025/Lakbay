@@ -23,26 +23,26 @@ class _LoginDetailsState extends State<LoginDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xFF5F7CF6),
+      backgroundColor: const Color(0xFFFFFF),
       body: SafeArea(
         child: SizedBox.expand(
           child: Stack(
             children: [
               // Bottom layer
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: 800,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF8DA2E6),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(80),
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   bottom: 0,
+              //   left: 0,
+              //   right: 0,
+              //   child: Container(
+              //     height: 800,
+              //     decoration: const BoxDecoration(
+              //       color: Color(0xFF8DA2E6),
+              //       borderRadius: BorderRadius.only(
+              //         topLeft: Radius.circular(80),
+              //       ),
+              //     ),
+              //   ),
+              // ),
 
               // Top layer
               Positioned(
@@ -51,12 +51,12 @@ class _LoginDetailsState extends State<LoginDetails> {
                 right: 0,
                 child: Container(
                   height: 750,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFBFBFB),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(80),
-                    ),
-                  ),
+                  // decoration: const BoxDecoration(
+                  //   color: Color(0xFFFBFBFB),
+                  //   borderRadius: BorderRadius.only(
+                  //     topLeft: Radius.circular(80),
+                  //   ),
+                  // ),
                   child: Padding(
                     padding: const EdgeInsets.all(50),
                     child: Form(
@@ -65,18 +65,19 @@ class _LoginDetailsState extends State<LoginDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "LOG IN",
+                            "Log in to your",
                             style: TextStyle(
-                              color: Color(0xFF5F7CF6),
+                              color: Color(0xFF000000),
                               fontWeight: FontWeight.bold,
                               fontSize: 40,
                             ),
                           ),
                           Text(
-                            "FOR YOUR ACCOUNT",
+                            "account",
                             style: TextStyle(
-                              color: Color(0xFF8DA2E6),
-                              fontSize: 25,
+                              color: Color(0xFF000000),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40,
                             ),
                           ),
                           SizedBox(height: 40),
@@ -87,7 +88,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                               hintText: 'Email',
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0xFF5F7CF6),
+                                  color: Color(0xFFF86400),
                                 ),
                               ),
                             ),
@@ -99,7 +100,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                             onSaved: (value) => email = value,
                           ),
 
-                          SizedBox(height: 10),
+                          SizedBox(width: 30, height: 30),
 
                           // Password TextFormField
                           TextFormField(
@@ -121,7 +122,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                               ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0xFF5F7CF6),
+                                  color: Color(0xFFF86400),
                                 ),
                               ),
                             ),
@@ -178,7 +179,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF5F7CF6),
+                                backgroundColor: Color(0xFFF86400),
                                 elevation: 8,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50),
