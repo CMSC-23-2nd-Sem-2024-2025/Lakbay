@@ -181,6 +181,11 @@ class _SignupDetailsState extends State<SignupDetails> {
                             obscureText: true,
                             decoration: const InputDecoration(
                               hintText: 'Password',
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFFF86400),
+                                ),
+                              ),
                             ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
