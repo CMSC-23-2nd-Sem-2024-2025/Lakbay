@@ -1,6 +1,6 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:lakbay/screens/starting_page.dart';
 import '../providers/auth_provider.dart';
 
@@ -84,7 +84,9 @@ class _SignupDetailsState extends State<SignupDetails> {
                           // First Name
                           TextFormField(
                             controller: firstnameController,
-                            decoration: const InputDecoration(hintText: 'First Name'),
+                            decoration: const InputDecoration(
+                              hintText: 'First Name',
+                            ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Please input a first name';
@@ -96,7 +98,9 @@ class _SignupDetailsState extends State<SignupDetails> {
                           // Last Name
                           TextFormField(
                             controller: lastnameController,
-                            decoration: const InputDecoration(hintText: 'Last Name'),
+                            decoration: const InputDecoration(
+                              hintText: 'Last Name',
+                            ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Please input a last name';
@@ -108,17 +112,23 @@ class _SignupDetailsState extends State<SignupDetails> {
                           // Username (Optional / or required)
                           TextFormField(
                             controller: usernameController,
-                            decoration: const InputDecoration(hintText: 'Username'),
+                            decoration: const InputDecoration(
+                              hintText: 'Username',
+                            ),
                           ),
 
                           // Email
                           TextFormField(
                             controller: emailController,
-                            decoration: const InputDecoration(hintText: 'Email'),
+                            decoration: const InputDecoration(
+                              hintText: 'Email',
+                            ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Email is required';
-                              } else if (!EmailValidator.validate(value.trim())) {
+                              } else if (!EmailValidator.validate(
+                                value.trim(),
+                              )) {
                                 return 'Enter a valid email';
                               }
                               if (prompt != null) {
@@ -134,12 +144,16 @@ class _SignupDetailsState extends State<SignupDetails> {
                           TextFormField(
                             controller: passwordController,
                             obscureText: true,
-                            decoration: const InputDecoration(hintText: 'Password'),
+                            decoration: const InputDecoration(
+                              hintText: 'Password',
+                            ),
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Password is required';
                               }
-                              final specpw = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$');
+                              final specpw = RegExp(
+                                r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$',
+                              );
                               if (!specpw.hasMatch(value)) {
                                 return 'Password too weak';
                               }
@@ -157,16 +171,21 @@ class _SignupDetailsState extends State<SignupDetails> {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   String email = emailController.text.trim();
-                                  String password = passwordController.text.trim();
-                                  String firstName = firstnameController.text.trim();
-                                  String lastName = lastnameController.text.trim();
+                                  String password =
+                                      passwordController.text.trim();
+                                  String firstName =
+                                      firstnameController.text.trim();
+                                  String lastName =
+                                      lastnameController.text.trim();
 
-                                  String? result = await context.read<AuthProvider>().signUp(
-                                    email,
-                                    password,
-                                    firstName,
-                                    lastName,
-                                  );
+                                  String? result = await context
+                                      .read<AuthProvider>()
+                                      .signUp(
+                                        email,
+                                        password,
+                                        firstName,
+                                        lastName,
+                                      );
 
                                   if (result != null) {
                                     setState(() {
@@ -180,9 +199,14 @@ class _SignupDetailsState extends State<SignupDetails> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF5F7CF6),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
                               ),
-                              child: const Text("Sign up", style: TextStyle(fontSize: 18)),
+                              child: const Text(
+                                "Sign up",
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
                           ),
 
@@ -193,16 +217,27 @@ class _SignupDetailsState extends State<SignupDetails> {
                             width: double.infinity,
                             height: 60,
                             child: ElevatedButton(
-                              onPressed: () => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => StartingPage()),
-                              ),
+                              onPressed:
+                                  () => Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => StartingPage(),
+                                    ),
+                                  ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
                               ),
-                              child: const Text("Back", style: TextStyle(fontSize: 18, color: Colors.black)),
+                              child: const Text(
+                                "Back",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
                           ),
                         ],
