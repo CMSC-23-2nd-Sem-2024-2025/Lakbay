@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.userObj;
     
-    authProvider.fetUserDetails().then((_) {
+    authProvider.fetchUserDetails().then((_) {
     setState(() {
       isLoading = false;
     });

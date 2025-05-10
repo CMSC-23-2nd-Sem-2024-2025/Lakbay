@@ -7,6 +7,7 @@ class AuthProvider with ChangeNotifier {
   late FirebaseAuthAPI authService;
   late Stream<User?> uStream;
   User? userObj;
+  Map<String, dynamic>? userDetails; 
 
   AuthProvider() {
     authService =
@@ -35,7 +36,7 @@ class AuthProvider with ChangeNotifier {
     });
   }
 
-  Future<void> fetUserDetails() async {
+  Future<void> fetchUserDetails() async {
     // current user logged in to the app
     User? currentUser = FirebaseAuthAPI.auth.currentUser;
 
@@ -47,6 +48,8 @@ class AuthProvider with ChangeNotifier {
 
       // this is for debugging only.
       if (userDetails != null) {
+        this.userObj = currentUser;
+        this.userDetails = userDetails;
         print("First Name: ${userDetails['firstName']}");
         print("Last Name: ${userDetails['lastName']}");
         print("Email: ${userDetails['email']}");

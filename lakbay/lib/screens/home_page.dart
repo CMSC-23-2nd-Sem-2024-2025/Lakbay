@@ -12,6 +12,14 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.userObj;
+    // final userDetails = authProvider.userDetails;
+
+    // if (userDetails != null) {
+    //   print("First Name: ${userDetails['firstName']}");
+    //   print("Last Name: ${userDetails['lastName']}");
+    // } else {
+    //   print("User details are null");
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -34,18 +42,23 @@ class HomePage extends StatelessWidget {
 
       drawer: DrawerWidget(user: user),
 
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              
-            ],
+      body: 
+      
+      // userDetails == null
+      //   ? const Center(child: CircularProgressIndicator())
+      //   : 
+        SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Text(
+                //   "Hi, ${userDetails['firstName']} ${userDetails['lastName']}",
+                //   style: const TextStyle(fontSize: 18),
+                // ),
+              ],
+            ),
           ),
-        ),
-      ),
     );
   }
 }
