@@ -172,7 +172,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => HomePage(),
+                                        builder: (context) => ProfilePage(),
                                       ),
                                     );
                                   }

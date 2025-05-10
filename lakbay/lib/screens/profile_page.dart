@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth_provider.dart'; 
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,45 +13,22 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String? firstName;
-  String? lastName;
-  String? email;
-  String? username;
   bool isLoading = true;
 
   @override
-  void initState() {
-    super.initState();
-    fetchUserData();
-  }
-
-  Future<void> fetchUserData() async {
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      DocumentSnapshot snapshot =
-          await FirebaseFirestore.instance
-              .collection('appusers')
-              .doc(user.uid)
-              .get();
-
-      if (snapshot.exists) {
-        final data = snapshot.data() as Map<String, dynamic>;
-        setState(() {
-          firstName = data['firstName'];
-          lastName = data['lastName'];
-          email = data['email'];
-          username = data['username'] ?? '';
-          isLoading = false;
-        });
-      } else {
-        setState(() => isLoading = false);
-      }
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.userObj;
+    
+    authProvider.fetUserDetails().then((_) {
+    setState(() {
+      isLoading = false;
+    });
+  }); // This should hold the user data
+
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9FB),
       body: Column(
@@ -83,7 +63,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Color(0xFF3A5BCE),
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          // No underline
                         ),
                       ),
                     ],
@@ -91,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 18),
                   // Centered name and username
                   Text(
-                    "${firstName ?? ''} ${lastName ?? ''}",
+                    "${user?.displayName ?? 'User'}",
                     style: const TextStyle(
                       color: Color(0xFF6C7CD1),
                       fontWeight: FontWeight.bold,
@@ -101,9 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    username != null && username!.isNotEmpty
-                        ? "@$username"
-                        : "@username",
+                    user?.email ?? 'No email',
                     style: const TextStyle(
                       color: Color(0xFF6C7CD1),
                       fontSize: 16,
@@ -116,61 +93,53 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           isLoading
               ? const Expanded(
-                child: Center(child: CircularProgressIndicator()),
-              )
+                  child: Center(child: CircularProgressIndicator()),
+                )
               : Expanded(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 24),
-                    // User info
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "First Name: ${firstName ?? ''}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 24),
+                      // User info
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "First Name: ${user?.displayName ?? ''}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "Last Name: ${lastName ?? ''}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
+                            const SizedBox(height: 4),
+                            Text(
+                              "Last Name: ${user?.email ?? ''}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "Email: ${email ?? ''}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    // Interests, Travel Styles, Friends List
-                    Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        children: [
-                          _profileButton("Interests"),
-                          const SizedBox(height: 16),
-                          _profileButton("Travel Styles"),
-                          const SizedBox(height: 16),
-                          _profileButton("Friends List"),
-                        ],
+                      const SizedBox(height: 24),
+                      // Additional Sections
+                      Expanded(
+                        child: ListView(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          children: [
+                            _profileButton("Interests"),
+                            const SizedBox(height: 16),
+                            _profileButton("Travel Styles"),
+                            const SizedBox(height: 16),
+                            _profileButton("Friends List"),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
         ],
       ),
     );
