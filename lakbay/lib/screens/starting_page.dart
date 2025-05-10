@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:lakbay/components/buttons.dart';
-// import 'package:lakbay/components/text_form_field.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lakbay/screens/login_details.dart';

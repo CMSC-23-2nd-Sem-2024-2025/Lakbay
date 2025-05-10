@@ -23,7 +23,7 @@ class _LoginDetailsState extends State<LoginDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xFFFFFF),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SizedBox.expand(
           child: Stack(
