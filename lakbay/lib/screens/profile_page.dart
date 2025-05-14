@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lakbay/common/app_drawer.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,6 +32,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final details = authProvider.userDetails;
 
     return Scaffold(
+      drawer: DrawerWidget(user: user),
+      appBar: AppBar(),
       body:
           isLoading
               ? const Center(child: CircularProgressIndicator())
