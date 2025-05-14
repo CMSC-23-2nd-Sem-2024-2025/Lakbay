@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lakbay/intro_screens/interests.dart';
 import 'package:lakbay/providers/auth_provider.dart';
 import 'package:lakbay/screens/home_page.dart';
 import 'package:lakbay/screens/onboarding.dart';
@@ -205,7 +206,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ProfilePage(),
+                                    builder: (context) => StartingPage(),
                                   ),
                                 );
                               },

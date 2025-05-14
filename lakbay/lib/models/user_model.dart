@@ -1,4 +1,5 @@
-class User { // this is the user model
+class User {
+  // this is the user model
   String? id;
   String firstName;
   String lastName;
@@ -7,7 +8,8 @@ class User { // this is the user model
   String email;
   List<String> interests;
   List<String> styles;
-  List<UserPlan> plans; // bale kada user may list of interests, styles, and plans
+  List<UserPlan>
+  plans; // bale kada user may list of interests, styles, and plans
 
   User({
     this.id,
@@ -31,9 +33,10 @@ class User { // this is the user model
       email: json['email'],
       interests: List<String>.from(json['interests'] ?? []),
       styles: List<String>.from(json['styles'] ?? []),
-      plans: (json['plans'] as List<dynamic>? ?? [])
-          .map((planJson) => UserPlan.fromJson(planJson))
-          .toList(), 
+      plans:
+          (json['plans'] as List<dynamic>? ?? [])
+              .map((planJson) => UserPlan.fromJson(planJson))
+              .toList(),
     );
   }
 
@@ -47,31 +50,26 @@ class User { // this is the user model
       'email': email,
       'interests': interests,
       'styles': styles,
-      'plans': plans.map((plan) => plan.toJson()).toList(), 
+      'plans': plans.map((plan) => plan.toJson()).toList(),
     };
   }
 }
 
-class UserPlan { //user plan
+class UserPlan {
+  //user plan
   final String planName;
   final String description;
 
-  UserPlan({
-    required this.planName,
-    required this.description,
-  });
+  UserPlan({required this.planName, required this.description});
 
   factory UserPlan.fromJson(Map<String, dynamic> json) {
     return UserPlan(
-      planName: json['planName'], 
+      planName: json['planName'],
       description: json['description'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'planName': planName,
-      'description': description,
-    };
+    return {'planName': planName, 'description': description};
   }
 }
