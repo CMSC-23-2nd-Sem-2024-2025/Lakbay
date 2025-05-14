@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lakbay/screens/starting_page.dart';
+import 'package:lakbay/screens/onboarding.dart';
 import '../providers/auth_provider.dart';
 
 class SignupDetails extends StatefulWidget {
@@ -244,7 +245,12 @@ class _SignupDetailsState extends State<SignupDetails> {
                                     });
                                     _formKey.currentState!.validate();
                                   } else if (context.mounted) {
-                                    Navigator.pop(context); // or push to login
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OnBoarding(),
+                                      ),
+                                    );
                                   }
                                 }
                               },

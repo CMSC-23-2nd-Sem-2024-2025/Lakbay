@@ -46,7 +46,8 @@ class FirebaseAuthAPI {
         'firstName': firstName,
         'lastName': lastName,
         'email': email,
-        
+        'interests': [], // Initialize empty interests list
+        'styles': [], // Initialize empty styles list
       });
 
       // will automatically signed in the user after signing up
