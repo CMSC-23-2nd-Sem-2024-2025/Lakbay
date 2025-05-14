@@ -38,9 +38,9 @@ class MyApp extends StatelessWidget {
       home: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
           if (authProvider.userObj != null) {
-            return ProfilePage(); 
+            return HomePage();
           } else {
-            return StartingPage(); 
+            return StartingPage();
           }
         },
       ),
