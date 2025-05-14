@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 class StylePage extends StatefulWidget {
-  const StylePage({super.key});
+  final Function(List<String>) onStylesSelected;
+  const StylePage({super.key, required this.onStylesSelected});
 
   @override
   State<StylePage> createState() => _StylePageState();
@@ -24,6 +26,10 @@ class _StylePageState extends State<StylePage> {
     'Pet-friendly',
     'Extreme Travel',
   ];
+
+  List<String> getStyles(){
+    return selectedStyle;
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -100,7 +106,9 @@ class _StylePageState extends State<StylePage> {
                               // add and remove on the selectedInterest list dynamically
                               ? selectedStyle.add(style)
                               : selectedStyle.remove(style);
-                          print(styles); // this is for debugging only
+
+                          widget.onStylesSelected(selectedStyle);
+                          
                         });
                       },
 

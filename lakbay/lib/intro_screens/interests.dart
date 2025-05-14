@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class InterestsPage extends StatefulWidget {
-  const InterestsPage({super.key});
+  final Function(List<String>) onInterestsSelected;
+
+  const InterestsPage({super.key, required this.onInterestsSelected});
 
   @override
   State<InterestsPage> createState() => _InterestsPageState();
 }
 
 class _InterestsPageState extends State<InterestsPage> {
-
   // create instance of string to store the selected interest during set state
   List<String> selectedInterest = [];
 
@@ -28,12 +29,15 @@ class _InterestsPageState extends State<InterestsPage> {
     'Fitness & Wellness',
   ];
 
+  List<String> getInterests() {
+    return selectedInterest;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Padding(
-
           // set padding
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
 
@@ -41,7 +45,6 @@ class _InterestsPageState extends State<InterestsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
               SizedBox(height: 50),
 
               // banner
@@ -76,51 +79,39 @@ class _InterestsPageState extends State<InterestsPage> {
                   // set item count dynamically on interests list
                   itemCount: interests.length,
                   itemBuilder: (context, index) {
-
                     // get specific interest on the interests index
                     final interest = interests[index];
 
                     // return the selectable choice chip
                     return ChoiceChip(
-
-                      // apply shadow since may shadow sa figma
                       elevation: 1,
                       shadowColor: Colors.black,
                       showCheckmark: false,
-
-                      // DO NOT REMOVE THIS. pag tinanggal tong center di magpapantay yung buttons
                       label: Center(
                         child: Text(
-                          interest,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
-                          style: const TextStyle(fontSize: 14),
-                        ),
+                        interest,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.visible,
+                        style: const TextStyle(fontSize: 14),
+                      ),
                       ),
                       selected: selectedInterest.contains(interest),
                       onSelected: (selected) {
                         setState(() {
                           selected
-                              // add and remove on the selectedInterest list dynamically
                               ? selectedInterest.add(interest)
                               : selectedInterest.remove(interest);
-                          print(interests); // this is for debugging only
+                          
+
+                          widget.onInterestsSelected(selectedInterest);
                         });
                       },
-
-                      // curve
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                         side: const BorderSide(color: Colors.black, width: 2),
                       ),
-
-                      // ito yung kulay pag selected yung chip
                       selectedColor: Colors.black,
-
-                      // pag di selected
                       backgroundColor: Colors.white,
-
-                      // edit label
                       labelStyle: TextStyle(
                         color:
                             selectedInterest.contains(interest)

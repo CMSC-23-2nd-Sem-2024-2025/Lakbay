@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lakbay/screens/home_page.dart';
+import 'package:lakbay/screens/onboarding.dart';
 import 'package:lakbay/screens/starting_page.dart';
 
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:lakbay/screens/profile_page.dart';
-import 'package:google_fonts/google_fonts.dart'; 
-
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +17,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: ((context) => AuthProvider()),
-        ),
+        ChangeNotifierProvider(create: ((context) => AuthProvider())),
       ],
       child: const MyApp(),
     ),
@@ -37,7 +35,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
       ),
-      home: StartingPage(),
+      home: Consumer<AuthProvider>(
+        builder: (context, authProvider, _) {
+          if (authProvider.userObj != null) {
+            return OnBoarding(); 
+          } else {
+            return StartingPage(); 
+          }
+        },
+      ),
     );
   }
 }
