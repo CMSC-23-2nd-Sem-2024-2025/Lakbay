@@ -8,7 +8,7 @@ import 'package:lakbay/screens/signup_details.dart';
 
 // make a stateful widget of the log in page
 class StartingPage extends StatefulWidget {
-  StartingPage({super.key});
+  const StartingPage({super.key});
 
   @override
   State<StartingPage> createState() => _StartingPageState();
@@ -18,7 +18,7 @@ class _StartingPageState extends State<StartingPage> {
   // text editing controller for email and password
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool _passwordVisible = false;
+  final bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {

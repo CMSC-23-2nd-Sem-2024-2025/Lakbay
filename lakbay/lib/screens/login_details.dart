@@ -23,7 +23,7 @@ class _LoginDetailsState extends State<LoginDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xFFFFFF),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SizedBox.expand(
           child: Stack(
@@ -49,7 +49,7 @@ class _LoginDetailsState extends State<LoginDetails> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: Container(
+                child: SizedBox(
                   height: 750,
                   // decoration: const BoxDecoration(
                   //   color: Color(0xFFFBFBFB),
@@ -160,8 +160,9 @@ class _LoginDetailsState extends State<LoginDetails> {
                                       .authService
                                       .signIn(email!, password!);
 
-                                  if (context.mounted)
+                                  if (context.mounted) {
                                     Navigator.of(context).pop();
+                                  }
 
                                   setState(() {
                                     showSignInErrorMessage = message != null;
