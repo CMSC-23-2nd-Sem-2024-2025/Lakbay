@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lakbay/common/app_drawer.dart';
+import 'package:lakbay/travel_screens/travel_form.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                               color: Color(0xFFF86400),
                               fontSize: 28,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w900,
                             ),
                           ),
                           const TextSpan(
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 28,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w900,
                             ),
                           ),
                         ],
@@ -222,7 +223,12 @@ class _HomePageState extends State<HomePage> {
                         child: IconButton(
                           icon: Icon(Icons.add, color: Colors.white),
                           onPressed: () {
-                            // Add new plan action
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TravelFormPage(),
+                              ),
+                            );
                           },
                         ),
                       ),

@@ -133,57 +133,149 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        enabled: false,
-                        initialValue: details['firstName'],
-                        decoration: InputDecoration(
-                          labelText: 'Full Name',
-                          hintText: details['firstName'],
-                          border: const OutlineInputBorder(),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromRGBO(0, 0, 0, 0.1),
+                              spreadRadius: 1,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: TextFormField(
+                          enabled: false,
+                          initialValue: details['firstName'],
+                          decoration: InputDecoration(
+                            labelText: 'Full Name',
+                            hintText: details['firstName'],
+                            disabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFF97419)),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        enabled: false,
-                        initialValue: details['userName'],
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          hintText: 'Username',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        enabled: false,
-                        initialValue: details['email'],
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          hintText: 'Email',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        enabled: false,
-                        initialValue: (details['interests'] as List<dynamic>)
-                            .join(', '),
 
-                        decoration: const InputDecoration(
-                          labelText: 'Interests',
-                          hintText: 'Interests',
-                          border: OutlineInputBorder(),
+                      const SizedBox(height: 20),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromRGBO(0, 0, 0, 0.1),
+                              spreadRadius: 1,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: TextFormField(
+                          enabled: false,
+                          initialValue: details['userName'],
+                          decoration: const InputDecoration(
+                            labelText: 'Username',
+                            hintText: 'Username',
+                            disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFF97419)),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        enabled: false,
-                        initialValue: (details['styles'] as List<dynamic>).join(
-                          ', ',
+
+                      const SizedBox(height: 20),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromRGBO(0, 0, 0, 0.1),
+                              spreadRadius: 1,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        decoration: const InputDecoration(
-                          labelText: 'Styles',
-                          hintText: 'Styles',
-                          border: OutlineInputBorder(),
+                        child: TextFormField(
+                          enabled: false,
+                          initialValue: details['email'],
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
+                            hintText: 'Email',
+                            disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFF97419)),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromRGBO(0, 0, 0, 0.1),
+                              spreadRadius: 1,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: TextFormField(
+                          enabled: false,
+                          initialValue: (details['interests'] as List<dynamic>)
+                              .join(', '),
+                          decoration: const InputDecoration(
+                            labelText: 'Interests',
+                            hintText: 'Interests',
+                            disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFF97419)),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromRGBO(0, 0, 0, 0.1),
+                              spreadRadius: 1,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: TextFormField(
+                          enabled: false,
+                          initialValue: (details['styles'] as List<dynamic>)
+                              .join(', '),
+                          decoration: const InputDecoration(
+                            labelText: 'Travel Styles',
+                            hintText: 'Travel Styles',
+                            disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFF97419)),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
                         ),
                       ),
                       const Spacer(),
