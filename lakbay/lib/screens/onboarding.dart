@@ -106,7 +106,7 @@ class _OnboardingState extends State<OnBoarding> {
                     width: 315,
                     height: 70,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async{
                         if (onLastPage) {
                           print(selectedInterests);
                           print(selectedStyles);
@@ -117,12 +117,23 @@ class _OnboardingState extends State<OnBoarding> {
                           );
                           final user = authProvider.userObj;
 
-                          // if (user != null){
+                          if (user != null) {
+                            try {
+                              await FirebaseFirestore.instance
+                                  .collection('appusers')
+                                  .doc(user.uid)
+                                  .update({
+                                    'interests': selectedInterests,
+                                    'styles': selectedStyles,
+                                  });
 
-                          //   try {
-
-                          //   }
-                          // }
+                              print("success");
+                            } catch (e) {
+                              print("Failed to update user data: $e");
+                            }
+                          } else{
+                            print("no user found");
+                          }
 
                           Navigator.pushReplacement(
                             context,

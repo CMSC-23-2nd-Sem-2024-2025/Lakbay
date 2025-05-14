@@ -162,7 +162,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       const SizedBox(height: 10),
                       TextFormField(
                         enabled: false,
-                        initialValue: "None",
+                        initialValue: (details['interests'] as List<dynamic>)
+                            .join(', '),
+
                         decoration: const InputDecoration(
                           labelText: 'Interests',
                           hintText: 'Interests',
@@ -172,7 +174,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       const SizedBox(height: 10),
                       TextFormField(
                         enabled: false,
-                        initialValue: "None",
+                        initialValue: (details['styles'] as List<dynamic>).join(
+                          ', ',
+                        ),
                         decoration: const InputDecoration(
                           labelText: 'Styles',
                           hintText: 'Styles',
