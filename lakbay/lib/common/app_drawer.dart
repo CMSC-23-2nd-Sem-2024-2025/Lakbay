@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:flutter/material.dart';
+import 'package:lakbay/screens/home_page.dart';
 import 'package:lakbay/screens/profile_page.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -21,12 +22,32 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             title: Text('Profile'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(),
-                ), // navigate to profile page when its clicked
-              );
+              
+              
+              if (ModalRoute.of(context)?.settings.name != '/profile') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(),
+                    settings: RouteSettings(name: '/profile'),
+                  ),
+                );
+              }
+            },
+          ),
+          ListTile(
+            title: Text('Your Plans'),
+            onTap: () {
+              Navigator.pop(context); 
+              if (ModalRoute.of(context)?.settings.name != '/home') {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                    settings: RouteSettings(name: '/home'),
+                  ),
+                );
+              }
             },
           ),
         ],

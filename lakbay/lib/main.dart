@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:lakbay/screens/home_page.dart';
 import 'package:lakbay/screens/onboarding.dart';
 import 'package:lakbay/screens/starting_page.dart';
-
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/home',
       debugShowCheckedModeBanner: false,
       title: 'Lakbay',
       theme: ThemeData(
@@ -38,9 +38,9 @@ class MyApp extends StatelessWidget {
       home: Consumer<AuthProvider>(
         builder: (context, authProvider, _) {
           if (authProvider.userObj != null) {
-            return ProfilePage(); 
+            return HomePage();
           } else {
-            return StartingPage(); 
+            return StartingPage();
           }
         },
       ),
