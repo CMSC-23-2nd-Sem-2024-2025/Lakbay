@@ -2,6 +2,7 @@ import 'dart:convert';
 
 class TravelPlan {
   String? id;
+  String userId;
   String? travelName;
   String? location;
   DateTime? departureDate;
@@ -13,6 +14,7 @@ class TravelPlan {
 
   TravelPlan({
     this.id,
+    required this.userId,
     required this.travelName,
     required this.location,
     required this.departureDate,
@@ -26,6 +28,7 @@ class TravelPlan {
   factory TravelPlan.fromJson(Map<String, dynamic> json) {
     return TravelPlan(
       id: json['id'],
+      userId: json['userId'],
       travelName: json['travelName'],
       location: json['location'],
       departureDate:
@@ -47,6 +50,7 @@ class TravelPlan {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'userId': userId,
       'travelName': travelName,
       'location': location,
       'departureDate':

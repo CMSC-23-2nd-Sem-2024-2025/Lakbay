@@ -54,22 +54,3 @@ class User {
     };
   }
 }
-
-class UserPlan {
-  //user plan
-  final String planName;
-  final String description;
-
-  UserPlan({required this.planName, required this.description});
-
-  factory UserPlan.fromJson(Map<String, dynamic> json) {
-    return UserPlan(
-      planName: json['planName'],
-      description: json['description'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'planName': planName, 'description': description};
-  }
-}
