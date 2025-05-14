@@ -7,9 +7,9 @@ class TravelPlan {
   DateTime? departureDate;
   DateTime? returnDate;
   String? flightDetails;
-  String? accomodation;
+  String? accommodation;
   String? notes;
-  double? emerContact;
+  String? emerContact;
 
   TravelPlan({
     this.id,
@@ -18,7 +18,7 @@ class TravelPlan {
     required this.departureDate,
     required this.returnDate,
     this.flightDetails,
-    this.accomodation,
+    this.accommodation,
     this.notes,
     this.emerContact,
   });
@@ -28,10 +28,17 @@ class TravelPlan {
       id: json['id'],
       travelName: json['travelName'],
       location: json['location'],
-      departureDate: json['departureDate'],
-      returnDate: json['returnDate'],
+      departureDate:
+          // parses the date from json format to datetime
+          json['departureDate'] != null
+              ? DateTime.parse(json['departureDate'])
+              : null,
+      returnDate:
+          json['returnDate'] != null
+              ? DateTime.parse(json['returnDate'])
+              : null,
       flightDetails: json['flightDetails'],
-      accomodation: json['accomodation'],
+      accommodation: json['accommodation'],
       notes: json['notes'],
       emerContact: json['emerContact'],
     );
@@ -42,8 +49,15 @@ class TravelPlan {
       'id': id,
       'travelName': travelName,
       'location': location,
-      'departureDate': departureDate,
-      'returnDate': returnDate,
+      'departureDate':
+          departureDate
+              ?.toIso8601String(), // method that stores the date in iso8601
+      // format then parsed into string
+      'returnDate': returnDate?.toIso8601String(),
+      'flightDetails': flightDetails,
+      'accommodation': accommodation,
+      'notes': notes,
+      'emerContact': emerContact,
     };
   }
 }
