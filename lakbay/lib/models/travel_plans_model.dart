@@ -22,4 +22,28 @@ class TravelPlan {
     this.notes,
     this.emerContact,
   });
+
+  factory TravelPlan.fromJson(Map<String, dynamic> json) {
+    return TravelPlan(
+      id: json['id'],
+      travelName: json['travelName'],
+      location: json['location'],
+      departureDate: json['departureDate'],
+      returnDate: json['returnDate'],
+      flightDetails: json['flightDetails'],
+      accomodation: json['accomodation'],
+      notes: json['notes'],
+      emerContact: json['emerContact'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'travelName': travelName,
+      'location': location,
+      'departureDate': departureDate,
+      'returnDate': returnDate,
+    };
+  }
 }
