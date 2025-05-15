@@ -5,6 +5,8 @@ import '../../providers/auth_provider.dart';
 import 'edit_profile_page.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import '../home-page/home_page.dart';
+import '../travel-page/travel_form.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -37,103 +39,100 @@ class _ProfilePageState extends State<ProfilePage> {
         details != null ? details['profileImageUrl'] as String? : null;
 
     return Scaffold(
-      drawer: DrawerWidget(user: user),
-      appBar: AppBar(),
+      backgroundColor: const Color(0xFFF6F6F6),
       body:
           isLoading
               ? const Center(child: CircularProgressIndicator())
               : user == null || details == null
               ? const Center(child: Text("No user data available."))
-              : SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      const Text("Lakbay", style: TextStyle(fontSize: 24)),
-                      const SizedBox(height: 70),
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          // User Info Container
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.only(
-                              top: 100,
-                              bottom: 24,
-                              left: 16,
-                              right: 16,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "${details['firstName']} ${details['lastName']}",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                Text(
-                                  "${details['email']}",
-                                  style: const TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
+              : Stack(
+                children: [
+                  // Orange header with logo and back button
+                  Container(
+                    height: 180,
+                    decoration: const BoxDecoration(color: Color(0xFFF97419)),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 30),
+                              Image.asset('assets/logo.png', height: 150),
+                            ],
                           ),
-                          // Profile Picture
-                          Positioned(
-                            top: -60,
-                            left: 0,
-                            right: 0,
-                            child: Center(
-                              child: Stack(
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Main content
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 160),
+                        // Profile picture and Edit Profile button in a row
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Profile picture (left)
+                              Stack(
                                 clipBehavior: Clip.none,
                                 children: [
-                                  ClipOval(
-                                    child: SizedBox(
-                                      width: 120,
-                                      height: 120,
-                                      child:
-                                          _profileImage != null
-                                              ? Image.file(
-                                                _profileImage!,
-                                                fit: BoxFit.cover,
-                                              )
-                                              : (profileImageUrl != null &&
-                                                  profileImageUrl.isNotEmpty)
-                                              ? Image.network(
-                                                profileImageUrl,
-                                                fit: BoxFit.cover,
-                                              )
-                                              : DecoratedBox(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 5,
+                                      ),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: ClipOval(
+                                      child: SizedBox(
+                                        width: 100,
+                                        height: 100,
+                                        child:
+                                            _profileImage != null
+                                                ? Image.file(
+                                                  _profileImage!,
+                                                  fit: BoxFit.cover,
+                                                )
+                                                : (profileImageUrl != null &&
+                                                    profileImageUrl.isNotEmpty)
+                                                ? Image.network(
+                                                  profileImageUrl,
+                                                  fit: BoxFit.cover,
+                                                )
+                                                : DecoratedBox(
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                        color: Colors.grey,
+                                                      ),
+                                                  child: const Icon(
+                                                    Icons.person,
+                                                    size: 60,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
-                                                child: Icon(
-                                                  Icons.person,
-                                                  size: 60,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
+                                      ),
                                     ),
                                   ),
+                                  // Camera/pencil logic (unchanged)
                                   Positioned(
                                     bottom: 0,
                                     right: 0,
                                     child: Container(
-                                      height: 40,
-                                      width: 40,
-                                      decoration: BoxDecoration(
+                                      height: 36,
+                                      width: 36,
+                                      decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
                                         color: Colors.white,
                                       ),
                                       child: IconButton(
                                         padding: EdgeInsets.zero,
-                                        iconSize: 20,
-                                        icon: Icon(
+                                        iconSize: 18,
+                                        icon: const Icon(
                                           Icons.edit,
                                           color: Colors.black,
                                         ),
@@ -149,10 +148,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                                           MainAxisSize.min,
                                                       children: [
                                                         ListTile(
-                                                          leading: Icon(
+                                                          leading: const Icon(
                                                             Icons.photo_library,
                                                           ),
-                                                          title: Text(
+                                                          title: const Text(
                                                             'Choose from Gallery',
                                                           ),
                                                           onTap:
@@ -164,10 +163,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   ),
                                                         ),
                                                         ListTile(
-                                                          leading: Icon(
+                                                          leading: const Icon(
                                                             Icons.camera_alt,
                                                           ),
-                                                          title: Text(
+                                                          title: const Text(
                                                             'Take a Photo',
                                                           ),
                                                           onTap:
@@ -201,195 +200,302 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromRGBO(0, 0, 0, 0.1),
-                              spreadRadius: 1,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: TextFormField(
-                          enabled: false,
-                          initialValue: details['firstName'],
-                          style: const TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            labelText: 'Full Name',
-                            hintText: details['firstName'],
-                            disabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFF97419)),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromRGBO(0, 0, 0, 0.1),
-                              spreadRadius: 1,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: TextFormField(
-                          enabled: false,
-                          initialValue: details['userName'],
-                          style: const TextStyle(color: Colors.black),
-                          decoration: const InputDecoration(
-                            labelText: 'Username',
-                            hintText: 'Username',
-                            disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFF97419)),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromRGBO(0, 0, 0, 0.1),
-                              spreadRadius: 1,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: TextFormField(
-                          enabled: false,
-                          initialValue: details['email'],
-                          style: const TextStyle(color: Colors.black),
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            hintText: 'Email',
-                            disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFF97419)),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromRGBO(0, 0, 0, 0.1),
-                              spreadRadius: 1,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: TextFormField(
-                          enabled: false,
-                          initialValue: (details['interests'] as List<dynamic>)
-                              .join(', '),
-                          style: const TextStyle(color: Colors.black),
-                          decoration: const InputDecoration(
-                            labelText: 'Interests',
-                            hintText: 'Interests',
-                            disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFF97419)),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromRGBO(0, 0, 0, 0.1),
-                              spreadRadius: 1,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: TextFormField(
-                          enabled: false,
-                          initialValue: (details['styles'] as List<dynamic>)
-                              .join(', '),
-                          style: const TextStyle(color: Colors.black),
-                          decoration: const InputDecoration(
-                            labelText: 'Travel Styles',
-                            hintText: 'Travel Styles',
-                            disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFF97419)),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      SizedBox(
-                        width: 315,
-                        height: 70,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const EditProfilePage(),
+                              const SizedBox(width: 16),
+                              const Spacer(),
+                              // Edit Profile button (right)
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => const EditProfilePage(),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 32,
+                                    vertical: 12,
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: const Text(
+                                  'Edit Profile',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                              side: BorderSide.none,
-                            ),
+                            ],
                           ),
-                          child: Text(
-                            "Edit Your Profile",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xFF000000),
+                        ),
+                        const SizedBox(height: 8),
+                        // Name, username, email
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${details['firstName']} ${details['lastName']}',
+                                style: const TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                '@${details['userName']}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.email,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    details['email'],
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${details['friendsCount'] ?? 0}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const Text(
+                                    ' Friends',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Text(
+                                    '${details['travelPlansCount'] ?? 0}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const Text(
+                                    ' Travel Plans',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        // Interests
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Interests',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Wrap(
+                                  spacing: 10,
+                                  runSpacing: 10,
+                                  children:
+                                      (details['interests'] as List<dynamic>)
+                                          .map<Widget>((interest) {
+                                            return Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 8,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFFF97419),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Text(
+                                                interest,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            );
+                                          })
+                                          .toList(),
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 18),
+                        // Travel Styles
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Travel Styles',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                (details['styles'] as List<dynamic>).isEmpty
+                                    ? const SizedBox.shrink()
+                                    : Wrap(
+                                      spacing: 10,
+                                      runSpacing: 10,
+                                      children:
+                                          (details['styles'] as List<dynamic>)
+                                              .map<Widget>((style) {
+                                                return Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 8,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          20,
+                                                        ),
+                                                  ),
+                                                  child: Text(
+                                                    style,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                );
+                                              })
+                                              .toList(),
+                                    ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                      ],
+                    ),
                   ),
+                ],
+              ),
+      // Add bottom navigation bar
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 28),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.people_alt_rounded,
+                  color: Color(0xFFF86400),
+                ),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                    (route) => false,
+                  );
+                },
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF86400),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.add, color: Colors.white),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TravelFormPage()),
+                    );
+                  },
                 ),
               ),
+              IconButton(
+                icon: const Icon(Icons.person, color: Color(0xFFF86400)),
+                onPressed: () {
+                  // Already on profile page, do nothing
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
