@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../api/firebase_auth_api.dart';
 
-
 class AuthProvider with ChangeNotifier {
   late FirebaseAuthAPI authService;
   late Stream<User?> uStream;
   User? userObj;
-  Map<String, dynamic>? userDetails; 
+  Map<String, dynamic>? userDetails;
 
   AuthProvider() {
     authService =
@@ -89,5 +88,23 @@ class AuthProvider with ChangeNotifier {
   Future<void> signOut() async {
     await authService.signOut();
     notifyListeners();
+  }
+
+  Future<String?> updateUserDetails(Map<String, dynamic> updatedData) async {
+    User? currentUser = FirebaseAuthAPI.auth.currentUser;
+    if (currentUser != null) {
+      // check if user is logged in
+      String uid = currentUser.uid;
+      String? result = await authService.updateUserInfo(
+        uid,
+        updatedData,
+      ); // update user details
+      if (result == null) {
+        await fetchUserDetails(); // refresh details after update
+        notifyListeners(); // notify listeners of the state change
+      }
+      return result;
+    }
+    return "No user is currently signed in.";
   }
 }

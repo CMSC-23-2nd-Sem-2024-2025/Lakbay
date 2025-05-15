@@ -84,6 +84,19 @@ class FirebaseAuthAPI {
       return null;
     }
   }
+
+  Future<String?> updateUserInfo(
+    String uid,
+    Map<String, dynamic> updatedData,
+  ) async {
+    try {
+      await db.collection("appusers").doc(uid).update(updatedData);
+      return null; // null means success
+    } catch (e) {
+      print("Error updating user details: $e");
+      return "Error updating user details: $e";
+    }
+  }
 }
 
 // TODO: addtional information for user
