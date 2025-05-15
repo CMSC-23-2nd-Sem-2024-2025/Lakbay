@@ -193,18 +193,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   picked.path,
                                                 );
                                               });
-                                              final authProvider =
-                                                  Provider.of<AuthProvider>(
-                                                    context,
-                                                    listen: false,
-                                                  );
-                                              await authProvider
-                                                  .uploadProfileImage(
-                                                    picked.path,
-                                                  );
-                                              await authProvider
-                                                  .fetchUserDetails();
-                                              setState(() {});
                                             }
                                           }
                                         },
