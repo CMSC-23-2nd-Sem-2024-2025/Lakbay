@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import 'profile_page.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -15,8 +13,6 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _fullNameController;
-  late TextEditingController _usernameController;
-  late TextEditingController _emailController;
   late TextEditingController _interestsController;
   late TextEditingController _stylesController;
   bool _isLoading = false;
@@ -58,10 +54,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ? "${details['firstName']} ${details['lastName']}"
               : '',
     );
-    _usernameController = TextEditingController(
-      text: details?['userName'] ?? '',
-    );
-    _emailController = TextEditingController(text: details?['email'] ?? '');
     _selectedInterests =
         (details?['interests'] as List<dynamic>?)
             ?.map((e) => e.toString())
@@ -81,8 +73,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void dispose() {
     _fullNameController.dispose();
-    _usernameController.dispose();
-    _emailController.dispose();
     _interestsController.dispose();
     _stylesController.dispose();
     super.dispose();
@@ -100,8 +90,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final updatedData = {
       'firstName': firstName,
       'lastName': lastName,
-      'userName': _usernameController.text.trim(),
-      'email': _emailController.text.trim(),
       'interests': _selectedInterests,
       'styles': _selectedStyles,
     };
@@ -146,32 +134,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             (value) =>
                                 value == null || value.isEmpty
                                     ? 'Enter your full name'
-                                    : null,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _usernameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator:
-                            (value) =>
-                                value == null || value.isEmpty
-                                    ? 'Enter your username'
-                                    : null,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator:
-                            (value) =>
-                                value == null || value.isEmpty
-                                    ? 'Enter your email'
                                     : null,
                       ),
                       const SizedBox(height: 16),
