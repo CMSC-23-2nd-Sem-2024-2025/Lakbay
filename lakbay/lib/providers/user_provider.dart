@@ -1,69 +1,53 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:ex8/api/firebase_todo_api.dart';
-// import 'package:flutter/material.dart';
-// import '../../../../models/todo_model.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lakbay/api/firebase_user_api.dart';
+import 'package:lakbay/models/travel_plans_model.dart';
 
-// class EntryExpenseProvider with ChangeNotifier {
-//   Stream<QuerySnapshot>? _expenseStream;
 
-//   //this gets an the stream of the firebase and shares it throughout the app.
-//   // I added the auth also in the expense provider because it constantly listens to the current logged in user
 
-//   Stream<QuerySnapshot>? get expenses => _expenseStream;
+class PlanProvider with ChangeNotifier {
+  Stream<QuerySnapshot>? _planStream;
 
-//   final FirebaseExpenseApi firebaseService = FirebaseExpenseApi();
+  // Stream getter to expose plans collection snapshots
+  Stream<QuerySnapshot>? get plans => _planStream;
 
-//   EntryExpenseProvider() {
-//     FirebaseAuth.instance.authStateChanges().listen((User? user) {
-//       if (user != null) {
-//         fetchExpense();
-//       } else {
-//         _expenseStream = null;
-//         notifyListeners();
-//       }
-//     });
-//   }
-//   // this is the provider file
+  final FirebasePlanApi firebaseService = FirebasePlanApi();
 
-//   void fetchExpense() {
-//     _expenseStream = firebaseService.getAllEntries();
+  PlanProvider() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        fetchPlans();
+      } else {
+        _planStream = null;
+        notifyListeners();
+      }
+    });
+  }
 
-//     notifyListeners();
-//   }
+  void fetchPlans() {
+    _planStream = firebaseService.getAllEntries();
+    notifyListeners();
+  }
 
-//   Future<void> addExpense(ExpenseEntry item) async {
-//     String message = await firebaseService.addEntry(item.toJson());
-//     print(message);
-//     notifyListeners();
-//   }
+  Future<void> addPlan(TravelPlan plan) async {
+    String message = await firebaseService.addEntry(plan.toJson());
+    print(message);
+    notifyListeners();
+  }
 
-//   Future<void> editExpense(String id, ExpenseEntry updatedExpense) async {
-//     Map<String, dynamic> updatedData = {
-//       'name': updatedExpense.name,
-//       'description': updatedExpense.description,
-//       'category': updatedExpense.category,
-//       'amount': updatedExpense.amount,
-//     };
+  Future<void> editPlan(String id, TravelPlan updatedPlan) async {
+    Map<String, dynamic> updatedData = updatedPlan.toJson();
+    updatedData.remove('id'); // avoid updating the id field
 
-//     String message = await firebaseService.updateEntry(id, updatedData);
-//     print(message);
-//     notifyListeners();
-//   }
+    String message = await firebaseService.updateEntry(id, updatedData);
+    print(message);
+    notifyListeners();
+  }
 
-//   Future<void> deleteTodo(String id) async {
-//     String message = await firebaseService.deleteEntry(id);
-//     print(message);
-//     notifyListeners();
-//   }
-
-//   Future<void> toggleStatus(String id, bool currentPaidStatus) async {
-//     bool newPaidStatus = !currentPaidStatus;
-
-//     Map<String, dynamic> updatedData = {'paid': newPaidStatus};
-
-//     String message = await firebaseService.updateEntry(id, updatedData);
-//     print(message);
-//     notifyListeners();
-//   }
-// }
+  Future<void> deletePlan(String id) async {
+    String message = await firebaseService.deleteEntry(id);
+    print(message);
+    notifyListeners();
+  }
+}
