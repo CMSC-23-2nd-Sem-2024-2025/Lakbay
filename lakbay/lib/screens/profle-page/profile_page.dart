@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lakbay/common/app_drawer.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import 'edit_profile_page.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -12,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true;
+  File? _profileImage;
 
   @override
   void initState() {
@@ -29,6 +33,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.userObj;
     final details = authProvider.userDetails;
+    final profileImageUrl =
+        details != null ? details['profileImageUrl'] as String? : null;
 
     return Scaffold(
       drawer: DrawerWidget(user: user),
@@ -90,16 +96,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: SizedBox(
                                       width: 120,
                                       height: 120,
-                                      child: DecoratedBox(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                        ),
-                                        child: Icon(
-                                          Icons.person,
-                                          size: 60,
-                                          color: Colors.white,
-                                        ),
-                                      ),
+                                      child:
+                                          _profileImage != null
+                                              ? Image.file(
+                                                _profileImage!,
+                                                fit: BoxFit.cover,
+                                              )
+                                              : (profileImageUrl != null &&
+                                                  profileImageUrl.isNotEmpty)
+                                              ? Image.network(
+                                                profileImageUrl,
+                                                fit: BoxFit.cover,
+                                              )
+                                              : DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey,
+                                                ),
+                                                child: Icon(
+                                                  Icons.person,
+                                                  size: 60,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
                                     ),
                                   ),
                                   Positioned(
@@ -119,8 +137,64 @@ class _ProfilePageState extends State<ProfilePage> {
                                           Icons.edit,
                                           color: Colors.black,
                                         ),
-                                        onPressed: () {
-                                          print("Edit Profile Picture");
+                                        onPressed: () async {
+                                          final source =
+                                              await showModalBottomSheet<
+                                                ImageSource
+                                              >(
+                                                context: context,
+                                                builder:
+                                                    (context) => Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        ListTile(
+                                                          leading: Icon(
+                                                            Icons.photo_library,
+                                                          ),
+                                                          title: Text(
+                                                            'Choose from Gallery',
+                                                          ),
+                                                          onTap:
+                                                              () =>
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                    ImageSource
+                                                                        .gallery,
+                                                                  ),
+                                                        ),
+                                                        ListTile(
+                                                          leading: Icon(
+                                                            Icons.camera_alt,
+                                                          ),
+                                                          title: Text(
+                                                            'Take a Photo',
+                                                          ),
+                                                          onTap:
+                                                              () =>
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                    ImageSource
+                                                                        .camera,
+                                                                  ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                              );
+                                          if (source != null) {
+                                            final picked = await ImagePicker()
+                                                .pickImage(
+                                                  source: source,
+                                                  imageQuality: 85,
+                                                );
+                                            if (picked != null) {
+                                              setState(() {
+                                                _profileImage = File(
+                                                  picked.path,
+                                                );
+                                              });
+                                            }
+                                          }
                                         },
                                       ),
                                     ),
@@ -288,14 +362,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 70,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigator.pushReplacement(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ProfilePage(),
-                            //   ),
-                            // );
-
-                            print("edit");
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const EditProfilePage(),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
