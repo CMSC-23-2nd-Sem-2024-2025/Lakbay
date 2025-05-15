@@ -150,6 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: TextFormField(
                           enabled: false,
                           initialValue: details['firstName'],
+                          style: const TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             labelText: 'Full Name',
                             hintText: details['firstName'],
@@ -179,6 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: TextFormField(
                           enabled: false,
                           initialValue: details['userName'],
+                          style: const TextStyle(color: Colors.black),
                           decoration: const InputDecoration(
                             labelText: 'Username',
                             hintText: 'Username',
@@ -208,6 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: TextFormField(
                           enabled: false,
                           initialValue: details['email'],
+                          style: const TextStyle(color: Colors.black),
                           decoration: const InputDecoration(
                             labelText: 'Email',
                             hintText: 'Email',
@@ -238,6 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           enabled: false,
                           initialValue: (details['interests'] as List<dynamic>)
                               .join(', '),
+                          style: const TextStyle(color: Colors.black),
                           decoration: const InputDecoration(
                             labelText: 'Interests',
                             hintText: 'Interests',
@@ -268,6 +272,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           enabled: false,
                           initialValue: (details['styles'] as List<dynamic>)
                               .join(', '),
+                          style: const TextStyle(color: Colors.black),
                           decoration: const InputDecoration(
                             labelText: 'Travel Styles',
                             hintText: 'Travel Styles',
