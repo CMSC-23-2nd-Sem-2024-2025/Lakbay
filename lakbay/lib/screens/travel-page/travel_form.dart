@@ -5,6 +5,8 @@ import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/api/firebase_user_api.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
 import 'package:provider/provider.dart';
+import 'package:lakbay/screens/travel-page/travel_add_info.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TravelFormPage extends StatefulWidget {
   const TravelFormPage({Key? key}) : super(key: key);
@@ -25,7 +27,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
   final nameController = TextEditingController();
   final locationController = TextEditingController();
   final departureController = TextEditingController();
-  final retunController = TextEditingController();
+  final returnController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -78,8 +80,6 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                 const SizedBox(height: 42),
 
-                // naming convention for the text field = Travel Name
-                //**INPUT VALIDATION */
                 _Label('Travel Name'),
                 _ShadowedTextField(
                   controller: nameController,
@@ -89,8 +89,6 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                 const SizedBox(height: 40),
 
-                // naming convention for the text field = Location
-                //**INPUT VALIDATION */
                 _Label('Location'),
                 _ShadowedTextField(
                   controller: locationController,
@@ -114,9 +112,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
                 //   )),
                 const SizedBox(height: 40),
 
-                // naming convention for the text field = Departure Date
-                // **IMPLEMENT THE DATE PICKER
-                //**INPUT VALIDATION */
+                _Label('Departure Date'),
                 _ShadowedTextField(
                   controller: departureController,
                   hintText: 'Select Departure Date',
@@ -162,12 +158,9 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                 const SizedBox(height: 40),
 
-                // naming convention for the text field = Return Date
-                // **IMPLEMENT THE TIME PICKER
-                //**INPUT VALIDATION */
                 _Label('Return Date'),
                 _ShadowedTextField(
-                  controller: retunController,
+                  controller: returnController,
                   hintText: 'Select Return Date',
                   icon: Icons.calendar_today_outlined,
                   onTap: () async {
@@ -197,7 +190,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                     if (pickedDate != null) {
                       setState(() {
-                        retunController.text =
+                        returnController.text =
                             pickedDate.toLocal().toString().split(' ')[0];
                       });
                     }
@@ -212,19 +205,26 @@ class _TravelFormPageState extends State<TravelFormPage> {
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState?.validate() ?? false) {
+                      if (_formKey.currentState!.validate()) {
+                        final user = FirebaseAuth.instance.currentUser;
+                        if (user == null) return;
+
                         final plan = TravelPlan(
-                          id: null, // Will be auto-generated in Firestore
-                          userId: FirebaseAuth.instance.currentUser?.uid ?? '',
+                          id: null,
+                          userId: user.uid,
                           travelName: nameController.text.trim(),
                           location: locationController.text.trim(),
                           departureDate:
                               departureController.text.isNotEmpty
-                                  ? DateTime.parse(departureController.text)
+                                  ? DateTime.parse(
+                                    departureController.text,
+                                  ).toLocal()
                                   : null,
                           returnDate:
-                              retunController.text.isNotEmpty
-                                  ? DateTime.parse(retunController.text)
+                              returnController.text.isNotEmpty
+                                  ? DateTime.parse(
+                                    returnController.text,
+                                  ).toLocal()
                                   : null,
                           flightDetails: null,
                           accommodation: null,
@@ -232,23 +232,29 @@ class _TravelFormPageState extends State<TravelFormPage> {
                           emerContact: null,
                         );
 
-                        // Save the plan using provider
-                        final planProvider = Provider.of<PlanProvider>(
-                          context,
-                          listen: false,
-                        );
-                        await planProvider.addPlan(plan);
+                        // Add to Firestore
+                        final docRef = await FirebaseFirestore.instance
+                            .collection('travelplans')
+                            .add({
+                              ...plan.toJson(),
+                              // Store only the date part as a string (YYYY-MM-DD)
+                              'departureDate':
+                                  departureController.text.isNotEmpty
+                                      ? departureController.text
+                                      : null,
+                              'returnDate':
+                                  returnController.text.isNotEmpty
+                                      ? returnController.text
+                                      : null,
+                            });
 
-                        // Navigate after saving
+                        // Go to add info page, pass planId
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      } else {
-                        // Optionally show validation error snackbar or message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Please fill all required fields'),
+                          MaterialPageRoute(
+                            builder:
+                                (context) =>
+                                    TravelAddInfoPage(planId: docRef.id),
                           ),
                         );
                       }

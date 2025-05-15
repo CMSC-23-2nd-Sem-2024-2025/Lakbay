@@ -4,13 +4,13 @@ class FirebasePlanApi {
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot> getAllEntries() {
-    return db.collection('plans').snapshots();
+    return db.collection('travelplans').snapshots();
   }
 
   Future<String> addEntry(Map<String, dynamic> entry) async {
     try {
       print("Attempting to add entry: $entry");
-      final planDoc = db.collection('plans').doc();
+      final planDoc = db.collection('travelplans').doc();
       entry['id'] = planDoc.id;
       await planDoc.set(entry);
       print("Successfully added entry: $entry");
@@ -23,16 +23,19 @@ class FirebasePlanApi {
 
   Future<String> deleteEntry(String id) async {
     try {
-      await db.collection('plans').doc(id).delete();
+      await db.collection('travelplans').doc(id).delete();
       return "Successfully deleted Plan!";
     } on FirebaseException catch (e) {
       return "Error on ${e.code}: ${e.message}";
     }
   }
 
-  Future<String> updateEntry(String id, Map<String, dynamic> updatedData) async {
+  Future<String> updateEntry(
+    String id,
+    Map<String, dynamic> updatedData,
+  ) async {
     try {
-      await db.collection('plans').doc(id).update(updatedData);
+      await db.collection('travelplans').doc(id).update(updatedData);
       return "Successfully updated Plan!";
     } on FirebaseException catch (e) {
       return "Error on ${e.code}: ${e.message}";
