@@ -31,8 +31,19 @@ class PlanProvider with ChangeNotifier {
   }
 
   Future<void> addPlan(TravelPlan plan) async {
-    String message = await firebaseService.addEntry(plan.toJson());
-    print(message);
+     final planMap = {
+      'userId': plan.userId,
+      'travelName': plan.travelName,
+      'location': plan.location,
+      'departureDate': plan.departureDate?.toIso8601String(),
+      'returnDate': plan.returnDate?.toIso8601String(),
+      'flightDetails': plan.flightDetails,
+      'accommodation': plan.accommodation,
+      'notes': plan.notes,
+      'emerContact': plan.emerContact,
+    };
+     final result = await firebaseService.addEntry(planMap);
+    print(result);
     notifyListeners();
   }
 
