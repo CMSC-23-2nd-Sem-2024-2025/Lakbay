@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:lakbay/screens/home_page.dart';
 
-class TravelFormPage extends StatelessWidget {
+class TravelFormPage extends StatefulWidget {
   const TravelFormPage({Key? key}) : super(key: key);
 
   @override
+  State<TravelFormPage> createState() => _TravelFormPageState();
+}
+
+class _TravelFormPageState extends State<TravelFormPage> {
+
+  final nameController = TextEditingController();
+  final locationController = TextEditingController();
+  final departureController = TextEditingController();
+  final retunController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  @override
   Widget build(BuildContext context) {
+
+    
     final orange = Color(0xFFF97419);
 
     return Scaffold(
@@ -13,7 +26,9 @@ class TravelFormPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
+          child: Form(
+            key: _formKey,
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // for back button
@@ -57,6 +72,7 @@ class TravelFormPage extends StatelessWidget {
               //**INPUT VALIDATION */
               _Label('Travel Name'),
               _ShadowedTextField(
+                controller: nameController,
                 hintText: 'Enter Travel Name',
                 icon: Icons.flight_takeoff,
               ),
@@ -67,6 +83,7 @@ class TravelFormPage extends StatelessWidget {
               //**INPUT VALIDATION */
               _Label('Location'),
               _ShadowedTextField(
+                controller: locationController,
                 hintText: 'Enter Location',
                 icon: Icons.location_on_outlined,
               ),
@@ -78,6 +95,7 @@ class TravelFormPage extends StatelessWidget {
               //**INPUT VALIDATION */
               _Label('Departure Date'),
               _ShadowedTextField(
+                controller: departureController,
                 hintText: 'Enter Departure Date',
                 icon: Icons.calendar_today_outlined,
               ),
@@ -89,6 +107,7 @@ class TravelFormPage extends StatelessWidget {
               //**INPUT VALIDATION */
               _Label('Return Date'),
               _ShadowedTextField(
+                controller: retunController,
                 hintText: 'Enter Return Date',
                 icon: Icons.calendar_today_outlined,
               ),
@@ -127,6 +146,7 @@ class TravelFormPage extends StatelessWidget {
               ),
             ],
           ),
+          ),
         ),
       ),
     );
@@ -158,10 +178,12 @@ class _Label extends StatelessWidget {
 class _ShadowedTextField extends StatelessWidget {
   final String hintText;
   final IconData icon;
+  final TextEditingController controller;
   const _ShadowedTextField({
     Key? key,
     required this.hintText,
     required this.icon,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -179,7 +201,9 @@ class _ShadowedTextField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        controller:  controller,
         decoration: InputDecoration(
+          
           prefixIcon: Icon(icon, color: Colors.black),
           hintText: hintText,
           border: OutlineInputBorder(

@@ -8,8 +8,7 @@ class User {
   String email;
   List<String> interests;
   List<String> styles;
-  List<UserPlan>
-  plans; // bale kada user may list of interests, styles, and plans
+  
 
   User({
     this.id,
@@ -20,7 +19,7 @@ class User {
     required this.email,
     this.interests = const [],
     this.styles = const [],
-    this.plans = const [],
+    
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -33,10 +32,6 @@ class User {
       email: json['email'],
       interests: List<String>.from(json['interests'] ?? []),
       styles: List<String>.from(json['styles'] ?? []),
-      plans:
-          (json['plans'] as List<dynamic>? ?? [])
-              .map((planJson) => UserPlan.fromJson(planJson))
-              .toList(),
     );
   }
 
@@ -50,7 +45,7 @@ class User {
       'email': email,
       'interests': interests,
       'styles': styles,
-      'plans': plans.map((plan) => plan.toJson()).toList(),
+      
     };
   }
 }
