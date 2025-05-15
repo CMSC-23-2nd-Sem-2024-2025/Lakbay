@@ -7,6 +7,7 @@ import '../../providers/user_provider.dart';
 import '../../providers/auth_provider.dart';
 import 'starting_page.dart';
 import '../profle-page/profile_page.dart';
+import 'package:lakbay/screens/itineraries-page/itineraries.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -162,6 +163,8 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child:
                       _selectedTab == 0
+                          // through this provider, this enables the stream to fetch the data from the firestore
+                          // the data is being fetched in travelplans collection
                           ? Consumer<PlanProvider>(
                             builder: (context, planProvider, _) {
                               final plansStream = planProvider.plans;
@@ -174,6 +177,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 );
                               }
+
+                              // through streambuilder, data from the plans stream is fetched
+                              // the data is then displayed in a list view
                               return StreamBuilder(
                                 stream: plansStream,
                                 builder: (context, snapshot) {
@@ -198,95 +204,112 @@ class _HomePageState extends State<HomePage> {
                                       final plan =
                                           plans[index].data()
                                               as Map<String, dynamic>;
-                                      return Card(
-                                        margin: EdgeInsets.symmetric(
-                                          horizontal: 24,
-                                          vertical: 8,
-                                        ),
-                                        child: SizedBox(
-                                          height: 150,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 140,
-                                                height: 110,
-                                                margin: EdgeInsets.all(16),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.orange[100],
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                child: Icon(
-                                                  Icons.image,
-                                                  color: Colors.orange,
-                                                  size: 32,
-                                                ),
-                                              ),
 
-                                              SizedBox(width: 10),
-
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      plan['travelName'] ??
-                                                          'No Name',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 24,
+                                      // ths makes the added travel plans to be clickable
+                                      // clicking the travel plan will directs the itineraries page
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) =>
+                                                      ItinerariesPage(plan: plan),
+                                            ),
+                                          );
+                                        },
+                                        child: Card(
+                                          margin: EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 8,
+                                          ),
+                                          child: SizedBox(
+                                            height: 150,
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 140,
+                                                  height: 110,
+                                                  margin: EdgeInsets.all(16),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.orange[100],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.image,
+                                                    color: Colors.orange,
+                                                    size: 32,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        plan['travelName'] ??
+                                                            'No Name',
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 24,
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(height: 8),
-                                                    Text(
-                                                      plan['location'] ??
-                                                          'No Location',
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.grey[700],
+                                                      SizedBox(height: 8),
+                                                      Text(
+                                                        plan['location'] ??
+                                                            'No Location',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          color:
+                                                              Colors.grey[700],
+                                                        ),
                                                       ),
-                                                    ),
-                                                    SizedBox(height: 8),
-                                                    Text(
-                                                      (() {
-                                                        final dateValue =
-                                                            plan['departureDate'];
-                                                        if (dateValue == null)
-                                                          return 'No Date';
-                                                        // Firestore Timestamp
-                                                        if (dateValue
-                                                            is Timestamp) {
-                                                          final date =
-                                                              dateValue
-                                                                  .toDate();
-                                                          return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                                                        }
-                                                        // String
-                                                        try {
-                                                          final date =
-                                                              DateTime.parse(
+                                                      SizedBox(height: 8),
+                                                      Text(
+                                                        (() {
+                                                          final dateValue =
+                                                              plan['departureDate'];
+                                                          if (dateValue == null)
+                                                            return 'No Date';
+                                                          if (dateValue
+                                                              is Timestamp) {
+                                                            final date =
                                                                 dateValue
-                                                                    .toString(),
-                                                              );
-                                                          return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                                                        } catch (_) {
-                                                          return dateValue
-                                                              .toString();
-                                                        }
-                                                      })(),
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.grey[700],
+                                                                    .toDate();
+                                                            return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                          }
+                                                          try {
+                                                            final date =
+                                                                DateTime.parse(
+                                                                  dateValue
+                                                                      .toString(),
+                                                                );
+                                                            return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                          } catch (_) {
+                                                            return dateValue
+                                                                .toString();
+                                                          }
+                                                        })(),
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          color:
+                                                              Colors.grey[700],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       );
