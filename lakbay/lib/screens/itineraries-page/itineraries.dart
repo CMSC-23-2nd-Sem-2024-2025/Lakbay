@@ -12,9 +12,9 @@ class ItinerariesPage extends StatefulWidget {
 }
 
 class _ItinerariesPageState extends State<ItinerariesPage> {
-  List<String> itineraries = [];
+  List<Map<String, String>> itineraries = [];
 
-  void _addItinerary(String itinerary) {
+  void _addItinerary(Map<String, String> itinerary) {
     setState(() {
       itineraries.add(itinerary);
     });
@@ -34,7 +34,7 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFFF97419),
+                color: Colors.orange,
               ),
             ),
             SizedBox(height: 8),
@@ -79,7 +79,7 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFFF97419),
+                color: Colors.orange,
               ),
             ),
             SizedBox(height: 8),
@@ -87,9 +87,20 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
               child: ListView.builder(
                 itemCount: itineraries.length,
                 itemBuilder: (context, index) {
+                  final itinerary = itineraries[index];
                   return Card(
                     margin: EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(title: Text(itineraries[index])),
+                    child: ListTile(
+                      title: Text(itinerary['itineraryName'] ?? 'No Name'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Activities: ${itinerary['activities'] ?? 'No Activities'}',
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
               ),
@@ -110,17 +121,13 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                 },
                 child: Text(
                   'Add Itinerary',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(color: Colors.black87),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFF97419),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32),
                   ),
-                  elevation: 0,
                 ),
               ),
             ),

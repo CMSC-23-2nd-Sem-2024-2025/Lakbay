@@ -45,7 +45,6 @@ class ItinerariesFormPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Collect data and return
                   final itineraryData = {
                     'itineraryName': itineraryNameController.text,
                     'activities': activitiesController.text,
@@ -54,7 +53,10 @@ class ItinerariesFormPage extends StatelessWidget {
                   };
                   Navigator.pop(context, itineraryData);
                 },
-                child: Text('Save Itinerary'),
+                child: Text(
+                  'Save Itinerary',
+                  style: TextStyle(color: Colors.black87),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFFF97419),
                   shape: RoundedRectangleBorder(
