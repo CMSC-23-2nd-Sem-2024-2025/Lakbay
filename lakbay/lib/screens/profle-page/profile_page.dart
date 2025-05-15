@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lakbay/common/app_drawer.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import 'edit_profile_page.dart';

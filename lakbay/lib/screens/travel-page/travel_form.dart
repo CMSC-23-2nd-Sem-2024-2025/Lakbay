@@ -9,13 +9,14 @@ import 'package:lakbay/screens/travel-page/travel_add_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TravelFormPage extends StatefulWidget {
-  const TravelFormPage({Key? key}) : super(key: key);
+  const TravelFormPage({super.key});
 
   @override
   State<TravelFormPage> createState() => _TravelFormPageState();
 }
 
 class _TravelFormPageState extends State<TravelFormPage> {
+  @override
   void initState() {
     super.initState();
 
@@ -290,7 +291,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
 // used for displaying name of the field ("Travel Name", "Location")
 class _Label extends StatelessWidget {
   final String text;
-  const _Label(this.text, {Key? key}) : super(key: key);
+  const _Label(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -314,12 +315,12 @@ class _ShadowedTextField extends StatelessWidget {
   final VoidCallback? onTap;
 
   const _ShadowedTextField({
-    Key? key,
+    super.key,
     required this.hintText,
     required this.icon,
     required this.controller,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

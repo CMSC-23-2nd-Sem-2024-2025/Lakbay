@@ -213,8 +213,9 @@ class _HomePageState extends State<HomePage> {
                                             context,
                                             MaterialPageRoute(
                                               builder:
-                                                  (context) =>
-                                                      ItinerariesPage(plan: plan),
+                                                  (context) => ItinerariesPage(
+                                                    plan: plan,
+                                                  ),
                                             ),
                                           );
                                         },
@@ -224,12 +225,12 @@ class _HomePageState extends State<HomePage> {
                                             vertical: 8,
                                           ),
                                           child: SizedBox(
-                                            height: 150,
+                                            height: 100,
                                             child: Row(
                                               children: [
                                                 Container(
-                                                  width: 140,
-                                                  height: 110,
+                                                  width: 100,
+                                                  height: 100,
                                                   margin: EdgeInsets.all(16),
                                                   decoration: BoxDecoration(
                                                     color: Colors.orange[100],
@@ -260,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                                                         style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          fontSize: 24,
+                                                          fontSize: 20,
                                                         ),
                                                       ),
                                                       SizedBox(height: 8),
@@ -268,7 +269,7 @@ class _HomePageState extends State<HomePage> {
                                                         plan['location'] ??
                                                             'No Location',
                                                         style: TextStyle(
-                                                          fontSize: 16,
+                                                          fontSize: 12,
                                                           color:
                                                               Colors.grey[700],
                                                         ),
@@ -278,8 +279,10 @@ class _HomePageState extends State<HomePage> {
                                                         (() {
                                                           final dateValue =
                                                               plan['departureDate'];
-                                                          if (dateValue == null)
+                                                          if (dateValue ==
+                                                              null) {
                                                             return 'No Date';
+                                                          }
                                                           if (dateValue
                                                               is Timestamp) {
                                                             final date =
@@ -300,7 +303,7 @@ class _HomePageState extends State<HomePage> {
                                                           }
                                                         })(),
                                                         style: TextStyle(
-                                                          fontSize: 16,
+                                                          fontSize: 12,
                                                           color:
                                                               Colors.grey[700],
                                                         ),

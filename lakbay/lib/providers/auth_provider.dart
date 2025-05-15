@@ -47,7 +47,7 @@ class AuthProvider with ChangeNotifier {
 
       // this is for debugging only.
       if (userDetails != null) {
-        this.userObj = currentUser;
+        userObj = currentUser;
         this.userDetails = userDetails;
         print("First Name: ${userDetails['firstName']}");
         print("Last Name: ${userDetails['lastName']}");

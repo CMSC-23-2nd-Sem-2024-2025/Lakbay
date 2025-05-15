@@ -9,7 +9,7 @@ import 'package:lakbay/models/travel_plans_model.dart';
 
 class TravelAddInfoPage extends StatefulWidget {
   final String planId;
-  const TravelAddInfoPage({Key? key, required this.planId}) : super(key: key);
+  const TravelAddInfoPage({super.key, required this.planId});
 
   @override
   State<TravelAddInfoPage> createState() => _TravelAddInfoPageState();
@@ -177,7 +177,7 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
 
 class _Label extends StatelessWidget {
   final String text;
-  const _Label(this.text, {Key? key}) : super(key: key);
+  const _Label(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -199,12 +199,12 @@ class _ShadowedTextField extends StatelessWidget {
   final VoidCallback? onTap;
 
   const _ShadowedTextField({
-    Key? key,
+    super.key,
     required this.hintText,
     required this.icon,
     required this.controller,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +222,7 @@ class _ShadowedTextField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: controller,
-        readOnly: onTap != null, // Make it read-only if onTap is provided
+        readOnly: onTap != null,
         onTap: onTap,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: Colors.black),
