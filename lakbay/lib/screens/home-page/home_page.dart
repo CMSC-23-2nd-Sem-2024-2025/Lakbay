@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lakbay/common/app_drawer.dart';
-import 'package:lakbay/travel_screens/travel_form.dart';
+import 'package:lakbay/screens/travel-page/travel_form.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/auth_provider.dart';
+import '../../providers/auth_provider.dart';
 import 'starting_page.dart';
-import 'profile_page.dart';
+import '../profle-page/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: DrawerWidget(user: user),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: SafeArea(
           child: Column(

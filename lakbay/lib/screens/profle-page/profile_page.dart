@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lakbay/common/app_drawer.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart';
-import 'package:image_picker/image_picker.dart';
-import 'edit_profile_page.dart';
+import '../../providers/auth_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -285,11 +283,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 70,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const EditProfilePage(),
-                              ),
-                            );
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ProfilePage(),
+                            //   ),
+                            // );
+
+                            print("edit");
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lakbay/intro_screens/interests.dart';
-import 'package:lakbay/screens/profile_page.dart';
+import 'package:lakbay/screens/intro_screens/interests.dart';
+import 'package:lakbay/screens/profle-page/profile_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:lakbay/intro_screens/stylers.dart';
+import 'package:lakbay/screens/intro_screens/stylers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:lakbay/providers/auth_provider.dart';
@@ -20,7 +20,7 @@ class _OnboardingState extends State<OnBoarding> {
   List<String> selectedStyles = [];
 
   bool onLastPage = false;
-  PageController _controller = PageController();
+  final PageController _controller = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class _OnboardingState extends State<OnBoarding> {
                     width: 315,
                     height: 70,
                     child: ElevatedButton(
-                      onPressed: () async{
+                      onPressed: () async {
                         if (onLastPage) {
                           print(selectedInterests);
                           print(selectedStyles);
@@ -131,7 +131,7 @@ class _OnboardingState extends State<OnBoarding> {
                             } catch (e) {
                               print("Failed to update user data: $e");
                             }
-                          } else{
+                          } else {
                             print("no user found");
                           }
 

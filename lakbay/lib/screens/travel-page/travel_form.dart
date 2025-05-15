@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lakbay/providers/user_provider.dart';
-import 'package:lakbay/screens/home_page.dart';
+import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/api/firebase_user_api.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
 import 'package:provider/provider.dart';
@@ -245,7 +245,6 @@ class _TravelFormPageState extends State<TravelFormPage> {
                           MaterialPageRoute(builder: (context) => HomePage()),
                         );
                       } else {
-                        
                         // Optionally show validation error snackbar or message
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lakbay/screens/login_details.dart';
-import 'package:lakbay/screens/signup_details.dart';
+import 'package:lakbay/screens/signing-page/login_details.dart';
+import 'package:lakbay/screens/signing-page/signup_details.dart';
 
 // make a stateful widget of the log in page
 class StartingPage extends StatefulWidget {
-  StartingPage({super.key});
+  const StartingPage({super.key});
 
   @override
   State<StartingPage> createState() => _StartingPageState();
@@ -16,7 +16,7 @@ class _StartingPageState extends State<StartingPage> {
   // text editing controller for email and password
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool _passwordVisible = false;
+  final bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {

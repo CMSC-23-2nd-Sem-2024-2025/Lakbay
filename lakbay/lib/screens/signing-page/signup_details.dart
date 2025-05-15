@@ -1,9 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:lakbay/screens/starting_page.dart';
-import 'package:lakbay/screens/onboarding.dart';
-import '../providers/auth_provider.dart';
+import 'package:lakbay/screens/home-page/starting_page.dart';
+import 'package:lakbay/screens/home-page/onboarding.dart';
+import '../../providers/auth_provider.dart';
 
 class SignupDetails extends StatefulWidget {
   const SignupDetails({super.key});

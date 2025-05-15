@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class TravelPlan {
   String? id;
   String userId;
