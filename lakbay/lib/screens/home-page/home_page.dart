@@ -44,7 +44,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      drawer: DrawerWidget(user: user),
       body: SizedBox(
         width: double.infinity,
         child: SafeArea(
