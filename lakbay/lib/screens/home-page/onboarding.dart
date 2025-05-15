@@ -75,17 +75,29 @@ class _OnboardingState extends State<OnBoarding> {
 
                   onLastPage
                       ? GestureDetector(
-                        onTap: () {},
-
+                        onTap: () {
+                          // Skip styles page and go to profile
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfilePage(),
+                            ),
+                          );
+                        },
                         child: const Text(
-                          "Done",
+                          "Skip",
                           style: TextStyle(fontSize: 18),
                         ),
                       )
                       : // Top-right "Skip" button
                       GestureDetector(
-                        onTap: () {},
-
+                        onTap: () {
+                          // Skip interests page and go to styles page
+                          _controller.nextPage(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeIn,
+                          );
+                        },
                         child: const Text(
                           "Skip",
                           style: TextStyle(fontSize: 18),
@@ -123,8 +135,14 @@ class _OnboardingState extends State<OnBoarding> {
                                   .collection('appusers')
                                   .doc(user.uid)
                                   .update({
-                                    'interests': selectedInterests,
-                                    'styles': selectedStyles,
+                                    'interests':
+                                        selectedInterests.isEmpty
+                                            ? []
+                                            : selectedInterests,
+                                    'styles':
+                                        selectedStyles.isEmpty
+                                            ? []
+                                            : selectedStyles,
                                   });
 
                               print("success");

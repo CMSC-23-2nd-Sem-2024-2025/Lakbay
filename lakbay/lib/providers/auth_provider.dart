@@ -63,13 +63,17 @@ class AuthProvider with ChangeNotifier {
     String password,
     String firstName,
     String lastName,
-  ) async {
+    String username, {
+    String? phoneNumber,
+  }) async {
     // Call the auth service and store the result
     String? result = await authService.signUp(
       email,
       password,
       firstName,
       lastName,
+      username,
+      phoneNumber: phoneNumber,
     );
 
     // Notify listeners after the sign-up attempt

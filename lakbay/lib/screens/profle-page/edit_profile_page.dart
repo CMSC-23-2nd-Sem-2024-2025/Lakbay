@@ -15,6 +15,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _fullNameController;
   late TextEditingController _interestsController;
   late TextEditingController _stylesController;
+  late TextEditingController _phoneNumberController;
   bool _isLoading = false;
   final List<String> _interestOptions = [
     'Hiking & Trekking',
@@ -60,14 +61,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
             .toList() ??
         [];
     _interestsController = TextEditingController(
-      text: _selectedInterests.join(', '),
+      text: _selectedInterests.isEmpty ? '' : _selectedInterests.join(', '),
     );
     _selectedStyles =
         (details?['styles'] as List<dynamic>?)
             ?.map((e) => e.toString())
             .toList() ??
         [];
-    _stylesController = TextEditingController(text: _selectedStyles.join(', '));
+    _stylesController = TextEditingController(
+      text: _selectedStyles.isEmpty ? '' : _selectedStyles.join(', '),
+    );
+    _phoneNumberController = TextEditingController(
+      text: details?['phoneNumber'] ?? '',
+    );
   }
 
   @override
@@ -75,6 +81,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _fullNameController.dispose();
     _interestsController.dispose();
     _stylesController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -92,6 +99,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       'lastName': lastName,
       'interests': _selectedInterests,
       'styles': _selectedStyles,
+      'phoneNumber': _phoneNumberController.text.trim(),
     };
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final result = await authProvider.updateUserDetails(updatedData);
@@ -296,6 +304,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         decoration: const InputDecoration(
                           labelText: 'Travel Styles',
                           hintText: 'Select your travel styles',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _phoneNumberController,
+                        decoration: const InputDecoration(
+                          labelText: 'Phone Number',
+                          hintText: 'Enter your phone number',
                           border: OutlineInputBorder(),
                         ),
                       ),

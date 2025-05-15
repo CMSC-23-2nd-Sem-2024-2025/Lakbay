@@ -26,7 +26,9 @@ class FirebaseAuthAPI {
     String password,
     String firstName,
     String lastName,
-  ) async {
+    String username, {
+    String? phoneNumber,
+  }) async {
     try {
       // create user in firebase authentication
       // creates new user firebase account
@@ -45,7 +47,9 @@ class FirebaseAuthAPI {
       await db.collection("appusers").doc(uid).set({
         'firstName': firstName,
         'lastName': lastName,
+        'userName': username,
         'email': email,
+        'phoneNumber': phoneNumber,
         'interests': [], // Initialize empty interests list
         'styles': [], // Initialize empty styles list
       });

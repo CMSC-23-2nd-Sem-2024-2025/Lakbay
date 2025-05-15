@@ -218,6 +218,8 @@ class _SignupDetailsState extends State<SignupDetails> {
                                       firstnameController.text.trim();
                                   String lastName =
                                       lastnameController.text.trim();
+                                  String username =
+                                      usernameController.text.trim();
 
                                   showDialog(
                                     context: context,
@@ -235,6 +237,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                                         password,
                                         firstName,
                                         lastName,
+                                        username,
                                       );
 
                                   if (context.mounted) Navigator.pop(context);

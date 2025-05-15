@@ -249,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   color: Colors.black,
                                 ),
                               ),
-                              const SizedBox(height: 2),
+                              const SizedBox(height: 4),
                               Text(
                                 '@${details['userName']}',
                                 style: const TextStyle(
@@ -257,23 +257,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                   color: Colors.grey,
                                 ),
                               ),
-                              const SizedBox(height: 2),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.email,
-                                    size: 16,
-                                    color: Colors.grey,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    details['email'],
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(height: 4),
+                              Text(
+                                details['email'] ?? '',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                details['phoneNumber'] ?? 'Add phone number',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
                               ),
                               const SizedBox(height: 12),
                               Row(
@@ -335,34 +333,50 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                Wrap(
-                                  spacing: 10,
-                                  runSpacing: 10,
-                                  children:
-                                      (details['interests'] as List<dynamic>)
-                                          .map<Widget>((interest) {
-                                            return Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 16,
-                                                    vertical: 8,
+                                (details['interests'] as List<dynamic>?)
+                                            ?.isNotEmpty ==
+                                        true
+                                    ? Wrap(
+                                      spacing: 10,
+                                      runSpacing: 10,
+                                      children:
+                                          (details['interests']
+                                                  as List<dynamic>)
+                                              .map<Widget>((interest) {
+                                                return Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 8,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    color: const Color(
+                                                      0xFFF97419,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          20,
+                                                        ),
                                                   ),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFFF97419),
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Text(
-                                                interest,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            );
-                                          })
-                                          .toList(),
-                                ),
+                                                  child: Text(
+                                                    interest,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                );
+                                              })
+                                              .toList(),
+                                    )
+                                    : const Text(
+                                      'No interests added yet',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
                               ],
                             ),
                           ),
@@ -396,9 +410,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                (details['styles'] as List<dynamic>).isEmpty
-                                    ? const SizedBox.shrink()
-                                    : Wrap(
+                                (details['styles'] as List<dynamic>?)
+                                            ?.isNotEmpty ==
+                                        true
+                                    ? Wrap(
                                       spacing: 10,
                                       runSpacing: 10,
                                       children:
@@ -428,6 +443,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 );
                                               })
                                               .toList(),
+                                    )
+                                    : const Text(
+                                      'No travel styles added yet',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontStyle: FontStyle.italic,
+                                      ),
                                     ),
                               ],
                             ),
