@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lakbay/common/app_drawer.dart';
 import 'package:lakbay/screens/travel-page/travel_form.dart';
 import 'package:provider/provider.dart';
-
+import '../../providers/user_provider.dart';
 import '../../providers/auth_provider.dart';
 import 'starting_page.dart';
 import '../profle-page/profile_page.dart';
@@ -162,12 +163,139 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child:
                       _selectedTab == 0
-                          ? Text(
-                            "No travel plans yet.",
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 16,
-                            ),
+                          ? Consumer<PlanProvider>(
+                            builder: (context, planProvider, _) {
+                              final plansStream = planProvider.plans;
+                              if (plansStream == null) {
+                                return Text(
+                                  "No travel plans yet.",
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 16,
+                                  ),
+                                );
+                              }
+                              return StreamBuilder(
+                                stream: plansStream,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  }
+                                  if (!snapshot.hasData ||
+                                      snapshot.data!.docs.isEmpty) {
+                                    return Text(
+                                      "No travel plans yet.",
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 16,
+                                      ),
+                                    );
+                                  }
+                                  final plans = snapshot.data!.docs;
+                                  return ListView.builder(
+                                    itemCount: plans.length,
+                                    itemBuilder: (context, index) {
+                                      final plan =
+                                          plans[index].data()
+                                              as Map<String, dynamic>;
+                                      return Card(
+                                        margin: EdgeInsets.symmetric(
+                                          horizontal: 24,
+                                          vertical: 8,
+                                        ),
+                                        child: SizedBox(
+                                          height: 150,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 140,
+                                                height: 110,
+                                                margin: EdgeInsets.all(16),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.orange[100],
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: Icon(
+                                                  Icons.image,
+                                                  color: Colors.orange,
+                                                  size: 32,
+                                                ),
+                                              ),
+
+                                              SizedBox(width: 10),
+
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      plan['travelName'] ??
+                                                          'No Name',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 24,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 8),
+                                                    Text(
+                                                      plan['location'] ??
+                                                          'No Location',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.grey[700],
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 8),
+                                                    Text(
+                                                      (() {
+                                                        final dateValue =
+                                                            plan['departureDate'];
+                                                        if (dateValue == null)
+                                                          return 'No Date';
+                                                        // Firestore Timestamp
+                                                        if (dateValue
+                                                            is Timestamp) {
+                                                          final date =
+                                                              dateValue
+                                                                  .toDate();
+                                                          return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                        }
+                                                        // String
+                                                        try {
+                                                          final date =
+                                                              DateTime.parse(
+                                                                dateValue
+                                                                    .toString(),
+                                                              );
+                                                          return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                        } catch (_) {
+                                                          return dateValue
+                                                              .toString();
+                                                        }
+                                                      })(),
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.grey[700],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            },
                           )
                           : GestureDetector(
                             child: Text(
