@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lakbay/common/app_drawer.dart';
 import 'package:lakbay/screens/travel-page/travel_form.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
