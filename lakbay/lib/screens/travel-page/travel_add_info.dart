@@ -16,12 +16,16 @@ class TravelAddInfoPage extends StatefulWidget {
 }
 
 class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
+
+  // add the controllers for the text fields
   final flightController = TextEditingController();
   final accommodationController = TextEditingController();
   final notesController = TextEditingController();
   final emergencyContactController = TextEditingController();
 
   @override
+
+  //dispose the controllers once done
   void dispose() {
     flightController.dispose();
     accommodationController.dispose();
@@ -29,6 +33,8 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
     emergencyContactController.dispose();
     super.dispose();
   }
+
+  // save info function
 
   Future<void> _saveAdditionalInfoAndGoHome() async {
     await FirebaseFirestore.instance
