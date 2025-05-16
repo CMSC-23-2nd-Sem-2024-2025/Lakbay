@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/screens/itineraries-page/itineraries_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ItinerariesPage extends StatefulWidget {
   final Map<String, dynamic> plan;
@@ -17,6 +18,14 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text('Error')),
+        body: Center(child: Text('User not authenticated')),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Itineraries'),
@@ -95,6 +104,7 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                     FirebaseFirestore.instance
                         .collection('itineraries')
                         .where('travelPlanId', isEqualTo: widget.plan['id'])
+                        .where('userId', isEqualTo: user.uid)
                         .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {

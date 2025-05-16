@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ItinerariesFormPage extends StatelessWidget {
   final Map<String, String>? existingItinerary;
@@ -81,12 +82,16 @@ class ItinerariesFormPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async {
                   print('Save Itinerary button pressed');
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user == null) return;
+
                   final itineraryData = {
                     'itineraryName': itineraryNameController.text,
                     'activities': activitiesController.text,
                     'location': locationController.text,
                     'timeSchedule': timeScheduleController.text,
                     'travelPlanId': travelPlanId,
+                    'userId': user.uid,
                   };
                   if (existingItinerary != null &&
                       existingItinerary!['id'] != null) {
