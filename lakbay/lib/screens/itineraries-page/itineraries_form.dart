@@ -14,6 +14,7 @@ class ItinerariesFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // initializing the controllers
     final TextEditingController itineraryNameController = TextEditingController(
       text: existingItinerary?['itineraryName'] ?? '',
     );
@@ -27,6 +28,7 @@ class ItinerariesFormPage extends StatelessWidget {
       text: existingItinerary?['timeSchedule'] ?? '',
     );
 
+    // this is the select time widget
     Future<void> _selectTime(BuildContext context) async {
       final TimeOfDay? picked = await showTimePicker(
         context: context,
@@ -55,6 +57,7 @@ class ItinerariesFormPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // making the text fields
             TextField(
               controller: itineraryNameController,
               decoration: InputDecoration(labelText: 'Itinerary Name'),
@@ -81,9 +84,12 @@ class ItinerariesFormPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  print('Save Itinerary button pressed');
+                  // fetch the instance of the user
                   final user = FirebaseAuth.instance.currentUser;
                   if (user == null) return;
+
+                  // make an instance of the itinerary based on the model and then add the attributes including
+                  // the unique identifiers
 
                   final itineraryData = {
                     'itineraryName': itineraryNameController.text,
@@ -95,9 +101,6 @@ class ItinerariesFormPage extends StatelessWidget {
                   };
                   if (existingItinerary != null &&
                       existingItinerary!['id'] != null) {
-                    print(
-                      'Updating existing itinerary with ID: ${existingItinerary!['id']}',
-                    );
                     await FirebaseFirestore.instance
                         .collection('itineraries')
                         .doc(existingItinerary!['id'])
