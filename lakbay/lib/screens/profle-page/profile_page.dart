@@ -31,9 +31,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    // make an instance of the auth provider to get user data
     final authProvider = Provider.of<AuthProvider>(context);
+
+    // make the user object to and details
     final user = authProvider.userObj;
     final details = authProvider.userDetails;
+
+    // image for storing to firebase
     final profileImageUrl =
         details != null ? details['profileImageUrl'] as String? : null;
 
@@ -41,6 +47,8 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: const Color(0xFFF6F6F6),
       body:
           isLoading
+
+          // apply a loading widget if data is still being fetched
               ? const Center(child: CircularProgressIndicator())
               : user == null || details == null
               ? const Center(child: Text("No user data available."))
@@ -50,6 +58,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   Container(
                     height: 180,
                     decoration: const BoxDecoration(color: Color(0xFFF97419)),
+
+                    // add the logo 
                     child: Stack(
                       children: [
                         Center(
@@ -92,6 +102,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         width: 100,
                                         height: 100,
                                         child:
+
+                                        // get the image
                                             _profileImage != null
                                                 ? Image.file(
                                                   _profileImage!,

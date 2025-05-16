@@ -26,27 +26,36 @@ class PlanProvider with ChangeNotifier {
   }
 
   void fetchPlans() {
-    _planStream = firebaseService.getAllEntries();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+    _planStream = firebaseService.getAllEntries(user.uid);
     notifyListeners();
   }
+  }
+
+  // this is the function for adding a new travel plan. makes a new instance of the travel plan (via the model)
+  // and then calls the addEntry functio from the firebase user api to interact with the firebase
 
   Future<void> addPlan(TravelPlan plan) async {
      final planMap = {
       'userId': plan.userId,
       'travelName': plan.travelName,
       'location': plan.location,
-      'departureDate': plan.departureDate?.toIso8601String(),
-      'returnDate': plan.returnDate?.toIso8601String(),
+      'departureDate': plan.departureDate.toIso8601String(),
+      'returnDate': plan.returnDate.toIso8601String(),
       'flightDetails': plan.flightDetails,
       'accommodation': plan.accommodation,
       'notes': plan.notes,
       'emerContact': plan.emerContact,
     };
+
+    // add the plan using await. omnce done, notify th listeners to update the UI
      final result = await firebaseService.addEntry(planMap);
     print(result);
     notifyListeners();
   }
 
+  // funciton for edit. still not functional
   Future<void> editPlan(String id, TravelPlan updatedPlan) async {
     Map<String, dynamic> updatedData = updatedPlan.toJson();
     updatedData.remove('id'); // avoid updating the id field
@@ -56,7 +65,11 @@ class PlanProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // function for deleting a plan.
+
   Future<void> deletePlan(String id) async {
+
+    // callls the  deleteEntry in the user api and deletes in the firebase
     String message = await firebaseService.deleteEntry(id);
     print(message);
     notifyListeners();

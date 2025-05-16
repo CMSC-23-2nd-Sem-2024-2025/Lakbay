@@ -1,10 +1,12 @@
+// this is the model for travel plans. some information can be optional.
+
 class TravelPlan {
   String? id;
   String userId;
-  String? travelName;
-  String? location;
-  DateTime? departureDate;
-  DateTime? returnDate;
+  String travelName;
+  String location;
+  DateTime departureDate;
+  DateTime returnDate;
   String? flightDetails;
   String? accommodation;
   String? notes;
@@ -31,13 +33,9 @@ class TravelPlan {
       location: json['location'],
       departureDate:
           // parses the date from json format to datetime
-          json['departureDate'] != null
-              ? DateTime.parse(json['departureDate'])
-              : null,
-      returnDate:
-          json['returnDate'] != null
-              ? DateTime.parse(json['returnDate'])
-              : null,
+          json['departureDate'] = DateTime.parse(json['departureDate']),
+             
+      returnDate: DateTime.parse(json['returnDate']),
       flightDetails: json['flightDetails'],
       accommodation: json['accommodation'],
       notes: json['notes'],

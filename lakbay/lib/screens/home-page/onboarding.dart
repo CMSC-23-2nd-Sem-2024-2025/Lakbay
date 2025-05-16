@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/screens/intro_screens/interests.dart';
 import 'package:lakbay/screens/profle-page/profile_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -19,6 +20,7 @@ class _OnboardingState extends State<OnBoarding> {
   List<String> selectedInterests = [];
   List<String> selectedStyles = [];
 
+  // check if it is in the last page to set state on some widgets 
   bool onLastPage = false;
   final PageController _controller = PageController();
 
@@ -26,23 +28,31 @@ class _OnboardingState extends State<OnBoarding> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+
+        // apply stack since the screens are on top of each other
         child: Stack(
           children: [
+
+            // add the page view so switch between the pages
             PageView(
               onPageChanged: (index) {
-                setState(() {
+                setState(() { // since dalawa lang page, then the last page is 1
                   onLastPage = (index == 1);
                 });
               },
               controller: _controller,
               children: [
+                // will lead to the interests screen
                 InterestsPage(
                   onInterestsSelected: (interests) {
                     setState(() {
                       selectedInterests = interests;
+                      // get the intersts from the intersts page
                     });
                   },
                 ),
+
+                // lead to styles screen
                 StylePage(
                   onStylesSelected: (styles) {
                     setState(() {
@@ -61,7 +71,8 @@ class _OnboardingState extends State<OnBoarding> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Top-left widget (e.g., a back button or title)
+                  
+                  // gesture detector for the back buttn
                   GestureDetector(
                     onTap: () {
                       _controller.previousPage(
@@ -89,10 +100,10 @@ class _OnboardingState extends State<OnBoarding> {
                           style: TextStyle(fontSize: 18),
                         ),
                       )
-                      : // Top-right "Skip" button
+                      : 
                       GestureDetector(
                         onTap: () {
-                          // Skip interests page and go to styles page
+                          // skip styples page
                           _controller.nextPage(
                             duration: Duration(milliseconds: 300),
                             curve: Curves.easeIn,
@@ -108,21 +119,26 @@ class _OnboardingState extends State<OnBoarding> {
             ),
 
             Positioned(
-              bottom: 80, // Adjust this value to your preference
+              // position the buttona the bottom
+              bottom: 80, 
               left: 0,
               right: 0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
+                    // adjust the hegiht of teh button
                     width: 315,
                     height: 70,
                     child: ElevatedButton(
                       onPressed: () async {
                         if (onLastPage) {
+                          // debugging
                           print(selectedInterests);
                           print(selectedStyles);
 
+                          // make an instance of the auth provider to check the current logged in user. if there is a user,
+                          // store the intersts and styles in the attributes of the user in the firebase (can also store empty) 
                           final authProvider = Provider.of<AuthProvider>(
                             context,
                             listen: false,
@@ -153,10 +169,12 @@ class _OnboardingState extends State<OnBoarding> {
                             print("no user found");
                           }
 
+                          // proceed to home page
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfilePage(),
+                              builder: (context) => HomePage(),
                             ),
                           );
                         } else {

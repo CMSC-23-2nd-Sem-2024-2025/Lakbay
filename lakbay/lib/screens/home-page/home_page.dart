@@ -17,20 +17,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  // control the state of the screen since there are two tabs in the home page
   int _selectedTab = 0;
 
   @override
   Widget build(BuildContext context) {
+
+    // make an instance of the auth provider to get the user object and obtain the details of auth user
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.userObj;
     final userDetails = authProvider.userDetails;
 
+    // make a string username to store it in a text widget later. if the username is null, use email (bakit guys???)
     String username =
         userDetails?['userName'] ?? user?.email?.split('@')[0] ?? "User";
 
+
+    // this is the main scaffold of the home page. it contains the app bar, body, and bottom navigation bar
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
+        // add the app drawer
         title: const Text(''),
         actions: [
           IconButton(
@@ -87,12 +95,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 24),
                     // Tabs
+
+                    // this makes the row for the tab selection
                     Row(
                       children: [
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _selectedTab = 0;
+                              _selectedTab = 0; //updates the value of the selected (will be used later)
                             });
                           },
                           child: Column(
@@ -162,7 +172,10 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: Center(
                   child:
-                      _selectedTab == 0
+                      // since nakabase yung selected tab sa gestuer provider sa taas magagamit sya to make a condition
+                      // and use a consumer provider to either fetch the users trravel plan or the shared plan based on the
+                      // selected tab
+                      _selectedTab == 0 //
                           // through this provider, this enables the stream to fetch the data from the firestore
                           // the data is being fetched in travelplans collection
                           ? Consumer<PlanProvider>(
@@ -224,10 +237,14 @@ class _HomePageState extends State<HomePage> {
                                             horizontal: 24,
                                             vertical: 8,
                                           ),
+
+                                          // control the height of the card
                                           child: SizedBox(
                                             height: 100,
                                             child: Row(
                                               children: [
+
+                                                // this is for the image in the left
                                                 Container(
                                                   width: 100,
                                                   height: 100,
@@ -246,6 +263,8 @@ class _HomePageState extends State<HomePage> {
                                                   ),
                                                 ),
                                                 SizedBox(width: 10),
+
+                                                // for the infos on the right
                                                 Expanded(
                                                   child: Column(
                                                     mainAxisAlignment:
@@ -255,6 +274,7 @@ class _HomePageState extends State<HomePage> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
+                                                      // retrieve the details from the plan
                                                       Text(
                                                         plan['travelName'] ??
                                                             'No Name',
@@ -322,6 +342,8 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           )
+
+                          // else, return this text instead
                           : GestureDetector(
                             child: Text(
                               "No shared plans yet.",

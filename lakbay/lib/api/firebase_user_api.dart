@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirebasePlanApi {
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
-  Stream<QuerySnapshot> getAllEntries() {
-    return db.collection('travelplans').snapshots();
+  Stream<QuerySnapshot> getAllEntries(String userId) {
+    return db.collection('travelplans').where('userId', isEqualTo: userId).snapshots();
   }
 
   Future<String> addEntry(Map<String, dynamic> entry) async {

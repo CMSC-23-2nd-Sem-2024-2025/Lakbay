@@ -15,6 +15,8 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+
+        // declare the auth provider and the plan provider using a multiprovider widget
         ChangeNotifierProvider(create: ((context) => AuthProvider())),
         ChangeNotifierProvider(create: ((context) => PlanProvider())),
       ],
@@ -36,6 +38,9 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
       ),
       home: Consumer<AuthProvider>(
+
+        // used a consumer widget to listen to the auth provider and go to either the home page (logged in)
+        // or the startinf page (when the userObj is null)
         builder: (context, authProvider, _) {
           if (authProvider.userObj != null) {
             return HomePage();

@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lakbay/providers/user_provider.dart';
+
 import 'package:lakbay/screens/home-page/home_page.dart';
-import 'package:lakbay/api/firebase_user_api.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
-import 'package:provider/provider.dart';
+
 import 'package:lakbay/screens/travel-page/travel_add_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -215,18 +214,12 @@ class _TravelFormPageState extends State<TravelFormPage> {
                           userId: user.uid,
                           travelName: nameController.text.trim(),
                           location: locationController.text.trim(),
-                          departureDate:
-                              departureController.text.isNotEmpty
-                                  ? DateTime.parse(
+                          departureDate: DateTime.parse(
                                     departureController.text,
-                                  ).toLocal()
-                                  : null,
-                          returnDate:
-                              returnController.text.isNotEmpty
-                                  ? DateTime.parse(
+                                  ).toLocal(),
+                          returnDate: DateTime.parse(
                                     returnController.text,
-                                  ).toLocal()
-                                  : null,
+                                  ).toLocal(),
                           flightDetails: null,
                           accommodation: null,
                           notes: null,
