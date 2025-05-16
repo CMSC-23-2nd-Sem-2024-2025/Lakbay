@@ -13,40 +13,7 @@ class ItinerariesPage extends StatefulWidget {
 }
 
 class _ItinerariesPageState extends State<ItinerariesPage> {
-  List<Map<String, String>> itineraries = [];
   bool _isAdding = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchItineraries();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _fetchItineraries();
-  }
-
-  void _fetchItineraries() async {
-    print('Fetching itineraries for travel plan ID: ${widget.plan['id']}');
-    final snapshot =
-        await FirebaseFirestore.instance
-            .collection('itineraries')
-            .where('travelPlanId', isEqualTo: widget.plan['id'])
-            .get();
-
-    print('Fetched ${snapshot.docs.length} itineraries');
-    setState(() {
-      itineraries =
-          snapshot.docs.map((doc) {
-            final data = doc.data() as Map<String, String>;
-            data['id'] = doc.id; // Include document ID
-            return data;
-          }).toList();
-      print('Updated itineraries state with ${itineraries.length} items');
-    });
-  }
 
   void _addItinerary(Map<String, String> itinerary) async {
     if (_isAdding) return; // Prevent multiple submissions
@@ -61,7 +28,6 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
     itinerary['id'] = docRef.id;
     print('Itinerary added with ID: ${docRef.id}');
     setState(() {
-      itineraries.add(itinerary);
       _isAdding = false;
     });
   }
@@ -141,41 +107,60 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
             ),
             SizedBox(height: 8),
             Expanded(
-              child: ListView.builder(
-                itemCount: itineraries.length,
-                itemBuilder: (context, index) {
-                  final itinerary = itineraries[index];
-                  return GestureDetector(
-                    onTap: () async {
-                      final updatedItinerary = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => ItinerariesFormPage(
-                                existingItinerary: itinerary,
-                              ),
+              child: StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance
+                        .collection('itineraries')
+                        .where('travelPlanId', isEqualTo: widget.plan['id'])
+                        .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error loading itineraries'));
+                  }
+                  final docs = snapshot.data?.docs ?? [];
+                  if (docs.isEmpty) {
+                    return Center(child: Text('No itineraries yet.'));
+                  }
+                  return ListView.builder(
+                    itemCount: docs.length,
+                    itemBuilder: (context, index) {
+                      final data = docs[index].data() as Map<String, dynamic>;
+                      final itinerary = Map<String, String>.from(data);
+                      itinerary['id'] = docs[index].id;
+                      return GestureDetector(
+                        onTap: () async {
+                          final updatedItinerary = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => ItinerariesFormPage(
+                                    existingItinerary: itinerary,
+                                  ),
+                            ),
+                          );
+                          // Optionally, handle update logic here if needed
+                        },
+                        child: Card(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          child: ListTile(
+                            title: Text(
+                              itinerary['itineraryName'] ?? 'No Name',
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Activities: ${itinerary['activities'] ?? 'No Activities'}',
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       );
-                      if (updatedItinerary != null) {
-                        setState(() {
-                          itineraries[index] = updatedItinerary;
-                        });
-                      }
                     },
-                    child: Card(
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      child: ListTile(
-                        title: Text(itinerary['itineraryName'] ?? 'No Name'),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Activities: ${itinerary['activities'] ?? 'No Activities'}',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   );
                 },
               ),
