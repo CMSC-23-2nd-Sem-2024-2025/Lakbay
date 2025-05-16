@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/screens/itineraries-page/itineraries_form.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ItinerariesPage extends StatefulWidget {
   final Map<String, dynamic> plan;
@@ -13,17 +14,73 @@ class ItinerariesPage extends StatefulWidget {
 
 class _ItinerariesPageState extends State<ItinerariesPage> {
   List<Map<String, String>> itineraries = [];
+  bool _isAdding = false;
 
-  void _addItinerary(Map<String, String> itinerary) {
+  @override
+  void initState() {
+    super.initState();
+    _fetchItineraries();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchItineraries();
+  }
+
+  void _fetchItineraries() async {
+    print('Fetching itineraries for travel plan ID: ${widget.plan['id']}');
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('itineraries')
+            .where('travelPlanId', isEqualTo: widget.plan['id'])
+            .get();
+
+    print('Fetched ${snapshot.docs.length} itineraries');
+    setState(() {
+      itineraries =
+          snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, String>;
+            data['id'] = doc.id; // Include document ID
+            return data;
+          }).toList();
+      print('Updated itineraries state with ${itineraries.length} items');
+    });
+  }
+
+  void _addItinerary(Map<String, String> itinerary) async {
+    if (_isAdding) return; // Prevent multiple submissions
+    setState(() {
+      _isAdding = true;
+    });
+
+    print('Adding itinerary: ${itinerary['itineraryName']}');
+    final docRef = await FirebaseFirestore.instance
+        .collection('itineraries')
+        .add(itinerary);
+    itinerary['id'] = docRef.id;
+    print('Itinerary added with ID: ${docRef.id}');
     setState(() {
       itineraries.add(itinerary);
+      _isAdding = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Itineraries')),
+      appBar: AppBar(
+        title: Text('Itineraries'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          },
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -88,17 +145,35 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                 itemCount: itineraries.length,
                 itemBuilder: (context, index) {
                   final itinerary = itineraries[index];
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(
-                      title: Text(itinerary['itineraryName'] ?? 'No Name'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Activities: ${itinerary['activities'] ?? 'No Activities'}',
-                          ),
-                        ],
+                  return GestureDetector(
+                    onTap: () async {
+                      final updatedItinerary = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => ItinerariesFormPage(
+                                existingItinerary: itinerary,
+                              ),
+                        ),
+                      );
+                      if (updatedItinerary != null) {
+                        setState(() {
+                          itineraries[index] = updatedItinerary;
+                        });
+                      }
+                    },
+                    child: Card(
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      child: ListTile(
+                        title: Text(itinerary['itineraryName'] ?? 'No Name'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Activities: ${itinerary['activities'] ?? 'No Activities'}',
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -108,17 +183,20 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () async {
-                  final newItinerary = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ItinerariesFormPage(),
-                    ),
-                  );
-                  if (newItinerary != null) {
-                    _addItinerary(newItinerary);
-                  }
-                },
+                onPressed:
+                    _isAdding
+                        ? null
+                        : () async {
+                          final newItinerary = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ItinerariesFormPage(),
+                            ),
+                          );
+                          if (newItinerary != null) {
+                            _addItinerary(newItinerary);
+                          }
+                        },
                 child: Text(
                   'Add Itinerary',
                   style: TextStyle(color: Colors.black87),

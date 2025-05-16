@@ -17,13 +17,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   // control the state of the screen since there are two tabs in the home page
   int _selectedTab = 0;
 
   @override
   Widget build(BuildContext context) {
-
     // make an instance of the auth provider to get the user object and obtain the details of auth user
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.userObj;
@@ -32,7 +30,6 @@ class _HomePageState extends State<HomePage> {
     // make a string username to store it in a text widget later. if the username is null, use email (bakit guys???)
     String username =
         userDetails?['userName'] ?? user?.email?.split('@')[0] ?? "User";
-
 
     // this is the main scaffold of the home page. it contains the app bar, body, and bottom navigation bar
     return Scaffold(
@@ -102,7 +99,8 @@ class _HomePageState extends State<HomePage> {
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _selectedTab = 0; //updates the value of the selected (will be used later)
+                              _selectedTab =
+                                  0; //updates the value of the selected (will be used later)
                             });
                           },
                           child: Column(
@@ -175,7 +173,8 @@ class _HomePageState extends State<HomePage> {
                       // since nakabase yung selected tab sa gestuer provider sa taas magagamit sya to make a condition
                       // and use a consumer provider to either fetch the users trravel plan or the shared plan based on the
                       // selected tab
-                      _selectedTab == 0 //
+                      _selectedTab ==
+                              0 //
                           // through this provider, this enables the stream to fetch the data from the firestore
                           // the data is being fetched in travelplans collection
                           ? Consumer<PlanProvider>(
@@ -222,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                                       // clicking the travel plan will directs the itineraries page
                                       return GestureDetector(
                                         onTap: () {
-                                          Navigator.push(
+                                          Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                               builder:
@@ -243,7 +242,6 @@ class _HomePageState extends State<HomePage> {
                                             height: 100,
                                             child: Row(
                                               children: [
-
                                                 // this is for the image in the left
                                                 Container(
                                                   width: 100,
@@ -342,7 +340,6 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           )
-
                           // else, return this text instead
                           : GestureDetector(
                             child: Text(

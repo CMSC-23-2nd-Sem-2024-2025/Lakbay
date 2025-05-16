@@ -1,21 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ItinerariesFormPage extends StatelessWidget {
-  const ItinerariesFormPage({super.key});
+  final Map<String, String>? existingItinerary;
+
+  const ItinerariesFormPage({super.key, this.existingItinerary});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController itineraryNameController =
-        TextEditingController();
-    final TextEditingController activitiesController = TextEditingController();
-    final TextEditingController locationController = TextEditingController();
-    final TextEditingController timeScheduleController =
-        TextEditingController();
+    final TextEditingController itineraryNameController = TextEditingController(
+      text: existingItinerary?['itineraryName'] ?? '',
+    );
+    final TextEditingController activitiesController = TextEditingController(
+      text: existingItinerary?['activities'] ?? '',
+    );
+    final TextEditingController locationController = TextEditingController(
+      text: existingItinerary?['location'] ?? '',
+    );
+    final TextEditingController timeScheduleController = TextEditingController(
+      text: existingItinerary?['timeSchedule'] ?? '',
+    );
+
+    Future<void> _selectTime(BuildContext context) async {
+      final TimeOfDay? picked = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+      if (picked != null) {
+        final now = DateTime.now();
+        final formattedTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          picked.hour,
+          picked.minute,
+        ).toLocal().toString().split(' ')[1].substring(0, 5);
+        timeScheduleController.text = formattedTime;
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Travel Plan Name'),
-        actions: [IconButton(icon: Icon(Icons.edit), onPressed: () {})],
+        title: Text(
+          existingItinerary == null ? 'New Itinerary' : 'Edit Itinerary',
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,22 +67,41 @@ class ItinerariesFormPage extends StatelessWidget {
             TextField(
               controller: timeScheduleController,
               decoration: InputDecoration(labelText: 'Time Schedule'),
+              readOnly: true,
+              onTap: () => _selectTime(context),
             ),
             Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  print('Save Itinerary button pressed');
                   final itineraryData = {
                     'itineraryName': itineraryNameController.text,
                     'activities': activitiesController.text,
                     'location': locationController.text,
                     'timeSchedule': timeScheduleController.text,
                   };
+                  if (existingItinerary != null) {
+                    print(
+                      'Updating existing itinerary with ID: ${existingItinerary!['id']}',
+                    );
+                    await FirebaseFirestore.instance
+                        .collection('itineraries')
+                        .doc(existingItinerary!['id'])
+                        .update(itineraryData);
+                  } else {
+                    print('Adding new itinerary');
+                    await FirebaseFirestore.instance
+                        .collection('itineraries')
+                        .add(itineraryData);
+                  }
                   Navigator.pop(context, itineraryData);
                 },
                 child: Text(
-                  'Save Itinerary',
+                  existingItinerary == null
+                      ? 'Save Itinerary'
+                      : 'Update Itinerary',
                   style: TextStyle(color: Colors.black87),
                 ),
                 style: ElevatedButton.styleFrom(
