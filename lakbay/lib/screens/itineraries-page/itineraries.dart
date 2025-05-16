@@ -15,23 +15,6 @@ class ItinerariesPage extends StatefulWidget {
 class _ItinerariesPageState extends State<ItinerariesPage> {
   bool _isAdding = false;
 
-  void _addItinerary(Map<String, String> itinerary) async {
-    if (_isAdding) return; // Prevent multiple submissions
-    setState(() {
-      _isAdding = true;
-    });
-
-    print('Adding itinerary: ${itinerary['itineraryName']}');
-    final docRef = await FirebaseFirestore.instance
-        .collection('itineraries')
-        .add(itinerary);
-    itinerary['id'] = docRef.id;
-    print('Itinerary added with ID: ${docRef.id}');
-    setState(() {
-      _isAdding = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,22 +97,38 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                         .where('travelPlanId', isEqualTo: widget.plan['id'])
                         .snapshots(),
                 builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
                   }
-                  if (snapshot.hasError) {
-                    return Center(child: Text('Error loading itineraries'));
+
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No itineraries yet',
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      ),
+                    );
                   }
-                  final docs = snapshot.data?.docs ?? [];
-                  if (docs.isEmpty) {
-                    return Center(child: Text('No itineraries yet.'));
-                  }
+
+                  final itineraries =
+                      snapshot.data!.docs.map((doc) {
+                        final data = doc.data() as Map<String, dynamic>;
+                        data['id'] = doc.id;
+                        // Convert all values to String (or empty string if null)
+                        return data.map(
+                          (key, value) =>
+                              MapEntry(key, value?.toString() ?? ''),
+                        );
+                      }).toList();
+
                   return ListView.builder(
-                    itemCount: docs.length,
+                    itemCount: itineraries.length,
                     itemBuilder: (context, index) {
-                      final data = docs[index].data() as Map<String, dynamic>;
-                      final itinerary = Map<String, String>.from(data);
-                      itinerary['id'] = docs[index].id;
+                      final itinerary = itineraries[index];
                       return GestureDetector(
                         onTap: () async {
                           final updatedItinerary = await Navigator.push(
@@ -138,10 +137,10 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                               builder:
                                   (context) => ItinerariesFormPage(
                                     existingItinerary: itinerary,
+                                    travelPlanId: widget.plan['id'].toString(),
                                   ),
                             ),
                           );
-                          // Optionally, handle update logic here if needed
                         },
                         child: Card(
                           margin: EdgeInsets.symmetric(vertical: 8),
@@ -175,12 +174,12 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                           final newItinerary = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ItinerariesFormPage(),
+                              builder:
+                                  (context) => ItinerariesFormPage(
+                                    travelPlanId: widget.plan['id'].toString(),
+                                  ),
                             ),
                           );
-                          if (newItinerary != null) {
-                            _addItinerary(newItinerary);
-                          }
                         },
                 child: Text(
                   'Add Itinerary',

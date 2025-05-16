@@ -3,8 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ItinerariesFormPage extends StatelessWidget {
   final Map<String, String>? existingItinerary;
+  final String travelPlanId;
 
-  const ItinerariesFormPage({super.key, this.existingItinerary});
+  const ItinerariesFormPage({
+    super.key,
+    this.existingItinerary,
+    required this.travelPlanId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +86,10 @@ class ItinerariesFormPage extends StatelessWidget {
                     'activities': activitiesController.text,
                     'location': locationController.text,
                     'timeSchedule': timeScheduleController.text,
+                    'travelPlanId': travelPlanId,
                   };
-                  if (existingItinerary != null) {
+                  if (existingItinerary != null &&
+                      existingItinerary!['id'] != null) {
                     print(
                       'Updating existing itinerary with ID: ${existingItinerary!['id']}',
                     );
@@ -90,11 +97,13 @@ class ItinerariesFormPage extends StatelessWidget {
                         .collection('itineraries')
                         .doc(existingItinerary!['id'])
                         .update(itineraryData);
+                    itineraryData['id'] = existingItinerary!['id']!;
                   } else {
                     print('Adding new itinerary');
-                    await FirebaseFirestore.instance
+                    final docRef = await FirebaseFirestore.instance
                         .collection('itineraries')
                         .add(itineraryData);
+                    itineraryData['id'] = docRef.id;
                   }
                   Navigator.pop(context, itineraryData);
                 },

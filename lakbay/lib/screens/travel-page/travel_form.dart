@@ -214,12 +214,12 @@ class _TravelFormPageState extends State<TravelFormPage> {
                           userId: user.uid,
                           travelName: nameController.text.trim(),
                           location: locationController.text.trim(),
-                          departureDate: DateTime.parse(
-                                    departureController.text,
-                                  ).toLocal(),
-                          returnDate: DateTime.parse(
-                                    returnController.text,
-                                  ).toLocal(),
+                          departureDate:
+                              DateTime.parse(
+                                departureController.text,
+                              ).toLocal(),
+                          returnDate:
+                              DateTime.parse(returnController.text).toLocal(),
                           flightDetails: null,
                           accommodation: null,
                           notes: null,
@@ -241,6 +241,9 @@ class _TravelFormPageState extends State<TravelFormPage> {
                                       ? returnController.text
                                       : null,
                             });
+
+                        // Update the plan with the generated ID
+                        await docRef.update({'id': docRef.id});
 
                         // Go to add info page, pass planId
                         Navigator.pushReplacement(
