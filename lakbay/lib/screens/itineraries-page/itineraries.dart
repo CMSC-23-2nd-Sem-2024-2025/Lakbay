@@ -154,18 +154,66 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                         },
                         child: Card(
                           margin: EdgeInsets.symmetric(vertical: 8),
-                          child: ListTile(
-                            title: Text(
-                              itinerary['itineraryName'] ?? 'No Name',
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Activities: ${itinerary['activities'] ?? 'No Activities'}',
+                          child: Stack(
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  itinerary['itineraryName'] ?? 'No Name',
                                 ),
-                              ],
-                            ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Activities: ${itinerary['activities'] ?? 'No Activities'}',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () async {
+                                    final confirm = await showDialog<bool>(
+                                      context: context,
+                                      builder:
+                                          (context) => AlertDialog(
+                                            title: Text('Delete Itinerary'),
+                                            content: Text(
+                                              'Delete na ba natin tong itinerary na to?',
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed:
+                                                    () => Navigator.pop(
+                                                      context,
+                                                      false,
+                                                    ),
+                                                child: Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                onPressed:
+                                                    () => Navigator.pop(
+                                                      context,
+                                                      true,
+                                                    ),
+                                                child: Text('Delete'),
+                                              ),
+                                            ],
+                                          ),
+                                    );
+
+                                    if (confirm == true) {
+                                      await FirebaseFirestore.instance
+                                          .collection('itineraries')
+                                          .doc(itinerary['id'])
+                                          .delete();
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
