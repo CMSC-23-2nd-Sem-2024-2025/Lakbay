@@ -7,6 +7,7 @@ import 'providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'providers/user_provider.dart';
+import 'providers/shared_plans_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,10 +16,10 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-
         // declare the auth provider and the plan provider using a multiprovider widget
         ChangeNotifierProvider(create: ((context) => AuthProvider())),
         ChangeNotifierProvider(create: ((context) => PlanProvider())),
+        ChangeNotifierProvider(create: ((context) => SharedPlansProvider())),
       ],
       child: const MyApp(),
     ),
@@ -31,14 +32,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-    
       debugShowCheckedModeBanner: false,
       title: 'Lakbay',
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
       ),
       home: Consumer<AuthProvider>(
-
         // used a consumer widget to listen to the auth provider and go to either the home page (logged in)
         // or the startinf page (when the userObj is null)
         builder: (context, authProvider, _) {

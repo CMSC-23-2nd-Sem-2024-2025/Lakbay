@@ -7,6 +7,7 @@ import '../../providers/auth_provider.dart';
 import 'starting_page.dart';
 import '../profle-page/profile_page.dart';
 import 'package:lakbay/screens/itineraries-page/itineraries.dart';
+import 'shared_plans_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,6 +19,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // control the state of the screen since there are two tabs in the home page
   int _selectedTab = 0;
+
+  void _showShareDialog(BuildContext context, String planId) {
+    showDialog(
+      context: context,
+      builder: (context) => SharePlanDialog(planId: planId),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,13 +177,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: Center(
                   child:
-                      // since nakabase yung selected tab sa gestuer provider sa taas magagamit sya to make a condition
-                      // and use a consumer provider to either fetch the users trravel plan or the shared plan based on the
-                      // selected tab
-                      _selectedTab ==
-                              0 //
-                          // through this provider, this enables the stream to fetch the data from the firestore
-                          // the data is being fetched in travelplans collection
+                      _selectedTab == 0
                           ? Consumer<PlanProvider>(
                             builder: (context, planProvider, _) {
                               final plansStream = planProvider.plans;
@@ -287,74 +289,19 @@ class _HomePageState extends State<HomePage> {
                                                             ),
                                                           ),
                                                         ),
-                                                        SizedBox(width: 8),
-                                                        SizedBox(
-                                                          width: 28,
-                                                          height: 28,
-                                                          child: IconButton(
-                                                            padding:
-                                                                EdgeInsets.zero,
-                                                            icon: Icon(
-                                                              Icons.delete,
-                                                              size: 20,
-                                                              color: Colors.red,
-                                                            ),
-                                                            onPressed: () async {
-                                                              final confirm = await showDialog<
-                                                                bool
-                                                              >(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (
-                                                                      context,
-                                                                    ) => AlertDialog(
-                                                                      title: Text(
-                                                                        'Delete Travel Plan',
-                                                                      ),
-                                                                      content: Text(
-                                                                        'Are you sure you want to delete this travel plan?',
-                                                                      ),
-                                                                      actions: [
-                                                                        TextButton(
-                                                                          onPressed:
-                                                                              () => Navigator.pop(
-                                                                                context,
-                                                                                false,
-                                                                              ),
-                                                                          child: Text(
-                                                                            'Cancel',
-                                                                          ),
-                                                                        ),
-                                                                        TextButton(
-                                                                          onPressed:
-                                                                              () => Navigator.pop(
-                                                                                context,
-                                                                                true,
-                                                                              ),
-                                                                          child: Text(
-                                                                            'Delete',
-                                                                            style: TextStyle(
-                                                                              color:
-                                                                                  Colors.red,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                              );
-                                                              if (confirm ==
-                                                                  true) {
-                                                                await FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                      'travelplans',
-                                                                    )
-                                                                    .doc(planId)
-                                                                    .delete();
-                                                              }
-                                                            },
+                                                        IconButton(
+                                                          icon: Icon(
+                                                            Icons.share,
+                                                            color:
+                                                                Colors.orange,
                                                           ),
+                                                          tooltip: 'Share Plan',
+                                                          onPressed:
+                                                              () =>
+                                                                  _showShareDialog(
+                                                                    context,
+                                                                    planId,
+                                                                  ),
                                                         ),
                                                       ],
                                                     ),
@@ -439,16 +386,7 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           )
-                          // else, return this text instead
-                          : GestureDetector(
-                            child: Text(
-                              "No shared plans yet.",
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
+                          : const SharedPlans(),
                 ),
               ),
               // Bottom Navigation Bar
