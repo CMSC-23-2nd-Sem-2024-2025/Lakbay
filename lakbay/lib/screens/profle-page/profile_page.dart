@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true;
-  
+
   File? _profileImage;
 
   @override
@@ -285,28 +285,29 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
 
                               Row(
-
                                 children: [
-
-                                  Text('Make Profile Public',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),
+                                  Text(
+                                    'Make Profile Public',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
                                   ),
 
                                   SizedBox(width: 2),
 
                                   Switch(
-                                value: makePublic,
-  onChanged: (value) async {
-    // Update in Firestore via AuthProvider
-    await Provider.of<AuthProvider>(context, listen: false)
-        .updateUserDetails({'public': value});
-    setState(() {}); // Refresh UI
-  },
-  activeColor: Color(0xFFF97419),
-                              ),
+                                    value: makePublic,
+                                    onChanged: (value) async {
+                                      // Update in Firestore via AuthProvider
+                                      await Provider.of<AuthProvider>(
+                                        context,
+                                        listen: false,
+                                      ).updateUserDetails({'public': value});
+                                      setState(() {}); // Refresh UI
+                                    },
+                                    activeColor: Color(0xFFF97419),
+                                  ),
                                 ],
                               ),
 

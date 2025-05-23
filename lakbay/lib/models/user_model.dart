@@ -15,6 +15,9 @@ class User {
     this.id,
     required this.firstName,
     required this.lastName,
+
+
+    
     required this.userName,
     this.phoneNumber,
     required this.email,
