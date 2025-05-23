@@ -16,7 +16,6 @@ class TravelAddInfoPage extends StatefulWidget {
 }
 
 class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
-
   // add the controllers for the text fields
   final flightController = TextEditingController();
   final accommodationController = TextEditingController();
@@ -24,7 +23,6 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
   final emergencyContactController = TextEditingController();
 
   @override
-
   //dispose the controllers once done
   void dispose() {
     flightController.dispose();
@@ -129,28 +127,29 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
                 hintText: 'Enter flight details',
                 icon: Icons.flight,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 40),
               _Label('Accommodation'),
               _ShadowedTextField(
                 controller: accommodationController,
                 hintText: 'Enter accommodation details',
                 icon: Icons.hotel,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 40),
               _Label('Notes'),
               _ShadowedTextField(
                 controller: notesController,
                 hintText: 'Enter notes',
                 icon: Icons.sticky_note_2_outlined,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 40),
               _Label('Emergency Contact?'),
               _ShadowedTextField(
                 controller: emergencyContactController,
                 hintText: 'Enter emergency contact',
                 icon: Icons.contact_emergency,
+                keyboardType: TextInputType.phone,
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 90),
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -203,6 +202,7 @@ class _ShadowedTextField extends StatelessWidget {
   final IconData icon;
   final TextEditingController controller;
   final VoidCallback? onTap;
+  final TextInputType? keyboardType;
 
   const _ShadowedTextField({
     super.key,
@@ -210,6 +210,7 @@ class _ShadowedTextField extends StatelessWidget {
     required this.icon,
     required this.controller,
     this.onTap,
+    this.keyboardType,
   });
 
   @override
@@ -230,6 +231,7 @@ class _ShadowedTextField extends StatelessWidget {
         controller: controller,
         readOnly: onTap != null,
         onTap: onTap,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: Colors.black),
           hintText: hintText,

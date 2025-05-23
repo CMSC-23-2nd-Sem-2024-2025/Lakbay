@@ -54,7 +54,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
                   },
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 16),
 
                 // RichText is used to control the design or style of each word
                 // TextSpan allows the user to select and modify the text for changing its font color, style, or size
@@ -96,20 +96,6 @@ class _TravelFormPageState extends State<TravelFormPage> {
                   icon: Icons.location_on_outlined,
                 ),
 
-                // SizedBox(height: 200, child: ListView.builder(
-                //   itemCount: 5,
-                //   itemBuilder: (context, index){
-                //     return GestureDetector(
-                //       onTap: (){
-
-                //       },
-
-                //       child: Text("Location $index"),
-
-                //     );
-                //   }
-
-                //   )),
                 const SizedBox(height: 40),
 
                 _Label('Departure Date'),
