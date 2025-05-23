@@ -220,165 +220,235 @@ class _HomePageState extends State<HomePage> {
                                           plans[index].data()
                                               as Map<String, dynamic>;
                                       final planId = plans[index].id;
-                                      return Card(
-                                        margin: EdgeInsets.symmetric(
-                                          horizontal: 24,
-                                          vertical: 8,
+                                      return Dismissible(
+                                        key: Key(planId),
+                                        direction: DismissDirection.endToStart,
+                                        background: Container(
+                                          alignment: Alignment.centerRight,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                          ),
+                                          color: Colors.red,
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                        child: SizedBox(
-                                          height: 100,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 100,
-                                                height: 100,
-                                                margin: EdgeInsets.all(16),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.orange[100],
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                child: Icon(
-                                                  Icons.image,
-                                                  color: Colors.orange,
-                                                  size: 32,
-                                                ),
-                                              ),
-                                              SizedBox(width: 10),
-                                              Expanded(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Expanded(
-                                                          child: GestureDetector(
-                                                            onTap: () {
-                                                              Navigator.pushReplacement(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (
-                                                                        context,
-                                                                      ) => ItinerariesPage(
-                                                                        plan:
-                                                                            plan,
-                                                                      ),
-                                                                ),
-                                                              );
-                                                            },
-                                                            child: Text(
-                                                              plan['travelName'] ??
-                                                                  'No Name',
-                                                              style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 20,
-                                                              ),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        IconButton(
-                                                          icon: Icon(
-                                                            Icons.share,
-                                                            color:
-                                                                Colors.orange,
-                                                          ),
-                                                          tooltip: 'Share Plan',
-                                                          onPressed:
-                                                              () =>
-                                                                  _showShareDialog(
-                                                                    context,
-                                                                    planId,
-                                                                  ),
-                                                        ),
-                                                      ],
+                                        confirmDismiss: (direction) async {
+                                          // Optionally, show a confirmation dialog
+                                          return await showDialog(
+                                            context: context,
+                                            builder:
+                                                (context) => AlertDialog(
+                                                  title: Text('Delete Plan'),
+                                                  content: Text(
+                                                    'Are you sure you want to delete this travel plan?',
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed:
+                                                          () => Navigator.of(
+                                                            context,
+                                                          ).pop(false),
+                                                      child: Text('Cancel'),
                                                     ),
-                                                    SizedBox(height: 8),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.pushReplacement(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    ItinerariesPage(
-                                                                      plan:
-                                                                          plan,
-                                                                    ),
-                                                          ),
-                                                        );
-                                                      },
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            plan['location'] ??
-                                                                'No Location',
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors
-                                                                      .grey[700],
-                                                            ),
-                                                          ),
-                                                          SizedBox(height: 8),
-                                                          Text(
-                                                            (() {
-                                                              final dateValue =
-                                                                  plan['departureDate'];
-                                                              if (dateValue ==
-                                                                  null) {
-                                                                return 'No Date';
-                                                              }
-                                                              if (dateValue
-                                                                  is Timestamp) {
-                                                                final date =
-                                                                    dateValue
-                                                                        .toDate();
-                                                                return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                                                              }
-                                                              try {
-                                                                final date =
-                                                                    DateTime.parse(
-                                                                      dateValue
-                                                                          .toString(),
-                                                                    );
-                                                                return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                                                              } catch (_) {
-                                                                return dateValue
-                                                                    .toString();
-                                                              }
-                                                            })(),
-                                                            style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors
-                                                                      .grey[700],
-                                                            ),
-                                                          ),
-                                                        ],
+                                                    TextButton(
+                                                      onPressed:
+                                                          () => Navigator.of(
+                                                            context,
+                                                          ).pop(true),
+                                                      child: Text(
+                                                        'Delete',
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
                                                 ),
+                                          );
+                                        },
+                                        onDismissed: (direction) async {
+                                          await FirebaseFirestore.instance
+                                              .collection('travelplans')
+                                              .doc(planId)
+                                              .delete();
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Travel plan deleted',
                                               ),
-                                            ],
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        },
+                                        child: Card(
+                                          margin: EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 8,
+                                          ),
+                                          child: SizedBox(
+                                            height: 100,
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 100,
+                                                  height: 100,
+                                                  margin: EdgeInsets.all(16),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.orange[100],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.image,
+                                                    color: Colors.orange,
+                                                    size: 32,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Expanded(
+                                                            child: GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.pushReplacement(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (
+                                                                          context,
+                                                                        ) => ItinerariesPage(
+                                                                          plan:
+                                                                              plan,
+                                                                        ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                              child: Text(
+                                                                plan['travelName'] ??
+                                                                    'No Name',
+                                                                style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 20,
+                                                                ),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          IconButton(
+                                                            icon: Icon(
+                                                              Icons.share,
+                                                              color:
+                                                                  Colors.orange,
+                                                            ),
+                                                            tooltip:
+                                                                'Share Plan',
+                                                            onPressed:
+                                                                () =>
+                                                                    _showShareDialog(
+                                                                      context,
+                                                                      planId,
+                                                                    ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 8),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.pushReplacement(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      ItinerariesPage(
+                                                                        plan:
+                                                                            plan,
+                                                                      ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              plan['location'] ??
+                                                                  'No Location',
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                color:
+                                                                    Colors
+                                                                        .grey[700],
+                                                              ),
+                                                            ),
+                                                            SizedBox(height: 8),
+                                                            Text(
+                                                              (() {
+                                                                final dateValue =
+                                                                    plan['departureDate'];
+                                                                if (dateValue ==
+                                                                    null) {
+                                                                  return 'No Date';
+                                                                }
+                                                                if (dateValue
+                                                                    is Timestamp) {
+                                                                  final date =
+                                                                      dateValue
+                                                                          .toDate();
+                                                                  return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                                }
+                                                                try {
+                                                                  final date =
+                                                                      DateTime.parse(
+                                                                        dateValue
+                                                                            .toString(),
+                                                                      );
+                                                                  return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                                } catch (_) {
+                                                                  return dateValue
+                                                                      .toString();
+                                                                }
+                                                              })(),
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                color:
+                                                                    Colors
+                                                                        .grey[700],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       );
@@ -393,15 +463,10 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // Bottom Navigation Bar
-
-              
             ],
           ),
-
-          
         ),
       ),
-
     );
   }
 }
