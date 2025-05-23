@@ -525,7 +525,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
 
-      // Add bottom navigation bar
+    
     );
   }
 }

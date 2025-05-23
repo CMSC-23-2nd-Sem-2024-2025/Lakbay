@@ -79,12 +79,7 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
                       color: Colors.black,
                     ), // icon back button
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TravelFormPage(),
-                        ),
-                      );
+                      Navigator.pop(context);
                     },
                   ),
                   TextButton(
