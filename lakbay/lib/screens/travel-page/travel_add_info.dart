@@ -53,10 +53,7 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
                   : null,
         });
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override
@@ -84,11 +81,8 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
-                    },
+  Navigator.of(context).popUntil((route) => route.isFirst);
+},
                     child: Text(
                       'Skip',
                       style: TextStyle(

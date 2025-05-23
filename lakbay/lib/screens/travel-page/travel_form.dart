@@ -267,13 +267,12 @@ class _TravelFormPageState extends State<TravelFormPage> {
                       await docRef.update({'id': docRef.id});
 
                       // Go to add info page, pass planId
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => TravelAddInfoPage(planId: docRef.id),
-                        ),
-                      );
+                      Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => TravelAddInfoPage(planId: docRef.id),
+  ),
+);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: orange,
