@@ -9,6 +9,7 @@ import '../home-page/home_page.dart';
 import '../travel-page/travel_form.dart';
 import 'dart:convert';
 import '../../components/bottomnav.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -328,16 +329,33 @@ class _ProfilePageState extends State<ProfilePage> {
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 const SizedBox(width: 16),
-                                Text(
-                                  '${details['travelPlansCount'] ?? 0}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const Text(
-                                  ' Travel Plans',
-                                  style: TextStyle(color: Colors.grey),
+                                StreamBuilder<QuerySnapshot>(
+                                  stream:
+                                      FirebaseFirestore.instance
+                                          .collection('travelplans')
+                                          .where('userId', isEqualTo: user.uid)
+                                          .snapshots(),
+                                  builder: (context, snapshot) {
+                                    final count =
+                                        snapshot.hasData
+                                            ? snapshot.data!.docs.length
+                                            : 0;
+                                    return Row(
+                                      children: [
+                                        Text(
+                                          '$count',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        const Text(
+                                          ' Travel Plans',
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ],
                             ),

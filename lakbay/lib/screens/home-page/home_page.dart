@@ -313,6 +313,8 @@ class _HomePageState extends State<HomePage> {
                                                 SizedBox(width: 10),
                                                 Expanded(
                                                   child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
@@ -347,11 +349,12 @@ class _HomePageState extends State<HomePage> {
                                                               child: Text(
                                                                 plan['travelName'] ??
                                                                     'No Name',
-                                                                style: TextStyle(
+                                                                style: const TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
                                                                   fontSize: 20,
+                                                                  height: 1.0,
                                                                 ),
                                                                 overflow:
                                                                     TextOverflow
@@ -360,7 +363,7 @@ class _HomePageState extends State<HomePage> {
                                                             ),
                                                           ),
                                                           IconButton(
-                                                            icon: Icon(
+                                                            icon: const Icon(
                                                               Icons.share,
                                                               color:
                                                                   Colors.orange,
@@ -376,7 +379,6 @@ class _HomePageState extends State<HomePage> {
                                                           ),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 8),
                                                       GestureDetector(
                                                         onTap: () {
                                                           Navigator.pushReplacement(
@@ -392,6 +394,8 @@ class _HomePageState extends State<HomePage> {
                                                           );
                                                         },
                                                         child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .start,
@@ -404,17 +408,16 @@ class _HomePageState extends State<HomePage> {
                                                                 color:
                                                                     Colors
                                                                         .grey[700],
+                                                                height: 1.0,
                                                               ),
                                                             ),
-                                                            SizedBox(height: 8),
                                                             Text(
                                                               (() {
                                                                 final dateValue =
                                                                     plan['departureDate'];
                                                                 if (dateValue ==
-                                                                    null) {
+                                                                    null)
                                                                   return 'No Date';
-                                                                }
                                                                 if (dateValue
                                                                     is Timestamp) {
                                                                   final date =
@@ -439,6 +442,7 @@ class _HomePageState extends State<HomePage> {
                                                                 color:
                                                                     Colors
                                                                         .grey[700],
+                                                                height: 1.0,
                                                               ),
                                                             ),
                                                           ],
