@@ -487,9 +487,7 @@ class _SharePlanDialogState extends State<SharePlanDialog>
                     children: [
                       GestureDetector(
                         onLongPress: () async {
-                          // Request storage permission
                           if (Platform.isAndroid) {
-                            // For Android 13 and above, we need to request photos permission
                             if (await Permission.photos.request().isGranted) {
                               await _saveAndShareQRCode(context);
                             } else {
@@ -505,34 +503,41 @@ class _SharePlanDialogState extends State<SharePlanDialog>
                               }
                             }
                           } else {
-                            // For iOS and other platforms
                             await _saveAndShareQRCode(context);
                           }
                         },
-                        child: Column(
-                          children: [
-                            QrImageView(
-                              data: widget.planId,
-                              size: 140.0,
-                              backgroundColor: Colors.white,
-                              eyeStyle: const QrEyeStyle(
-                                eyeShape: QrEyeShape.square,
-                                color: Colors.black,
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Column(
+                            children: [
+                              QrImageView(
+                                data: widget.planId,
+                                size: 140.0,
+                                backgroundColor: Colors.white,
+                                eyeStyle: const QrEyeStyle(
+                                  eyeShape: QrEyeShape.square,
+                                  color: Colors.black,
+                                ),
+                                dataModuleStyle: const QrDataModuleStyle(
+                                  dataModuleShape: QrDataModuleShape.square,
+                                  color: Colors.black,
+                                ),
                               ),
-                              dataModuleStyle: const QrDataModuleStyle(
-                                dataModuleShape: QrDataModuleShape.square,
-                                color: Colors.black,
+                              const SizedBox(height: 8),
+                              const Text(
+                                'Long press to save QR code',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Long press to save QR code',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -574,6 +579,9 @@ class _SharePlanDialogState extends State<SharePlanDialog>
       final qrPainter = QrPainter(
         data: widget.planId,
         version: QrVersions.auto,
+        gapless: true,
+        embeddedImageStyle: null,
+        embeddedImage: null,
         eyeStyle: const QrEyeStyle(
           eyeShape: QrEyeShape.square,
           color: Colors.black,
@@ -584,10 +592,17 @@ class _SharePlanDialogState extends State<SharePlanDialog>
         ),
       );
 
-      // Create a picture recorder
+      // Create a picture recorder with a white background
       final recorder = ui.PictureRecorder();
       final canvas = Canvas(recorder);
       final size = const Size(200, 200);
+
+      // Draw white background
+      final paint =
+          Paint()
+            ..color = Colors.white
+            ..style = PaintingStyle.fill;
+      canvas.drawRect(Offset.zero & size, paint);
 
       // Draw the QR code
       qrPainter.paint(canvas, size);
@@ -603,7 +618,7 @@ class _SharePlanDialogState extends State<SharePlanDialog>
       final file = File(filePath);
       await file.writeAsBytes(buffer);
 
-      // Share the image
+      // Share the image with a white background
       await Share.shareXFiles([
         XFile(filePath),
       ], text: 'Share QR Code for Travel Plan');
