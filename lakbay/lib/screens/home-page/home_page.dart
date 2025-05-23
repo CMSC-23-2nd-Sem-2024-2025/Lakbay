@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:lakbay/components/bottomnav.dart';
+import 'package:lakbay/screens/similar_people/similar_page.dart';
 import 'package:lakbay/screens/travel-page/travel_form.dart';
 import 'package:provider/provider.dart';
 import '../../providers/plan_provider.dart';
@@ -389,76 +391,42 @@ class _HomePageState extends State<HomePage> {
                           : const SharedPlans(),
                 ),
               ),
+
               // Bottom Navigation Bar
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  bottom: 16,
-                  top: 0,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
-                        blurRadius: 8,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.people_alt_rounded, // 2-person icon
-                          color: Color(0xFFF86400),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _selectedTab = 1;
-                          });
-                        },
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Color(0xFFF86400),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: IconButton(
-                          icon: Icon(Icons.add, color: Colors.white),
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TravelFormPage(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.person, color: Color(0xFFF86400)),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfilePage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
+              
             ],
           ),
+
+          
         ),
+      ),
+
+      bottomNavigationBar: CustomBottomNav(
+        selectedIndex: 0, // 0 for home/travel plan
+        onTabSelected: (index) {
+          if (index == 0) {
+            // Already on home, do nothing or set tab
+            setState(() {
+              _selectedTab = 0;
+            });
+          } else if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TravelFormPage()),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FindSimilar()),
+            );
+          }
+        },
       ),
     );
   }

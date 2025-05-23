@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lakbay/screens/similar_people/similar_page.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import 'edit_profile_page.dart';
@@ -7,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../home-page/home_page.dart';
 import '../travel-page/travel_form.dart';
 import 'dart:convert';
+import '../../components/bottomnav.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -22,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    
+
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     authProvider.fetchUserDetails().then((_) {
       setState(() {
@@ -65,7 +67,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-
     bool makePublic = false;
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.userObj;
@@ -518,62 +519,33 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
       // Add bottom navigation bar
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 12, 12, 28),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.people_alt_rounded,
-                  color: Color(0xFFF86400),
-                ),
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                    (route) => false,
-                  );
-                },
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF86400),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.add, color: Colors.white),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TravelFormPage()),
-                    );
-                  },
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.person, color: Color(0xFFF86400)),
-                onPressed: () {
-                  // Already on profile page, do nothing
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+     bottomNavigationBar: CustomBottomNav(
+  selectedIndex: 2, // 0, 1, 2, or 3 depending on the page
+  onTabSelected: (index) {
+    if (index == 0) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+        (route) => false,
+      );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TravelFormPage()),
+      );
+    } else if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
+    } else if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => FindSimilar()),
+      );
+    }
+  },
+),
     );
   }
 }

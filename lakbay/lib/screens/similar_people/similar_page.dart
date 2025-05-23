@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lakbay/components/bottomnav.dart';
 import 'package:lakbay/providers/plan_provider.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
@@ -369,59 +370,33 @@ class _FindSimilarState extends State<FindSimilar> {
         ),
       ),
 
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 12, 12, 28),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.people_alt_rounded,
-                  color: Color(0xFFF86400),
-                ),
-                onPressed: () {},
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF86400),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.add, color: Colors.white),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TravelFormPage()),
-                    );
-                  },
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.person, color: Color(0xFFF86400)),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      bottomNavigationBar: CustomBottomNav(
+  selectedIndex: 3, // 0, 1, 2, or 3 depending on the page
+  onTabSelected: (index) {
+    if (index == 0) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+        (route) => false,
+      );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TravelFormPage()),
+      );
+    } else if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()),
+      );
+    } else if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => FindSimilar()),
+      );
+    }
+  },
+),
     );
   }
 }
