@@ -427,7 +427,11 @@ class _SharePlanDialogState extends State<SharePlanDialog>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Share Plan'),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: const Text(
+        'Share Plan',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+      ),
       content: SizedBox(
         width: 300,
         child: Column(
@@ -435,8 +439,9 @@ class _SharePlanDialogState extends State<SharePlanDialog>
           children: [
             TabBar(
               controller: _tabController,
-              labelColor: Theme.of(context).primaryColor,
+              labelColor: Colors.black,
               unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.black,
               tabs: const [Tab(text: 'By Username'), Tab(text: 'By QR Code')],
             ),
             SizedBox(
@@ -452,20 +457,41 @@ class _SharePlanDialogState extends State<SharePlanDialog>
                         controller: _usernameController,
                         decoration: InputDecoration(
                           labelText: 'Recipient Username',
+                          labelStyle: const TextStyle(color: Colors.black),
                           errorText: _error,
                           enabled: !_isLoading,
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                         onSubmitted: (_) => _handleShare(),
                       ),
                       if (_isLoading)
                         const Padding(
                           padding: EdgeInsets.only(top: 16),
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(color: Colors.black),
                         ),
                     ],
                   ),
                   // By QR Code
-                  Center(child: QrImageView(data: widget.planId, size: 140.0)),
+                  Center(
+                    child: QrImageView(
+                      data: widget.planId,
+                      size: 140.0,
+                      backgroundColor: Colors.white,
+                      eyeStyle: const QrEyeStyle(
+                        eyeShape: QrEyeShape.square,
+                        color: Colors.black,
+                      ),
+                      dataModuleStyle: const QrDataModuleStyle(
+                        dataModuleShape: QrDataModuleShape.square,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -475,11 +501,18 @@ class _SharePlanDialogState extends State<SharePlanDialog>
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
         ),
         if (_tabController.index == 0)
           ElevatedButton(
             onPressed: _isLoading ? null : _handleShare,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
             child: const Text('Share'),
           ),
       ],

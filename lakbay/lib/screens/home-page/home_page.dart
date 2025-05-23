@@ -316,8 +316,7 @@ class _HomePageState extends State<HomePage> {
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
+                                                        MainAxisAlignment.start,
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
@@ -379,73 +378,81 @@ class _HomePageState extends State<HomePage> {
                                                           ),
                                                         ],
                                                       ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.pushReplacement(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      ItinerariesPage(
-                                                                        plan:
-                                                                            plan,
-                                                                      ),
-                                                            ),
-                                                          );
-                                                        },
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              plan['location'] ??
-                                                                  'No Location',
-                                                              style: TextStyle(
-                                                                fontSize: 12,
-                                                                color:
-                                                                    Colors
-                                                                        .grey[700],
-                                                                height: 1.0,
+                                                      Transform.translate(
+                                                        offset: const Offset(
+                                                          0,
+                                                          -8,
+                                                        ),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.pushReplacement(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (
+                                                                      context,
+                                                                    ) => ItinerariesPage(
+                                                                      plan:
+                                                                          plan,
+                                                                    ),
                                                               ),
-                                                            ),
-                                                            Text(
-                                                              (() {
-                                                                final dateValue =
-                                                                    plan['departureDate'];
-                                                                if (dateValue ==
-                                                                    null)
-                                                                  return 'No Date';
-                                                                if (dateValue
-                                                                    is Timestamp) {
-                                                                  final date =
-                                                                      dateValue
-                                                                          .toDate();
-                                                                  return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                                                                }
-                                                                try {
-                                                                  final date =
-                                                                      DateTime.parse(
+                                                            );
+                                                          },
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                plan['location'] ??
+                                                                    'No Location',
+                                                                style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color:
+                                                                      Colors
+                                                                          .grey[700],
+                                                                  height: 1.0,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                (() {
+                                                                  final dateValue =
+                                                                      plan['departureDate'];
+                                                                  if (dateValue ==
+                                                                      null)
+                                                                    return 'No Date';
+                                                                  if (dateValue
+                                                                      is Timestamp) {
+                                                                    final date =
                                                                         dateValue
-                                                                            .toString(),
-                                                                      );
-                                                                  return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                                                                } catch (_) {
-                                                                  return dateValue
-                                                                      .toString();
-                                                                }
-                                                              })(),
-                                                              style: TextStyle(
-                                                                fontSize: 12,
-                                                                color:
-                                                                    Colors
-                                                                        .grey[700],
-                                                                height: 1.0,
+                                                                            .toDate();
+                                                                    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                                  }
+                                                                  try {
+                                                                    final date =
+                                                                        DateTime.parse(
+                                                                          dateValue
+                                                                              .toString(),
+                                                                        );
+                                                                    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                                  } catch (_) {
+                                                                    return dateValue
+                                                                        .toString();
+                                                                  }
+                                                                })(),
+                                                                style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color:
+                                                                      Colors
+                                                                          .grey[700],
+                                                                  height: 1.0,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
