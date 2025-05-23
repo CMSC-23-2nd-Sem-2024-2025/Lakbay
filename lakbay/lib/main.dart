@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lakbay/components/scaffolds.dart';
 import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/screens/home-page/starting_page.dart';
 import 'package:lakbay/screens/similar_people/similar_page.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         // or the startinf page (when the userObj is null)
         builder: (context, authProvider, _) {
           if (authProvider.userObj != null) {
-            return HomePage();
+            return MainScaffold();
           } else {
             return StartingPage();
           }

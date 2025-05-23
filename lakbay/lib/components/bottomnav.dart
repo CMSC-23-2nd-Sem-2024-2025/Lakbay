@@ -60,6 +60,14 @@ class CustomBottomNav extends StatelessWidget {
                 onPressed: () => onTabSelected(1),
               ),
             ),
+
+            IconButton(
+              icon: Icon(
+                Icons.notifications,
+                color: orange,
+              ),
+              onPressed: () {},
+            ),
             IconButton(
               icon: Icon(
                 Icons.person,
@@ -67,6 +75,8 @@ class CustomBottomNav extends StatelessWidget {
               ),
               onPressed: () => onTabSelected(2),
             ),
+
+            
             
           ],
         ),

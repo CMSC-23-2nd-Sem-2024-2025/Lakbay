@@ -519,33 +519,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
       // Add bottom navigation bar
-     bottomNavigationBar: CustomBottomNav(
-  selectedIndex: 2, // 0, 1, 2, or 3 depending on the page
-  onTabSelected: (index) {
-    if (index == 0) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-        (route) => false,
-      );
-    } else if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => TravelFormPage()),
-      );
-    } else if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
-      );
-    } else if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => FindSimilar()),
-      );
-    }
-  },
-),
+    
     );
   }
 }

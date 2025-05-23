@@ -402,32 +402,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
 
-      bottomNavigationBar: CustomBottomNav(
-        selectedIndex: 0, // 0 for home/travel plan
-        onTabSelected: (index) {
-          if (index == 0) {
-            // Already on home, do nothing or set tab
-            setState(() {
-              _selectedTab = 0;
-            });
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TravelFormPage()),
-            );
-          } else if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
-          } else if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FindSimilar()),
-            );
-          }
-        },
-      ),
     );
   }
 }
