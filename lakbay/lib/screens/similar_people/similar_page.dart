@@ -345,15 +345,21 @@ class _FindSimilarState extends State<FindSimilar> {
                                       fontSize: 16,
                                     ),
                                     textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
-                                    matchText,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.blueGrey,
+                                  Flexible(
+                                    child: Text(
+                                      matchText,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.blueGrey,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
                                     ),
-                                    textAlign: TextAlign.center,
                                   ),
                                 ],
                               ),
@@ -369,8 +375,6 @@ class _FindSimilarState extends State<FindSimilar> {
           ),
         ),
       ),
-
-      
     );
   }
 }

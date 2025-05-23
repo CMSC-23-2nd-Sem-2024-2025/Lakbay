@@ -107,9 +107,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _isLoading = false;
     });
     if (result == null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
-      );
+      Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(
         context,
