@@ -52,6 +52,7 @@ class AuthProvider with ChangeNotifier {
         print("First Name: ${userDetails['firstName']}");
         print("Last Name: ${userDetails['lastName']}");
         print("Email: ${userDetails['email']}");
+        notifyListeners(); // Add this line to notify listeners after updating userDetails
       } else {
         print("User details not found in Firestore.");
       }

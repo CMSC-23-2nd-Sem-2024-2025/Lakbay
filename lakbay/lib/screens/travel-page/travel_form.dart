@@ -15,20 +15,42 @@ class TravelFormPage extends StatefulWidget {
 }
 
 class _TravelFormPageState extends State<TravelFormPage> {
+  final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final locationController = TextEditingController();
+  final departureController = TextEditingController();
+  final returnController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-
     locationController.addListener(() {
       setState(() {});
     });
   }
 
-  final nameController = TextEditingController();
-  final locationController = TextEditingController();
-  final departureController = TextEditingController();
-  final returnController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  @override
+  void dispose() {
+    nameController.dispose();
+    locationController.dispose();
+    departureController.dispose();
+    returnController.dispose();
+    super.dispose();
+  }
+
+  bool _validateFields() {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please fill in all required fields'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final orange = Color(0xFFF97419);
@@ -80,33 +102,50 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                 const SizedBox(height: 42),
 
-                _Label('Travel Name'),
+                _Label('Travel Name *'),
                 _ShadowedTextField(
                   controller: nameController,
                   hintText: 'Enter Travel Name',
                   icon: Icons.flight_takeoff,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter travel name';
+                    }
+                    return null;
+                  },
                 ),
 
                 const SizedBox(height: 40),
 
-                _Label('Location'),
+                _Label('Location *'),
                 _ShadowedTextField(
                   controller: locationController,
                   hintText: 'Enter Location',
                   icon: Icons.location_on_outlined,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter location';
+                    }
+                    return null;
+                  },
                 ),
 
                 const SizedBox(height: 40),
 
-                _Label('Departure Date'),
+                _Label('Departure Date *'),
                 _ShadowedTextField(
                   controller: departureController,
                   hintText: 'Select Departure Date',
                   icon: Icons.date_range,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please select departure date';
+                    }
+                    return null;
+                  },
                   onTap: () async {
                     final DateTime? pickedDate = await showDatePicker(
                       context: context,
-                      // mode: DateTimeFieldPickerMode.date,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
                       initialDate: DateTime.now(),
@@ -114,17 +153,13 @@ class _TravelFormPageState extends State<TravelFormPage> {
                         return Theme(
                           data: Theme.of(context).copyWith(
                             colorScheme: ColorScheme.light(
-                              primary: Color(
-                                0xFFF97419,
-                              ), // orange header & selection
-                              onPrimary: Colors.white, // text on primary color
-                              onSurface: Colors.black, // default text color
+                              primary: Color(0xFFF97419),
+                              onPrimary: Colors.white,
+                              onSurface: Colors.black,
                             ),
                             textButtonTheme: TextButtonThemeData(
                               style: TextButton.styleFrom(
-                                foregroundColor: Color(
-                                  0xFFF97419,
-                                ), // button text color
+                                foregroundColor: Color(0xFFF97419),
                               ),
                             ),
                           ),
@@ -144,11 +179,27 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                 const SizedBox(height: 40),
 
-                _Label('Return Date'),
+                _Label('Return Date *'),
                 _ShadowedTextField(
                   controller: returnController,
                   hintText: 'Select Return Date',
                   icon: Icons.calendar_today_outlined,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please select return date';
+                    }
+                    // Validate that return date is after departure date
+                    if (departureController.text.isNotEmpty) {
+                      final departure = DateTime.parse(
+                        departureController.text,
+                      );
+                      final returnDate = DateTime.parse(value);
+                      if (returnDate.isBefore(departure)) {
+                        return 'Return date must be after departure date';
+                      }
+                    }
+                    return null;
+                  },
                   onTap: () async {
                     final DateTime? pickedDate = await showDatePicker(
                       context: context,
@@ -191,56 +242,46 @@ class _TravelFormPageState extends State<TravelFormPage> {
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final user = FirebaseAuth.instance.currentUser;
-                        if (user == null) return;
+                      if (!_validateFields()) return;
 
-                        final plan = TravelPlan(
-                          id: null,
-                          userId: user.uid,
-                          travelName: nameController.text.trim(),
-                          location: locationController.text.trim(),
-                          departureDate:
-                              DateTime.parse(
-                                departureController.text,
-                              ).toLocal(),
-                          returnDate:
-                              DateTime.parse(returnController.text).toLocal(),
-                          flightDetails: null,
-                          accommodation: null,
-                          notes: null,
-                          emerContact: null,
-                        );
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user == null) return;
 
-                        // Add to Firestore
-                        final docRef = await FirebaseFirestore.instance
-                            .collection('travelplans')
-                            .add({
-                              ...plan.toJson(),
-                              // Store only the date part as a string (YYYY-MM-DD)
-                              'departureDate':
-                                  departureController.text.isNotEmpty
-                                      ? departureController.text
-                                      : null,
-                              'returnDate':
-                                  returnController.text.isNotEmpty
-                                      ? returnController.text
-                                      : null,
-                            });
+                      final plan = TravelPlan(
+                        id: null,
+                        userId: user.uid,
+                        travelName: nameController.text.trim(),
+                        location: locationController.text.trim(),
+                        departureDate:
+                            DateTime.parse(departureController.text).toLocal(),
+                        returnDate:
+                            DateTime.parse(returnController.text).toLocal(),
+                        flightDetails: null,
+                        accommodation: null,
+                        notes: null,
+                        emerContact: null,
+                      );
 
-                        // Update the plan with the generated ID
-                        await docRef.update({'id': docRef.id});
+                      // Add to Firestore
+                      final docRef = await FirebaseFirestore.instance
+                          .collection('travelplans')
+                          .add({
+                            ...plan.toJson(),
+                            'departureDate': departureController.text,
+                            'returnDate': returnController.text,
+                          });
 
-                        // Go to add info page, pass planId
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    TravelAddInfoPage(planId: docRef.id),
-                          ),
-                        );
-                      }
+                      // Update the plan with the generated ID
+                      await docRef.update({'id': docRef.id});
+
+                      // Go to add info page, pass planId
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => TravelAddInfoPage(planId: docRef.id),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: orange,
@@ -295,6 +336,7 @@ class _ShadowedTextField extends StatelessWidget {
   final IconData icon;
   final TextEditingController controller;
   final VoidCallback? onTap;
+  final String? Function(String?)? validator;
 
   const _ShadowedTextField({
     super.key,
@@ -302,6 +344,7 @@ class _ShadowedTextField extends StatelessWidget {
     required this.icon,
     required this.controller,
     this.onTap,
+    this.validator,
   });
 
   @override
@@ -320,8 +363,9 @@ class _ShadowedTextField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: controller,
-        readOnly: onTap != null, // Make it read-only if onTap is provided
+        readOnly: onTap != null,
         onTap: onTap,
+        validator: validator,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: Colors.black),
           hintText: hintText,
