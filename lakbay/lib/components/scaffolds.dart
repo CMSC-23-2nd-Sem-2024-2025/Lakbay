@@ -9,14 +9,18 @@ import 'package:lakbay/screens/travel-page/travel_form.dart';
 
 
 class MainScaffold extends StatefulWidget {
+  static final ValueNotifier<int> navIndexNotifier = ValueNotifier<int>(0);
   const MainScaffold({super.key});
+  
 
   @override
   State<MainScaffold> createState() => _MainScaffoldState();
+  
 }
 
 class _MainScaffoldState extends State<MainScaffold> {
   int _selectedIndex = 0;
+  
   final PageController _pageController = PageController();
 
   final List<Widget> _pages = [
@@ -25,6 +29,16 @@ class _MainScaffoldState extends State<MainScaffold> {
     ProfilePage(),
     FindSimilar(),
   ];
+
+  @override
+  void initState() {
+  super.initState();
+  MainScaffold.navIndexNotifier.addListener(() {
+    setState(() {
+      _selectedIndex = MainScaffold.navIndexNotifier.value;
+    });
+  });
+}
 
   @override
   void dispose() {

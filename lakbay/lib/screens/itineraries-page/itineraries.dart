@@ -3,6 +3,7 @@ import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/screens/itineraries-page/itineraries_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lakbay/components/scaffolds.dart';
 
 class ItinerariesPage extends StatefulWidget {
   final Map<String, dynamic> plan;
@@ -32,11 +33,12 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
-          },
+  MainScaffold.navIndexNotifier.value = 0;
+  Navigator.of(context).pushAndRemoveUntil(
+    MaterialPageRoute(builder: (context) => MainScaffold()),
+    (route) => false,
+  );
+},
         ),
       ),
       body: Padding(
