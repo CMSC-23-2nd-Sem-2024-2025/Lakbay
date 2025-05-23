@@ -3,6 +3,7 @@ import 'package:lakbay/providers/auth_provider.dart';
 import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/screens/home-page/starting_page.dart';
 import 'package:provider/provider.dart';
+import 'package:lakbay/components/scaffolds.dart';
 
 class LoginDetails extends StatefulWidget {
   const LoginDetails({super.key});
@@ -172,7 +173,8 @@ class _LoginDetailsState extends State<LoginDetails> {
                                     Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => HomePage(),
+                                        builder:
+                                            (context) => const MainScaffold(),
                                       ),
                                       (route) => false,
                                     );
