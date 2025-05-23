@@ -169,11 +169,12 @@ class _LoginDetailsState extends State<LoginDetails> {
 
                                   // Navigate to the homepage if login is successful
                                   if (message == null) {
-                                    Navigator.pushReplacement(
+                                    Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => HomePage(),
                                       ),
+                                      (route) => false,
                                     );
                                   }
                                 }
