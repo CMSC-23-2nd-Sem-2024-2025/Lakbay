@@ -16,6 +16,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true;
+
   File? _profileImage;
 
   @override
@@ -31,13 +32,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-
     // make an instance of the auth provider to get user data
     final authProvider = Provider.of<AuthProvider>(context);
 
     // make the user object to and details
     final user = authProvider.userObj;
     final details = authProvider.userDetails;
+    bool makePublic = details?['public'] ?? false;
 
     // image for storing to firebase
     final profileImageUrl =
@@ -47,8 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: const Color(0xFFF6F6F6),
       body:
           isLoading
-
-          // apply a loading widget if data is still being fetched
+              // apply a loading widget if data is still being fetched
               ? const Center(child: CircularProgressIndicator())
               : user == null || details == null
               ? const Center(child: Text("No user data available."))
@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 180,
                     decoration: const BoxDecoration(color: Color(0xFFF97419)),
 
-                    // add the logo 
+                    // add the logo
                     child: Stack(
                       children: [
                         Center(
@@ -102,8 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         width: 100,
                                         height: 100,
                                         child:
-
-                                        // get the image
+                                            // get the image
                                             _profileImage != null
                                                 ? Image.file(
                                                   _profileImage!,
@@ -284,6 +283,34 @@ class _ProfilePageState extends State<ProfilePage> {
                                   color: Colors.grey,
                                 ),
                               ),
+
+                              Row(
+                                children: [
+                                  Text(
+                                    'Make Profile Public',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+
+                                  SizedBox(width: 2),
+
+                                  Switch(
+                                    value: makePublic,
+                                    onChanged: (value) async {
+                                      // Update in Firestore via AuthProvider
+                                      await Provider.of<AuthProvider>(
+                                        context,
+                                        listen: false,
+                                      ).updateUserDetails({'public': value});
+                                      setState(() {}); // Refresh UI
+                                    },
+                                    activeColor: Color(0xFFF97419),
+                                  ),
+                                ],
+                              ),
+
                               const SizedBox(height: 12),
                               Row(
                                 children: [

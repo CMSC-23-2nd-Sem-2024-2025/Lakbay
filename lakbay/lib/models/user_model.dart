@@ -8,6 +8,7 @@ class User {
   String email;
   List<String> interests;
   List<String> styles;
+  bool public;
   
 
   User({
@@ -19,6 +20,7 @@ class User {
     required this.email,
     this.interests = const [],
     this.styles = const [],
+    this.public = false,
     
   });
 
@@ -32,6 +34,7 @@ class User {
       email: json['email'],
       interests: List<String>.from(json['interests'] ?? []),
       styles: List<String>.from(json['styles'] ?? []),
+      public: json['public'] ?? false,
     );
   }
 
@@ -45,6 +48,7 @@ class User {
       'email': email,
       'interests': interests,
       'styles': styles,
+      'public': public,
       
     };
   }

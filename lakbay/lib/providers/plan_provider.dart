@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lakbay/api/firebase_user_api.dart';
+import 'package:lakbay/api/firebase_plan_api.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
 
 
@@ -74,4 +74,31 @@ class PlanProvider with ChangeNotifier {
     print(message);
     notifyListeners();
   }
+
+
+  Stream<List<Map<String, dynamic>>> streamSimilarUsers({
+  required String currentUserId,
+  required List<String> interests,
+  required List<String> styles,
+}) {
+  // Listen to all users and filter in Dart
+  return FirebaseFirestore.instance.collection('appusers').snapshots().map(
+    (snapshot) {
+      return snapshot.docs
+          .where((doc) => doc.id != currentUserId)
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .where((user) {
+            // Only include users with public == true
+            if (user['public'] != true) return false;
+            final userInterests = List<String>.from(user['interests'] ?? []);
+            final userStyles = List<String>.from(user['styles'] ?? []);
+            final hasMatchingInterest = interests.any(userInterests.contains);
+            final hasMatchingStyle = styles.any(userStyles.contains);
+            return hasMatchingInterest || hasMatchingStyle;
+          })
+          .toList();
+    },
+  );
+}
+  
 }

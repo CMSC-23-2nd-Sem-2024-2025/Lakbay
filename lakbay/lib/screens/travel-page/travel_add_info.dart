@@ -3,7 +3,7 @@ import 'travel_form.dart';
 import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lakbay/providers/user_provider.dart';
+import 'package:lakbay/providers/plan_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
 
