@@ -7,6 +7,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lakbay/models/shared_plans_model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:lakbay/screens/home-page/qr_scanner_page.dart';
+import 'dart:ui' as ui;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SharedPlans extends StatelessWidget {
   const SharedPlans({Key? key}) : super(key: key);
@@ -477,20 +482,60 @@ class _SharePlanDialogState extends State<SharePlanDialog>
                     ],
                   ),
                   // By QR Code
-                  Center(
-                    child: QrImageView(
-                      data: widget.planId,
-                      size: 140.0,
-                      backgroundColor: Colors.white,
-                      eyeStyle: const QrEyeStyle(
-                        eyeShape: QrEyeShape.square,
-                        color: Colors.black,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onLongPress: () async {
+                          // Request storage permission
+                          if (Platform.isAndroid) {
+                            // For Android 13 and above, we need to request photos permission
+                            if (await Permission.photos.request().isGranted) {
+                              await _saveAndShareQRCode(context);
+                            } else {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Photos permission is required to save QR code',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
+                          } else {
+                            // For iOS and other platforms
+                            await _saveAndShareQRCode(context);
+                          }
+                        },
+                        child: Column(
+                          children: [
+                            QrImageView(
+                              data: widget.planId,
+                              size: 140.0,
+                              backgroundColor: Colors.white,
+                              eyeStyle: const QrEyeStyle(
+                                eyeShape: QrEyeShape.square,
+                                color: Colors.black,
+                              ),
+                              dataModuleStyle: const QrDataModuleStyle(
+                                dataModuleShape: QrDataModuleShape.square,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Long press to save QR code',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      dataModuleStyle: const QrDataModuleStyle(
-                        dataModuleShape: QrDataModuleShape.square,
-                        color: Colors.black,
-                      ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -517,5 +562,69 @@ class _SharePlanDialogState extends State<SharePlanDialog>
           ),
       ],
     );
+  }
+
+  Future<void> _saveAndShareQRCode(BuildContext context) async {
+    try {
+      // Create a temporary directory
+      final directory = await getTemporaryDirectory();
+      final String filePath = '${directory.path}/qr_code.png';
+
+      // Create a painter to draw the QR code
+      final qrPainter = QrPainter(
+        data: widget.planId,
+        version: QrVersions.auto,
+        eyeStyle: const QrEyeStyle(
+          eyeShape: QrEyeShape.square,
+          color: Colors.black,
+        ),
+        dataModuleStyle: const QrDataModuleStyle(
+          dataModuleShape: QrDataModuleShape.square,
+          color: Colors.black,
+        ),
+      );
+
+      // Create a picture recorder
+      final recorder = ui.PictureRecorder();
+      final canvas = Canvas(recorder);
+      final size = const Size(200, 200);
+
+      // Draw the QR code
+      qrPainter.paint(canvas, size);
+      final picture = recorder.endRecording();
+      final img = await picture.toImage(
+        size.width.toInt(),
+        size.height.toInt(),
+      );
+      final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+      final buffer = byteData!.buffer.asUint8List();
+
+      // Save the image
+      final file = File(filePath);
+      await file.writeAsBytes(buffer);
+
+      // Share the image
+      await Share.shareXFiles([
+        XFile(filePath),
+      ], text: 'Share QR Code for Travel Plan');
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('QR Code saved and ready to share!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving QR code: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }
