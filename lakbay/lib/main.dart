@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         // or the startinf page (when the userObj is null)
         builder: (context, authProvider, _) {
           if (authProvider.userObj != null) {
-            return HomePage();
+            return FindSimilar();
           } else {
             return StartingPage();
           }

@@ -6,6 +6,7 @@ import '../home-page/home_page.dart';
 import '../profle-page/profile_page.dart';
 import '../travel-page/travel_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
 
 class FindSimilar extends StatefulWidget {
   const FindSimilar({super.key});
@@ -30,6 +31,31 @@ class _FindSimilarState extends State<FindSimilar> {
     } else {
       isLoading = false;
     }
+  }
+
+  Widget _buildProfileImage(Map<String, dynamic> user) {
+    final profileImageBase64 = user['profileImageBase64'] as String?;
+
+    if (profileImageBase64 != null && profileImageBase64.isNotEmpty) {
+      return ClipOval(
+        child: Image.memory(
+          base64Decode(profileImageBase64),
+          width: 100,
+          height: 100,
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        shape: BoxShape.circle,
+      ),
+      child: const Icon(Icons.person, size: 50, color: Colors.white),
+    );
   }
 
   @override
@@ -143,9 +169,7 @@ class _FindSimilarState extends State<FindSimilar> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Center(
-                                          child: Icon(Icons.image, size: 100),
-                                        ),
+                                        Center(child: _buildProfileImage(u)),
                                         const SizedBox(height: 16),
 
                                         Center(
@@ -209,13 +233,10 @@ class _FindSimilarState extends State<FindSimilar> {
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             fontSize: 12,
-                                            color:
-                                                Colors
-                                                    .black, 
+                                            color: Colors.black,
                                           ),
                                           decoration: InputDecoration(
-                                            border:
-                                                UnderlineInputBorder(), 
+                                            border: UnderlineInputBorder(),
                                             isDense: true,
                                             contentPadding: EdgeInsets.zero,
                                           ),
@@ -246,13 +267,10 @@ class _FindSimilarState extends State<FindSimilar> {
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             fontSize: 12,
-                                            color:
-                                                Colors
-                                                    .black, 
+                                            color: Colors.black,
                                           ),
                                           decoration: InputDecoration(
-                                            border:
-                                                UnderlineInputBorder(), 
+                                            border: UnderlineInputBorder(),
                                             isDense: true,
                                             contentPadding: EdgeInsets.zero,
                                           ),
@@ -281,13 +299,10 @@ class _FindSimilarState extends State<FindSimilar> {
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             fontSize: 12,
-                                            color:
-                                                Colors
-                                                    .black, 
+                                            color: Colors.black,
                                           ),
                                           decoration: InputDecoration(
-                                            border:
-                                                UnderlineInputBorder(), 
+                                            border: UnderlineInputBorder(),
                                             isDense: true,
                                             contentPadding: EdgeInsets.zero,
                                           ),
@@ -300,7 +315,10 @@ class _FindSimilarState extends State<FindSimilar> {
                                     TextButton(
                                       onPressed:
                                           () => Navigator.of(context).pop(),
-                                      child: const Text('Back', style: TextStyle(color: Colors.black)),
+                                      child: const Text(
+                                        'Back',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
                                     ),
                                   ],
                                 );
@@ -317,7 +335,7 @@ class _FindSimilarState extends State<FindSimilar> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.image, size: 50),
+                                  _buildProfileImage(u),
                                   const SizedBox(height: 8),
                                   Text(
                                     '${u['userName'] ?? ''}',
@@ -373,9 +391,7 @@ class _FindSimilarState extends State<FindSimilar> {
                   Icons.people_alt_rounded,
                   color: Color(0xFFF86400),
                 ),
-                onPressed: () {
-                  
-                },
+                onPressed: () {},
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 8),
