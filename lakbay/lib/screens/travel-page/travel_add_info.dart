@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lakbay/providers/plan_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
+import 'package:lakbay/components/scaffolds.dart';
 
 class TravelAddInfoPage extends StatefulWidget {
   final String planId;
@@ -53,7 +54,11 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
                   : null,
         });
 
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    // Navigate to main scaffold and remove all previous routes
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => MainScaffold()),
+      (route) => false,
+    );
   }
 
   @override
@@ -81,8 +86,11 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
                   ),
                   TextButton(
                     onPressed: () {
-  Navigator.of(context).popUntil((route) => route.isFirst);
-},
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => MainScaffold()),
+                        (route) => false,
+                      );
+                    },
                     child: Text(
                       'Skip',
                       style: TextStyle(
