@@ -160,11 +160,56 @@ class _SignupDetailsState extends State<SignupDetails> {
                             validator: (value) {
                               if (value == null || value.trim().isEmpty) {
                                 return 'Email is required';
-                              } else if (!EmailValidator.validate(
-                                value.trim(),
-                              )) {
-                                return 'Enter a valid email';
                               }
+
+                              // More strict email validation pattern
+                              final emailRegex = RegExp(
+                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                              );
+
+                              if (!emailRegex.hasMatch(value.trim())) {
+                                return 'Enter a valid email address';
+                              }
+
+                              // Additional validation for common TLDs
+                              final validTLDs = [
+                                'com',
+                                'org',
+                                'net',
+                                'edu',
+                                'gov',
+                                'mil',
+                                'io',
+                                'co',
+                                'ai',
+                                'app',
+                                'dev',
+                                'me',
+                                'info',
+                                'biz',
+                                'name',
+                                'pro',
+                                'xyz',
+                                'ph',
+                                'uk',
+                                'us',
+                                'ca',
+                                'au',
+                                'nz',
+                                'jp',
+                                'kr',
+                                'cn',
+                                'in',
+                                'sg',
+                                'my',
+                              ];
+
+                              final tld =
+                                  value.trim().split('.').last.toLowerCase();
+                              if (!validTLDs.contains(tld)) {
+                                return 'Please use a valid email domain';
+                              }
+
                               if (prompt != null) {
                                 final error = prompt;
                                 prompt = null;
