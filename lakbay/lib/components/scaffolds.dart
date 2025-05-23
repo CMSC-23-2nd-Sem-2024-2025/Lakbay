@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:lakbay/components/bottomnav.dart';
 import 'package:lakbay/screens/home-page/home_page.dart';
@@ -16,6 +17,7 @@ class MainScaffold extends StatefulWidget {
 
 class _MainScaffoldState extends State<MainScaffold> {
   int _selectedIndex = 0;
+  final PageController _pageController = PageController();
 
   final List<Widget> _pages = [
     HomePage(),
@@ -25,11 +27,25 @@ class _MainScaffoldState extends State<MainScaffold> {
   ];
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
+      body: PageTransitionSwitcher(
+        duration: const Duration(milliseconds: 400),
+        transitionBuilder: (child, animation, secondaryAnimation) {
+          return SharedAxisTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            transitionType: SharedAxisTransitionType.horizontal,
+            child: child,
+          );
+        },
+        child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: CustomBottomNav(
         selectedIndex: _selectedIndex,
