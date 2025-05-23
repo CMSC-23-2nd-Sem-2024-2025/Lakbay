@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../api/firebase_auth_api.dart';
+import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
   late FirebaseAuthAPI authService;
@@ -107,6 +108,22 @@ class AuthProvider with ChangeNotifier {
       if (result == null) {
         await fetchUserDetails(); // refresh details after update
         notifyListeners(); // notify listeners of the state change
+      }
+      return result;
+    }
+    return "No user is currently signed in.";
+  }
+
+  Future<String?> updateProfilePicture(String base64Image) async {
+    User? currentUser = FirebaseAuthAPI.auth.currentUser;
+    if (currentUser != null) {
+      String uid = currentUser.uid;
+      Map<String, dynamic> updatedData = {'profileImageBase64': base64Image};
+
+      String? result = await authService.updateUserInfo(uid, updatedData);
+      if (result == null) {
+        await fetchUserDetails();
+        notifyListeners();
       }
       return result;
     }

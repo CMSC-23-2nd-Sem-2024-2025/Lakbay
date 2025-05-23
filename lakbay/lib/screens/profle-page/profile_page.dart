@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import '../home-page/home_page.dart';
 import '../travel-page/travel_form.dart';
+import 'dart:convert';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -29,26 +30,52 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  Future<void> _handleImageSelection(ImageSource source) async {
+    try {
+      final picked = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 85,
+      );
+
+      if (picked != null) {
+        final file = File(picked.path);
+        final bytes = await file.readAsBytes();
+        final base64Image = base64Encode(bytes);
+
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final result = await authProvider.updateProfilePicture(base64Image);
+
+        if (result == null) {
+          setState(() {
+            _profileImage = file;
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error updating profile picture: $result')),
+          );
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    // make an instance of the auth provider to get user data
     final authProvider = Provider.of<AuthProvider>(context);
-
-    // make the user object to and details
     final user = authProvider.userObj;
     final details = authProvider.userDetails;
 
-    // image for storing to firebase
-    final profileImageUrl =
-        details != null ? details['profileImageUrl'] as String? : null;
+    // Get base64 image from user details
+    final profileImageBase64 =
+        details != null ? details['profileImageBase64'] as String? : null;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       body:
           isLoading
-
-          // apply a loading widget if data is still being fetched
               ? const Center(child: CircularProgressIndicator())
               : user == null || details == null
               ? const Center(child: Text("No user data available."))
@@ -59,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 180,
                     decoration: const BoxDecoration(color: Color(0xFFF97419)),
 
-                    // add the logo 
+                    // add the logo
                     child: Stack(
                       children: [
                         Center(
@@ -102,25 +129,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                         width: 100,
                                         height: 100,
                                         child:
-
-                                        // get the image
                                             _profileImage != null
                                                 ? Image.file(
                                                   _profileImage!,
                                                   fit: BoxFit.cover,
                                                 )
-                                                : (profileImageUrl != null &&
-                                                    profileImageUrl.isNotEmpty)
-                                                ? Image.network(
-                                                  profileImageUrl,
+                                                : profileImageBase64 != null
+                                                ? Image.memory(
+                                                  base64Decode(
+                                                    profileImageBase64,
+                                                  ),
                                                   fit: BoxFit.cover,
                                                 )
-                                                : DecoratedBox(
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                        color: Colors.grey,
-                                                      ),
-                                                  child: const Icon(
+                                                : const DecoratedBox(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey,
+                                                  ),
+                                                  child: Icon(
                                                     Icons.person,
                                                     size: 60,
                                                     color: Colors.white,
@@ -192,18 +217,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     ),
                                               );
                                           if (source != null) {
-                                            final picked = await ImagePicker()
-                                                .pickImage(
-                                                  source: source,
-                                                  imageQuality: 85,
-                                                );
-                                            if (picked != null) {
-                                              setState(() {
-                                                _profileImage = File(
-                                                  picked.path,
-                                                );
-                                              });
-                                            }
+                                            await _handleImageSelection(source);
                                           }
                                         },
                                       ),
