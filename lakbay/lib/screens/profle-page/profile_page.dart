@@ -20,15 +20,16 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = true;
   File? _profileImage;
+  bool? _makePublic;
 
   @override
   void initState() {
     super.initState();
-
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     authProvider.fetchUserDetails().then((_) {
       setState(() {
         isLoading = false;
+        _makePublic = authProvider.userDetails?['public'] ?? false;
       });
     });
   }
@@ -67,7 +68,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    bool makePublic = false;
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.userObj;
     final details = authProvider.userDetails;
@@ -316,14 +316,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                   SizedBox(width: 2),
 
                                   Switch(
-                                    value: makePublic,
+                                    value: _makePublic ?? false,
                                     onChanged: (value) async {
-                                      // Update in Firestore via AuthProvider
-                                      await Provider.of<AuthProvider>(
-                                        context,
-                                        listen: false,
-                                      ).updateUserDetails({'public': value});
-                                      setState(() {}); // Refresh UI
+                                      setState(() {
+                                        _makePublic = value;
+                                      });
+                                      final authProvider =
+                                          Provider.of<AuthProvider>(
+                                            context,
+                                            listen: false,
+                                          );
+                                      await authProvider.updateUserDetails({
+                                        'public': value,
+                                      });
+                                      await authProvider.fetchUserDetails();
                                     },
                                     activeColor: Color(0xFFF97419),
                                   ),
@@ -518,8 +524,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
+
       // Add bottom navigation bar
-    
     );
   }
 }
