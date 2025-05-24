@@ -327,12 +327,20 @@ class _ProfilePageState extends State<ProfilePage> {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                Text(
-                                  '${details['friendsCount'] ?? 0}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
+                                StreamBuilder<DocumentSnapshot>(
+                                  stream: FirebaseFirestore.instance.collection('appusers').doc(user.uid).snapshots(),
+                                  builder: (context, snapshot) {
+                                    final friends = (snapshot.hasData && snapshot.data!.exists)
+                                        ? (snapshot.data!.data() as Map<String, dynamic>)['friends'] as List<dynamic>? ?? []
+                                        : [];
+                                    return Text(
+                                      '${friends.length}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 const Text(
                                   ' Friends',

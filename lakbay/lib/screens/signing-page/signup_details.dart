@@ -283,6 +283,9 @@ class _SignupDetailsState extends State<SignupDetails> {
                                         firstName,
                                         lastName,
                                         username,
+                                        
+                                        friends: [], 
+                                        pendingRequests: [],
                                       );
 
                                   if (context.mounted) Navigator.pop(context);

@@ -28,6 +28,8 @@ class FirebaseAuthAPI {
     String lastName,
     String username, {
     String? phoneNumber,
+    List<String> friends = const [],
+    List<String> pendingRequests = const [],
   }) async {
     try {
       // create user in firebase authentication
@@ -52,6 +54,8 @@ class FirebaseAuthAPI {
         'phoneNumber': phoneNumber,
         'interests': [], // Initialize empty interests list
         'styles': [], // Initialize empty styles list
+        'friends': friends, // Initialize friends list
+        'pendingRequests': pendingRequests, // Initialize pending requests list
       });
 
       // will automatically signed in the user after signing up

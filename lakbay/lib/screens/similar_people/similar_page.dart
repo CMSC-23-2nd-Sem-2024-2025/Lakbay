@@ -109,7 +109,11 @@ class _FindSimilarState extends State<FindSimilar> {
                     final similarUsers = snapshot.data!;
                     if (similarUsers.isEmpty) {
                       return const Center(
-                        child: Text('No similar users found.'),
+                        child: Text(
+                          'No similar users found.',
+                          style: TextStyle(fontSize: 18, color: Color(0xFF757575)),
+                          textAlign: TextAlign.center,
+                        ),
                       );
                     }
                     return GridView.builder(

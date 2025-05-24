@@ -67,6 +67,8 @@ class AuthProvider with ChangeNotifier {
     String lastName,
     String username, {
     String? phoneNumber,
+    List<String> friends = const [],
+    List<String> pendingRequests = const [],
   }) async {
     // Call the auth service and store the result
     String? result = await authService.signUp(
@@ -76,6 +78,8 @@ class AuthProvider with ChangeNotifier {
       lastName,
       username,
       phoneNumber: phoneNumber,
+      friends: friends,
+      pendingRequests: pendingRequests,
     );
 
     // Notify listeners after the sign-up attempt

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lakbay/components/scaffolds.dart';
-import 'package:lakbay/screens/home-page/home_page.dart';
+
 import 'package:lakbay/screens/home-page/starting_page.dart';
-import 'package:lakbay/screens/similar_people/similar_page.dart';
+
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
 import 'package:provider/provider.dart';

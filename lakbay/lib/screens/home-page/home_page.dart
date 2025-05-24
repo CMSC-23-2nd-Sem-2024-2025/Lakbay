@@ -43,17 +43,140 @@ class _HomePageState extends State<HomePage> {
     // this is the main scaffold of the home page. it contains the app bar, body, and bottom navigation bar
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        // add the app drawer
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () async {
+            await context.read<AuthProvider>().signOut();
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => StartingPage()),
+              (route) => false,
+            );
+          },
+        ),
         title: const Text(''),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await context.read<AuthProvider>().signOut();
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => StartingPage()),
-                (route) => false,
+            icon: const Icon(Icons.notifications, color: Color(0xFFF86400)),
+            onPressed: () {
+              if (user == null) return;
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Notifications'),
+                    content: SizedBox(
+                      width: 300,
+                      height: 200,
+                      child: StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('appusers')
+                            .doc(user.uid)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                          final data = snapshot.data!.data() as Map<String, dynamic>?;
+                          final pending = (data?['pendingRequests'] ?? []) as List;
+                          final friends = (data?['friends'] ?? []) as List;
+                          if (pending.isEmpty) {
+                            return const Center(
+                              child: Text('All caught up!'),
+                            );
+                          }
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: pending.length,
+                            itemBuilder: (context, index) {
+                              final requesterEmail = pending[index];
+                              return ListTile(
+                                leading: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.check, color: Colors.green),
+                                      tooltip: 'Accept',
+                                      visualDensity: VisualDensity.compact,
+                                      padding: EdgeInsets.zero,
+                                      constraints: BoxConstraints(),
+                                      onPressed: () async {
+                                        final userDoc = FirebaseFirestore.instance.collection('appusers').doc(user.uid);
+                                        final requesterQuery = await FirebaseFirestore.instance
+                                            .collection('appusers')
+                                            .where('email', isEqualTo: requesterEmail)
+                                            .limit(1)
+                                            .get();
+                                        if (requesterQuery.docs.isNotEmpty) {
+                                          final requesterDoc = requesterQuery.docs.first.reference;
+                                          final requesterData = requesterQuery.docs.first.data();
+                                          final requesterFriends = List<String>.from(requesterData['friends'] ?? []);
+
+                                          // Remove from pending, add to friends (current user)
+                                          final newPending = List<String>.from(pending)..remove(requesterEmail);
+                                          final newFriends = List<String>.from(friends);
+                                          if (!newFriends.contains(requesterEmail)) newFriends.add(requesterEmail);
+
+                                          await userDoc.update({
+                                            'pendingRequests': newPending,
+                                            'friends': newFriends,
+                                          });
+
+                                          // Add current user to requester's friends
+                                          if (user.email != null && !requesterFriends.contains(user.email)) {
+                                            requesterFriends.add(user.email!);
+                                          }
+                                          await requesterDoc.update({
+                                            'friends': requesterFriends,
+                                          });
+                                        }
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close, color: Colors.red),
+                                      tooltip: 'Decline',
+                                      visualDensity: VisualDensity.compact,
+                                      padding: EdgeInsets.zero,
+                                      constraints: BoxConstraints(),
+                                      onPressed: () async {
+                                        final userDoc = FirebaseFirestore.instance.collection('appusers').doc(user.uid);
+                                        final newPending = List<String>.from(pending)..remove(requesterEmail);
+                                        await userDoc.update({
+                                          'pendingRequests': newPending,
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                title: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection('appusers')
+                                      .where('email', isEqualTo: requesterEmail)
+                                      .limit(1)
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                                      return Text('Someone sent you a friend request');
+                                    }
+                                    final requesterData = snapshot.data!.docs.first.data() as Map<String, dynamic>;
+                                    final requesterUsername = requesterData['userName'] ?? requesterEmail;
+                                    return Text('$requesterUsername sent you a friend request');
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  );
+                },
               );
             },
           ),
@@ -185,10 +308,10 @@ class _HomePageState extends State<HomePage> {
                               final plansStream = planProvider.plans;
                               if (plansStream == null) {
                                 return Text(
-                                  "No travel plans yet.",
+                                  'No travel plans yet.',
                                   style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 16,
+                                    color: Color(0xFF757575),
+                                    fontSize: 18,
                                   ),
                                 );
                               }
@@ -209,10 +332,10 @@ class _HomePageState extends State<HomePage> {
                                   if (!snapshot.hasData ||
                                       snapshot.data!.docs.isEmpty) {
                                     return Text(
-                                      "No travel plans yet.",
+                                      'No results found.',
                                       style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 16,
+                                        color: Color(0xFF757575),
+                                        fontSize: 18,
                                       ),
                                     );
                                   }

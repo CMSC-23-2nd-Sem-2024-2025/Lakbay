@@ -9,22 +9,22 @@ class User {
   List<String> interests;
   List<String> styles;
   bool public;
+  List<String> friends;
+  List<String> pendingRequests;
   
 
   User({
     this.id,
     required this.firstName,
     required this.lastName,
-
-
-    
     required this.userName,
     this.phoneNumber,
     required this.email,
     this.interests = const [],
     this.styles = const [],
     this.public = false,
-    
+    this.friends = const [],
+    this.pendingRequests = const [],
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -38,6 +38,8 @@ class User {
       interests: List<String>.from(json['interests'] ?? []),
       styles: List<String>.from(json['styles'] ?? []),
       public: json['public'] ?? false,
+      friends: List<String>.from(json['friends'] ?? []),
+      pendingRequests: List<String>.from(json['pendingRequests'] ?? []),
     );
   }
 
@@ -52,6 +54,8 @@ class User {
       'interests': interests,
       'styles': styles,
       'public': public,
+      'friends': friends,
+      'pendingRequests': pendingRequests,
       
     };
   }
