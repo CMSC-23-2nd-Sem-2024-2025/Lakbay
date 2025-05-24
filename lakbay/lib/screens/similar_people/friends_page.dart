@@ -45,7 +45,11 @@ class _FriendsPageState extends State<FriendsPage> {
     }
 
     return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance.collection('appusers').doc(user.uid).snapshots(),
+      stream:
+          FirebaseFirestore.instance
+              .collection('appusers')
+              .doc(user.uid)
+              .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData || !snapshot.data!.exists) {
           return const Scaffold(
@@ -89,19 +93,26 @@ class _FriendsPageState extends State<FriendsPage> {
                           return const Center(
                             child: Text(
                               'No friends yet.',
-                              style: TextStyle(fontSize: 18, color: Color(0xFF757575)),
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Color(0xFF757575),
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           );
                         }
                         return StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('appusers')
-                              .where(
-                                'email',
-                                whereIn: friends.length > 10 ? friends.sublist(0, 10) : friends,
-                              )
-                              .snapshots(),
+                          stream:
+                              FirebaseFirestore.instance
+                                  .collection('appusers')
+                                  .where(
+                                    'email',
+                                    whereIn:
+                                        friends.length > 10
+                                            ? friends.sublist(0, 10)
+                                            : friends,
+                                  )
+                                  .snapshots(),
                           builder: (context, friendSnapshot) {
                             if (!friendSnapshot.hasData) {
                               return const Center(
@@ -113,21 +124,26 @@ class _FriendsPageState extends State<FriendsPage> {
                               return const Center(
                                 child: Text(
                                   'No results found.',
-                                  style: TextStyle(fontSize: 18, color: Color(0xFF757575)),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Color(0xFF757575),
+                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               );
                             }
                             return GridView.builder(
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 16,
-                                mainAxisSpacing: 16,
-                                childAspectRatio: 0.8,
-                              ),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 16,
+                                    mainAxisSpacing: 16,
+                                    childAspectRatio: 0.8,
+                                  ),
                               itemCount: docs.length,
                               itemBuilder: (context, index) {
-                                final u = docs[index].data() as Map<String, dynamic>;
+                                final u =
+                                    docs[index].data() as Map<String, dynamic>;
                                 final friendEmail = u['email'] as String?;
                                 return SizedBox(
                                   height: 220, // Fixed height for card
@@ -143,141 +159,254 @@ class _FriendsPageState extends State<FriendsPage> {
                                                   content: SizedBox(
                                                     width: 300,
                                                     child: Column(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Center(
-                                                          child: _buildProfileImage(u),
+                                                          child:
+                                                              _buildProfileImage(
+                                                                u,
+                                                              ),
                                                         ),
-                                                        const SizedBox(height: 16),
+                                                        const SizedBox(
+                                                          height: 16,
+                                                        ),
                                                         Center(
                                                           child: Text(
                                                             '@${u['userName']}',
-                                                            style: const TextStyle(
-                                                              fontWeight: FontWeight.bold,
-                                                              color: Colors.grey,
-                                                              fontSize: 15,
-                                                            ),
-                                                            textAlign: TextAlign.left,
+                                                            style:
+                                                                const TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color:
+                                                                      Colors
+                                                                          .grey,
+                                                                  fontSize: 15,
+                                                                ),
+                                                            textAlign:
+                                                                TextAlign.left,
                                                           ),
                                                         ),
-                                                        const SizedBox(height: 20),
+                                                        const SizedBox(
+                                                          height: 20,
+                                                        ),
                                                         Text(
                                                           'Name',
-                                                          style: const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                          textAlign: TextAlign.center,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                          textAlign:
+                                                              TextAlign.center,
                                                         ),
                                                         TextField(
-                                                          controller: TextEditingController(
-                                                            text: '${u['firstName']} ${u['lastName']}',
-                                                          ),
+                                                          controller:
+                                                              TextEditingController(
+                                                                text:
+                                                                    '${u['firstName']} ${u['lastName']}',
+                                                              ),
                                                           readOnly: true,
                                                           enabled: false,
-                                                          textAlign: TextAlign.left,
-                                                          style: const TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.black,
-                                                          ),
-                                                          decoration: const InputDecoration(
-                                                            border: UnderlineInputBorder(),
-                                                            isDense: true,
-                                                            contentPadding: EdgeInsets.zero,
-                                                          ),
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 12,
+                                                                color:
+                                                                    Colors
+                                                                        .black,
+                                                              ),
+                                                          decoration:
+                                                              const InputDecoration(
+                                                                border:
+                                                                    UnderlineInputBorder(),
+                                                                isDense: true,
+                                                                contentPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                              ),
                                                         ),
-                                                        const SizedBox(height: 14),
+                                                        const SizedBox(
+                                                          height: 14,
+                                                        ),
                                                         Text(
                                                           'Contact info',
-                                                          style: const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                          textAlign: TextAlign.center,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                          textAlign:
+                                                              TextAlign.center,
                                                         ),
                                                         TextField(
-                                                          controller: TextEditingController(
-                                                            text: u['email'] ?? '',
-                                                          ),
+                                                          controller:
+                                                              TextEditingController(
+                                                                text:
+                                                                    u['email'] ??
+                                                                    '',
+                                                              ),
                                                           readOnly: true,
                                                           enabled: false,
-                                                          textAlign: TextAlign.left,
-                                                          style: const TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.black,
-                                                          ),
-                                                          decoration: const InputDecoration(
-                                                            border: UnderlineInputBorder(),
-                                                            isDense: true,
-                                                            contentPadding: EdgeInsets.zero,
-                                                          ),
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 12,
+                                                                color:
+                                                                    Colors
+                                                                        .black,
+                                                              ),
+                                                          decoration:
+                                                              const InputDecoration(
+                                                                border:
+                                                                    UnderlineInputBorder(),
+                                                                isDense: true,
+                                                                contentPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                              ),
                                                         ),
-                                                        const SizedBox(height: 14),
+                                                        const SizedBox(
+                                                          height: 14,
+                                                        ),
                                                         Text(
                                                           'Interests',
-                                                          style: const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                          textAlign: TextAlign.center,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                          textAlign:
+                                                              TextAlign.center,
                                                         ),
                                                         TextField(
                                                           controller: TextEditingController(
-                                                            text: ((u['interests'] as List<dynamic>?) == null || (u['interests'] as List<dynamic>?)!.isEmpty)
-                                                                ? 'None'
-                                                                : (u['interests'] as List<dynamic>).join(", "),
+                                                            text:
+                                                                ((u['interests']
+                                                                                as List<
+                                                                                  dynamic
+                                                                                >?) ==
+                                                                            null ||
+                                                                        (u['interests']
+                                                                                as List<
+                                                                                  dynamic
+                                                                                >?)!
+                                                                            .isEmpty)
+                                                                    ? 'None'
+                                                                    : (u['interests']
+                                                                            as List<
+                                                                              dynamic
+                                                                            >)
+                                                                        .join(
+                                                                          ", ",
+                                                                        ),
                                                           ),
                                                           readOnly: true,
                                                           enabled: false,
                                                           maxLines: null,
-                                                          textAlign: TextAlign.left,
-                                                          style: const TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.black,
-                                                          ),
-                                                          decoration: const InputDecoration(
-                                                            border: UnderlineInputBorder(),
-                                                            isDense: true,
-                                                            contentPadding: EdgeInsets.zero,
-                                                          ),
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 12,
+                                                                color:
+                                                                    Colors
+                                                                        .black,
+                                                              ),
+                                                          decoration:
+                                                              const InputDecoration(
+                                                                border:
+                                                                    UnderlineInputBorder(),
+                                                                isDense: true,
+                                                                contentPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                              ),
                                                         ),
-                                                        const SizedBox(height: 14),
+                                                        const SizedBox(
+                                                          height: 14,
+                                                        ),
                                                         Text(
                                                           'Styles',
-                                                          style: const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                          textAlign: TextAlign.center,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                          textAlign:
+                                                              TextAlign.center,
                                                         ),
                                                         TextField(
                                                           controller: TextEditingController(
-                                                            text: ((u['styles'] as List<dynamic>?) == null || (u['styles'] as List<dynamic>?)!.isEmpty)
-                                                                ? 'None'
-                                                                : (u['styles'] as List<dynamic>).join(", "),
+                                                            text:
+                                                                ((u['styles']
+                                                                                as List<
+                                                                                  dynamic
+                                                                                >?) ==
+                                                                            null ||
+                                                                        (u['styles']
+                                                                                as List<
+                                                                                  dynamic
+                                                                                >?)!
+                                                                            .isEmpty)
+                                                                    ? 'None'
+                                                                    : (u['styles']
+                                                                            as List<
+                                                                              dynamic
+                                                                            >)
+                                                                        .join(
+                                                                          ", ",
+                                                                        ),
                                                           ),
                                                           readOnly: true,
                                                           enabled: false,
                                                           maxLines: null,
-                                                          textAlign: TextAlign.left,
-                                                          style: const TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.black,
-                                                          ),
-                                                          decoration: const InputDecoration(
-                                                            border: UnderlineInputBorder(),
-                                                            isDense: true,
-                                                            contentPadding: EdgeInsets.zero,
-                                                          ),
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 12,
+                                                                color:
+                                                                    Colors
+                                                                        .black,
+                                                              ),
+                                                          decoration:
+                                                              const InputDecoration(
+                                                                border:
+                                                                    UnderlineInputBorder(),
+                                                                isDense: true,
+                                                                contentPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                              ),
                                                         ),
-                                                        const SizedBox(height: 16),
+                                                        const SizedBox(
+                                                          height: 16,
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
                                                   actions: [
                                                     TextButton(
-                                                      onPressed: () => Navigator.of(context).pop(),
+                                                      onPressed:
+                                                          () =>
+                                                              Navigator.of(
+                                                                context,
+                                                              ).pop(),
                                                       child: const Text(
                                                         'Back',
                                                         style: TextStyle(
@@ -293,37 +422,56 @@ class _FriendsPageState extends State<FriendsPage> {
                                           child: Card(
                                             elevation: 3,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(16),
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
                                             ),
                                             child: Padding(
                                               padding: const EdgeInsets.all(12),
                                               child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   _buildProfileImage(u),
                                                   const SizedBox(height: 8),
                                                   Text(
                                                     u['userName'] ?? '',
                                                     style: const TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 16,
                                                     ),
                                                     textAlign: TextAlign.center,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     maxLines: 1,
                                                   ),
                                                   const SizedBox(height: 8),
                                                   Flexible(
                                                     child: Text(
-                                                      ((u['interests'] as List<dynamic>?) == null || (u['interests'] as List<dynamic>?)!.isEmpty)
+                                                      ((u['interests']
+                                                                      as List<
+                                                                        dynamic
+                                                                      >?) ==
+                                                                  null ||
+                                                              (u['interests']
+                                                                      as List<
+                                                                        dynamic
+                                                                      >?)!
+                                                                  .isEmpty)
                                                           ? 'None'
-                                                          : (u['interests'] as List<dynamic>).join(", "),
+                                                          : (u['interests']
+                                                                  as List<
+                                                                    dynamic
+                                                                  >)
+                                                              .join(", "),
                                                       style: const TextStyle(
                                                         fontSize: 12,
                                                         color: Colors.blueGrey,
                                                       ),
-                                                      textAlign: TextAlign.center,
-                                                      overflow: TextOverflow.ellipsis,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 2,
                                                     ),
                                                   ),
@@ -339,48 +487,112 @@ class _FriendsPageState extends State<FriendsPage> {
                                           top: 0,
                                           right: 0,
                                           child: IconButton(
-                                            icon: const Icon(Icons.delete, color: Colors.red),
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
                                             tooltip: 'Remove Friend',
                                             onPressed: () async {
-                                              final confirm = await showDialog<bool>(
+                                              final confirm = await showDialog<
+                                                bool
+                                              >(
                                                 context: context,
-                                                builder: (context) => AlertDialog(
-                                                  title: const Text('Remove Friend'),
-                                                  content: const Text('Are you sure you want to remove this friend?'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () => Navigator.of(context).pop(false),
-                                                      child: const Text('Cancel'),
+                                                builder:
+                                                    (context) => AlertDialog(
+                                                      title: const Text(
+                                                        'Remove Friend',
+                                                      ),
+                                                      content: const Text(
+                                                        'Are you sure you want to remove this friend?',
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed:
+                                                              () =>
+                                                                  Navigator.of(
+                                                                    context,
+                                                                  ).pop(false),
+                                                          child: const Text(
+                                                            'Cancel',
+                                                          ),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed:
+                                                              () =>
+                                                                  Navigator.of(
+                                                                    context,
+                                                                  ).pop(true),
+                                                          child: const Text(
+                                                            'Remove',
+                                                            style: TextStyle(
+                                                              color: Colors.red,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    TextButton(
-                                                      onPressed: () => Navigator.of(context).pop(true),
-                                                      child: const Text('Remove', style: TextStyle(color: Colors.red)),
-                                                    ),
-                                                  ],
-                                                ),
                                               );
                                               if (confirm == true) {
                                                 // Remove friend from current user's friends
-                                                final userDoc = FirebaseFirestore.instance.collection('appusers').doc(user.uid);
-                                                final userFriends = List<String>.from((userDetails['friends'] ?? []));
+                                                final userDoc =
+                                                    FirebaseFirestore.instance
+                                                        .collection('appusers')
+                                                        .doc(user.uid);
+                                                final userFriends =
+                                                    List<String>.from(
+                                                      (userDetails['friends'] ??
+                                                          []),
+                                                    );
                                                 userFriends.remove(friendEmail);
-                                                await userDoc.update({'friends': userFriends});
+                                                await userDoc.update({
+                                                  'friends': userFriends,
+                                                });
                                                 // Remove current user from friend's friends
-                                                final friendQuery = await FirebaseFirestore.instance
-                                                    .collection('appusers')
-                                                    .where('email', isEqualTo: friendEmail)
-                                                    .limit(1)
-                                                    .get();
-                                                if (friendQuery.docs.isNotEmpty) {
-                                                  final friendDoc = friendQuery.docs.first.reference;
-                                                  final friendData = friendQuery.docs.first.data();
-                                                  final friendFriends = List<String>.from(friendData['friends'] ?? []);
+                                                final friendQuery =
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection('appusers')
+                                                        .where(
+                                                          'email',
+                                                          isEqualTo:
+                                                              friendEmail,
+                                                        )
+                                                        .limit(1)
+                                                        .get();
+                                                if (friendQuery
+                                                    .docs
+                                                    .isNotEmpty) {
+                                                  final friendDoc =
+                                                      friendQuery
+                                                          .docs
+                                                          .first
+                                                          .reference;
+                                                  final friendData =
+                                                      friendQuery.docs.first
+                                                          .data();
+                                                  final friendFriends =
+                                                      List<String>.from(
+                                                        friendData['friends'] ??
+                                                            [],
+                                                      );
                                                   if (user.email != null) {
-                                                    friendFriends.remove(user.email);
+                                                    friendFriends.remove(
+                                                      user.email,
+                                                    );
                                                   }
-                                                  await friendDoc.update({'friends': friendFriends});
+                                                  await friendDoc.update({
+                                                    'friends': friendFriends,
+                                                  });
                                                 }
-                                                // No need to manually refresh userDetails, StreamBuilder will update UI
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text(
+                                                      'Friend removed successfully.',
+                                                    ),
+                                                  ),
+                                                );
                                               }
                                             },
                                           ),
@@ -415,7 +627,9 @@ class _FriendsPageState extends State<FriendsPage> {
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text("You can add friends with their email address."),
+                        const Text(
+                          "You can add friends with their email address.",
+                        ),
                         SizedBox(height: 16),
                         TextFormField(
                           controller: emailController,
@@ -542,6 +756,8 @@ class _FriendsPageState extends State<FriendsPage> {
       }
     }
   }
+
+  // reused function for building profile image
 
   Widget _buildProfileImage(Map<String, dynamic> user) {
     final profileImageBase64 = user['profileImageBase64'] as String?;

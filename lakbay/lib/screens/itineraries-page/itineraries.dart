@@ -33,12 +33,12 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-  MainScaffold.navIndexNotifier.value = 0;
-  Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (context) => MainScaffold()),
-    (route) => false,
-  );
-},
+            MainScaffold.navIndexNotifier.value = 0;
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => MainScaffold()),
+              (route) => false,
+            );
+          },
         ),
       ),
       body: Padding(

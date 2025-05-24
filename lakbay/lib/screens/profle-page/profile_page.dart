@@ -328,11 +328,23 @@ class _ProfilePageState extends State<ProfilePage> {
                             Row(
                               children: [
                                 StreamBuilder<DocumentSnapshot>(
-                                  stream: FirebaseFirestore.instance.collection('appusers').doc(user.uid).snapshots(),
+                                  stream:
+                                      FirebaseFirestore.instance
+                                          .collection('appusers')
+                                          .doc(user.uid)
+                                          .snapshots(),
                                   builder: (context, snapshot) {
-                                    final friends = (snapshot.hasData && snapshot.data!.exists)
-                                        ? (snapshot.data!.data() as Map<String, dynamic>)['friends'] as List<dynamic>? ?? []
-                                        : [];
+                                    final friends =
+                                        (snapshot.hasData &&
+                                                snapshot.data!.exists)
+                                            ? (snapshot.data!.data()
+                                                        as Map<
+                                                          String,
+                                                          dynamic
+                                                        >)['friends']
+                                                    as List<dynamic>? ??
+                                                []
+                                            : [];
                                     return Text(
                                       '${friends.length}',
                                       style: const TextStyle(
@@ -619,5 +631,4 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
     );
   }
-}                               
-                               
+}
