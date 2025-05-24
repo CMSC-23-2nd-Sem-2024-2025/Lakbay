@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lakbay/components/bottomnav.dart';
 import 'package:lakbay/providers/plan_provider.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
-import '../home-page/home_page.dart';
-import '../profle-page/profile_page.dart';
-import '../travel-page/travel_form.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 
 class FindSimilar extends StatefulWidget {
@@ -107,7 +102,9 @@ class _FindSimilarState extends State<FindSimilar> {
                   ),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Color(0xFFF86400)),
+                      ));
                     }
                     final similarUsers = snapshot.data!;
                     if (similarUsers.isEmpty) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lakbay/components/bottomnav.dart';
 import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/screens/profle-page/profile_page.dart';
+import 'package:lakbay/screens/similar_people/friends_page.dart';
 import 'package:lakbay/screens/similar_people/similar_page.dart';
 import 'package:lakbay/screens/travel-page/travel_form.dart';
 
@@ -28,6 +29,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     TravelFormPage(),
     ProfilePage(),
     FindSimilar(),
+    FriendsPage(),
   ];
 
   @override

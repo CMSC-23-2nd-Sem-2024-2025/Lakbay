@@ -200,7 +200,11 @@ class _HomePageState extends State<HomePage> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
+                                    return CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Color(0xFFF86400),
+                                      ),
+                                    );
                                   }
                                   if (!snapshot.hasData ||
                                       snapshot.data!.docs.isEmpty) {

@@ -27,12 +27,18 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    authProvider.fetchUserDetails().then((_) {
-      setState(() {
-        isLoading = false;
-        _makePublic = authProvider.userDetails?['public'] ?? false;
+    if (authProvider.userDetails == null) {
+      isLoading = true;
+      authProvider.fetchUserDetails().then((_) {
+        setState(() {
+          isLoading = false;
+          _makePublic = authProvider.userDetails?['public'] ?? false;
+        });
       });
-    });
+    } else {
+      isLoading = false;
+      _makePublic = authProvider.userDetails?['public'] ?? false;
+    }
   }
 
   Future<void> _handleImageSelection(ImageSource source) async {
@@ -81,7 +87,11 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: const Color(0xFFF6F6F6),
       body:
           isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF97419)),
+                ),
+              )
               : user == null || details == null
               ? const Center(child: Text("No user data available."))
               : Stack(
@@ -601,4 +611,5 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
     );
   }
-}
+}                               
+                               

@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import '../screens/home-page/home_page.dart';
-import '../screens/travel-page/travel_form.dart';
-import '../screens/profle-page/profile_page.dart';
-import '../screens/similar_people/similar_page.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTabSelected;
 
   const CustomBottomNav({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.onTabSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +21,7 @@ class CustomBottomNav extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.08),
               blurRadius: 8,
               offset: const Offset(0, 2),
@@ -36,7 +33,7 @@ class CustomBottomNav extends StatelessWidget {
           children: [
             IconButton(
               icon: Icon(
-                Icons.people_alt_rounded,
+                Icons.home,
                 color: orange,
               ),
               onPressed: () => onTabSelected(0),
@@ -63,10 +60,10 @@ class CustomBottomNav extends StatelessWidget {
 
             IconButton(
               icon: Icon(
-                Icons.notifications,
+                Icons.group,
                 color: orange,
               ),
-              onPressed: () {},
+              onPressed: () {onTabSelected(4);},
             ),
             IconButton(
               icon: Icon(
