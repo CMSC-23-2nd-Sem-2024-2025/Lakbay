@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../api/firebase_auth_api.dart';
-import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
   late FirebaseAuthAPI authService;

@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lakbay/components/bottomnav.dart';
-import 'package:lakbay/screens/similar_people/similar_page.dart';
-import 'package:lakbay/screens/travel-page/travel_form.dart';
 import 'package:provider/provider.dart';
 import '../../providers/plan_provider.dart';
 import '../../providers/auth_provider.dart';
 import 'starting_page.dart';
-import '../profle-page/profile_page.dart';
 import 'package:lakbay/screens/itineraries-page/itineraries.dart';
 import 'shared_plans_page.dart';
 

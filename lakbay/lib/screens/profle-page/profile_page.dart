@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lakbay/screens/similar_people/similar_page.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import 'edit_profile_page.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import '../home-page/home_page.dart';
-import '../travel-page/travel_form.dart';
 import 'dart:convert';
-import '../../components/bottomnav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatefulWidget {

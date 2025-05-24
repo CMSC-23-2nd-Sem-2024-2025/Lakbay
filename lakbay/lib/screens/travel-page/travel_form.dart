@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:lakbay/screens/home-page/home_page.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
 
 import 'package:lakbay/screens/travel-page/travel_add_info.dart';

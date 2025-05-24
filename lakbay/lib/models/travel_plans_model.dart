@@ -50,10 +50,9 @@ class TravelPlan {
       'travelName': travelName,
       'location': location,
       'departureDate':
-          departureDate
-              ?.toIso8601String(), // method that stores the date in iso8601
+          departureDate.toIso8601String(), // method that stores the date in iso8601
       // format then parsed into string
-      'returnDate': returnDate?.toIso8601String(),
+      'returnDate': returnDate.toIso8601String(),
       'flightDetails': flightDetails,
       'accommodation': accommodation,
       'notes': notes,
