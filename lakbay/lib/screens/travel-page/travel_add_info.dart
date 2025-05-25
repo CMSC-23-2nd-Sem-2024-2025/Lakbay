@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lakbay/components/scaffolds.dart';
+import 'package:lakbay/models/travel_plans_model.dart';
+import 'package:lakbay/providers/plan_provider.dart';
+import 'package:provider/provider.dart';
 
 class TravelAddInfoPage extends StatefulWidget {
-  final String planId;
-  const TravelAddInfoPage({super.key, required this.planId});
+  final TravelPlan travelPlan;
+  const TravelAddInfoPage({super.key, required this.travelPlan});
 
   @override
   State<TravelAddInfoPage> createState() => _TravelAddInfoPageState();
@@ -28,25 +31,34 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
   }
 
   // save info function
-
   Future<void> _saveAdditionalInfoAndGoHome() async {
-    await FirebaseFirestore.instance
-        .collection('travelplans')
-        .doc(widget.planId)
-        .update({
-          'flightDetails':
-              flightController.text.isNotEmpty ? flightController.text : null,
-          'accommodation':
-              accommodationController.text.isNotEmpty
-                  ? accommodationController.text
-                  : null,
-          'notes':
-              notesController.text.isNotEmpty ? notesController.text : null,
-          'emerContact':
-              emergencyContactController.text.isNotEmpty
-                  ? emergencyContactController.text
-                  : null,
-        });
+    final updatedPlan = TravelPlan(
+      id: widget.travelPlan.id,
+      userId: widget.travelPlan.userId,
+      travelName: widget.travelPlan.travelName,
+      location: widget.travelPlan.location,
+      departureDate: widget.travelPlan.departureDate,
+      returnDate: widget.travelPlan.returnDate,
+      flightDetails:
+          flightController.text.isNotEmpty ? flightController.text : null,
+      accommodation:
+          accommodationController.text.isNotEmpty
+              ? accommodationController.text
+              : null,
+      notes: notesController.text.isNotEmpty ? notesController.text : null,
+      emerContact:
+          emergencyContactController.text.isNotEmpty
+              ? emergencyContactController.text
+              : null,
+      enableNotifications: widget.travelPlan.enableNotifications,
+      notificationTime: widget.travelPlan.notificationTime,
+    );
+
+    // Add the plan using the provider
+    await Provider.of<PlanProvider>(
+      context,
+      listen: false,
+    ).addPlan(updatedPlan);
 
     // Navigate to main scaffold and remove all previous routes
     Navigator.of(context).pushAndRemoveUntil(

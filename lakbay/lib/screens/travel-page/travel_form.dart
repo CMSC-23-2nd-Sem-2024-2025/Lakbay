@@ -4,6 +4,7 @@ import 'package:lakbay/models/travel_plans_model.dart';
 import 'package:lakbay/screens/travel-page/travel_add_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
+import 'package:lakbay/services/notification_service.dart';
 
 class TravelFormPage extends StatefulWidget {
   const TravelFormPage({super.key});
@@ -18,7 +19,12 @@ class _TravelFormPageState extends State<TravelFormPage> {
   final locationController = TextEditingController();
   final departureController = TextEditingController();
   final returnController = TextEditingController();
+  final notificationDateController = TextEditingController();
+  final notificationTimeController = TextEditingController();
   LatLong? selectedLocation;
+  bool enableNotifications = false;
+  DateTime? notificationDate;
+  TimeOfDay? notificationTime;
 
   @override
   void initState() {
@@ -34,6 +40,8 @@ class _TravelFormPageState extends State<TravelFormPage> {
     locationController.dispose();
     departureController.dispose();
     returnController.dispose();
+    notificationDateController.dispose();
+    notificationTimeController.dispose();
     super.dispose();
   }
 
@@ -66,8 +74,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
                   setState(() {
                     selectedLocation = pickedData.latLong;
                     // use the address from the picked data instead of coordinates
-                    locationController.text =
-                        pickedData.address;
+                    locationController.text = pickedData.address;
                   });
                   Navigator.pop(context);
                 },
@@ -87,6 +94,67 @@ class _TravelFormPageState extends State<TravelFormPage> {
             ),
       ),
     );
+  }
+
+  Future<void> _showNotificationDatePicker() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFFF97419),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(foregroundColor: Color(0xFFF97419)),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        notificationDate = pickedDate;
+        notificationDateController.text =
+            pickedDate.toLocal().toString().split(' ')[0];
+      });
+    }
+  }
+
+  Future<void> _showTimePicker() async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFFF97419),
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(foregroundColor: Color(0xFFF97419)),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        notificationTime = pickedTime;
+        notificationTimeController.text = pickedTime.format(context);
+      });
+    }
   }
 
   @override
@@ -264,67 +332,149 @@ class _TravelFormPageState extends State<TravelFormPage> {
                   },
                 ),
 
-                const SizedBox(height: 90),
+                const SizedBox(height: 40),
 
-                // for continue button
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (!_validateFields()) return;
-
-                      final user = FirebaseAuth.instance.currentUser;
-                      if (user == null) return;
-
-                      final plan = TravelPlan(
-                        id: null,
-                        userId: user.uid,
-                        travelName: nameController.text.trim(),
-                        location: locationController.text.trim(),
-                        departureDate:
-                            DateTime.parse(departureController.text).toLocal(),
-                        returnDate:
-                            DateTime.parse(returnController.text).toLocal(),
-                        flightDetails: null,
-                        accommodation: null,
-                        notes: null,
-                        emerContact: null,
-                      );
-
-                      // Add to Firestore
-                      final docRef = await FirebaseFirestore.instance
-                          .collection('travelplans')
-                          .add({
-                            ...plan.toJson(),
-                            'departureDate': departureController.text,
-                            'returnDate': returnController.text,
-                          });
-
-                      // Update the plan with the generated ID
-                      await docRef.update({'id': docRef.id});
-
-                      // Go to add info page, pass planId
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => TravelAddInfoPage(planId: docRef.id),
+                // Notification Settings Section
+                _Label('Notification Settings'),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Enable Notifications',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Switch(
+                            value: enableNotifications,
+                            onChanged: (value) {
+                              setState(() {
+                                enableNotifications = value;
+                                if (!value) {
+                                  notificationDate = null;
+                                  notificationTime = null;
+                                  notificationDateController.clear();
+                                  notificationTimeController.clear();
+                                }
+                              });
+                            },
+                            activeColor: orange,
+                          ),
+                        ],
+                      ),
+                      if (enableNotifications) ...[
+                        SizedBox(height: 16),
+                        _Label('Notification Date'),
+                        _ShadowedTextField(
+                          controller: notificationDateController,
+                          hintText: 'Select notification date',
+                          icon: Icons.calendar_today,
+                          onTap: _showNotificationDatePicker,
+                          readOnly: true,
+                          validator: (value) {
+                            if (enableNotifications &&
+                                (value == null || value.isEmpty)) {
+                              return 'Please select notification date';
+                            }
+                            return null;
+                          },
                         ),
-                      );
+                        SizedBox(height: 16),
+                        _Label('Notification Time'),
+                        _ShadowedTextField(
+                          controller: notificationTimeController,
+                          hintText: 'Select notification time',
+                          icon: Icons.access_time,
+                          onTap: _showTimePicker,
+                          readOnly: true,
+                          validator: (value) {
+                            if (enableNotifications &&
+                                (value == null || value.isEmpty)) {
+                              return 'Please select notification time';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () async {
+                                final notificationService =
+                                    NotificationService();
+                                await notificationService
+                                    .showTestNotification();
+                              },
+                              icon: Icon(Icons.notifications_active),
+                              label: Text('Test Notification'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: orange,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 40),
+
+                // Next Button
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_validateFields()) {
+                        final travelPlan = _createTravelPlan();
+
+                        print(
+                          'Creating travel plan with notification time: ${travelPlan.notificationTime}, enableNotifications: ${travelPlan.enableNotifications}',
+                        );
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) =>
+                                    TravelAddInfoPage(travelPlan: travelPlan),
+                          ),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: orange,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 48,
+                        vertical: 16,
                       ),
-                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
-                    child: const Text(
-                      'Continue',
+                    child: Text(
+                      'Next',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
                         fontSize: 18,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
@@ -335,6 +485,43 @@ class _TravelFormPageState extends State<TravelFormPage> {
           ),
         ),
       ),
+    );
+  }
+
+  TravelPlan _createTravelPlan() {
+    // Combine notification date and time if both are set
+    DateTime? combinedNotificationTime;
+    if (notificationDate != null && notificationTime != null) {
+      // Create a DateTime object with the selected date and time
+      combinedNotificationTime = DateTime(
+        notificationDate!.year,
+        notificationDate!.month,
+        notificationDate!.day,
+        notificationTime!.hour,
+        notificationTime!.minute,
+      );
+
+      // Log the combined notification time
+      print('Combined notification time: $combinedNotificationTime');
+
+      // Verify the time is in the future
+      final now = DateTime.now();
+      if (combinedNotificationTime.isBefore(now)) {
+        print('Warning: Combined notification time is in the past');
+        // Set to 1 minute in the future for testing
+        combinedNotificationTime = now.add(Duration(minutes: 1));
+        print('Adjusted notification time to: $combinedNotificationTime');
+      }
+    }
+
+    return TravelPlan(
+      userId: FirebaseAuth.instance.currentUser!.uid,
+      travelName: nameController.text,
+      location: locationController.text,
+      departureDate: DateTime.parse(departureController.text),
+      returnDate: DateTime.parse(returnController.text),
+      enableNotifications: enableNotifications,
+      notificationTime: combinedNotificationTime,
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:lakbay/components/scaffolds.dart';
 
 import 'package:lakbay/screens/home-page/starting_page.dart';
+import 'package:lakbay/services/notification_service.dart';
 
 import 'firebase_options.dart';
 import 'providers/auth_provider.dart';
@@ -14,6 +15,11 @@ import 'providers/shared_plans_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize notification service
+  final notificationService = NotificationService();
+  await notificationService.initialize();
+  await notificationService.requestPermissions();
 
   runApp(
     MultiProvider(

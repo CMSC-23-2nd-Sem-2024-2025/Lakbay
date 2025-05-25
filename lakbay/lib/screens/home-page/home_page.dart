@@ -5,6 +5,7 @@ import '../../providers/plan_provider.dart';
 import '../../providers/auth_provider.dart';
 import 'package:lakbay/screens/itineraries-page/itineraries.dart';
 import 'shared_plans_page.dart';
+import 'package:lakbay/services/notification_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +22,60 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) => SharePlanDialog(planId: planId),
+    );
+  }
+
+  Future<void> _showNotificationDebugInfo() async {
+    final notificationService = NotificationService();
+
+    // Ensure the notification service is initialized
+    await notificationService.ensureInitialized();
+
+    final status = await notificationService.getNotificationStatus();
+    final pendingNotifications =
+        await notificationService.getPendingNotifications();
+
+    if (!mounted) return;
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Notification Debug Info'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Service Status:'),
+                  Text('• Initialized: ${status['initialized']}'),
+                  Text('• Permission Status: ${status['permissionStatus']}'),
+                  if (status['error'] != null)
+                    Text('• Error: ${status['error']}'),
+                  SizedBox(height: 16),
+                  Text('Pending Notifications: ${pendingNotifications.length}'),
+                  if (pendingNotifications.isNotEmpty) ...[
+                    SizedBox(height: 8),
+                    Text('Scheduled Notifications:'),
+                    ...pendingNotifications.map(
+                      (notification) => Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text('• ${notification.title}'),
+                      ),
+                    ),
+                  ],
+                  SizedBox(height: 8),
+                  Text('Current Time: ${DateTime.now()}'),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Close'),
+              ),
+            ],
+          ),
     );
   }
 
@@ -47,6 +102,14 @@ class _HomePageState extends State<HomePage> {
           child: Image.asset('assets/or.png', height: 60),
         ),
         actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.bug_report,
+              color: Color(0xFFF86400),
+              size: 32,
+            ),
+            onPressed: _showNotificationDebugInfo,
+          ),
           IconButton(
             icon: const Icon(
               Icons.notifications,

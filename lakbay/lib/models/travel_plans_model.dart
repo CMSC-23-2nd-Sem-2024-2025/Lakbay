@@ -11,6 +11,8 @@ class TravelPlan {
   String? accommodation;
   String? notes;
   String? emerContact;
+  bool enableNotifications;
+  DateTime? notificationTime;
 
   TravelPlan({
     this.id,
@@ -23,6 +25,8 @@ class TravelPlan {
     this.accommodation,
     this.notes,
     this.emerContact,
+    this.enableNotifications = false,
+    this.notificationTime,
   });
 
   factory TravelPlan.fromJson(Map<String, dynamic> json) {
@@ -31,15 +35,17 @@ class TravelPlan {
       userId: json['userId'],
       travelName: json['travelName'],
       location: json['location'],
-      departureDate:
-          // parses the date from json format to datetime
-          json['departureDate'] = DateTime.parse(json['departureDate']),
-             
+      departureDate: DateTime.parse(json['departureDate']),
       returnDate: DateTime.parse(json['returnDate']),
       flightDetails: json['flightDetails'],
       accommodation: json['accommodation'],
       notes: json['notes'],
       emerContact: json['emerContact'],
+      enableNotifications: json['enableNotifications'] ?? false,
+      notificationTime:
+          json['notificationTime'] != null
+              ? DateTime.parse(json['notificationTime'])
+              : null,
     );
   }
 
@@ -49,14 +55,14 @@ class TravelPlan {
       'userId': userId,
       'travelName': travelName,
       'location': location,
-      'departureDate':
-          departureDate.toIso8601String(), // method that stores the date in iso8601
-      // format then parsed into string
+      'departureDate': departureDate.toIso8601String(),
       'returnDate': returnDate.toIso8601String(),
       'flightDetails': flightDetails,
       'accommodation': accommodation,
       'notes': notes,
       'emerContact': emerContact,
+      'enableNotifications': enableNotifications,
+      'notificationTime': notificationTime?.toIso8601String(),
     };
   }
 }
