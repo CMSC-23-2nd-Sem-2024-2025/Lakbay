@@ -752,18 +752,12 @@ class _FriendsPageState extends State<FriendsPage> {
         await doc.reference.update({'pendingRequests': pendingRequests});
         if (context.mounted) {
           Navigator.of(context).pop();
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Friend request sent!')));
+          showCustomSnackbar(context, 'Friend request sent!');
         }
       } else {
         if (context.mounted) {
           Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('You have already sent a request to this user.'),
-            ),
-          );
+          showCustomSnackbar(context, 'You have already sent a request to this user.');
         }
       }
     } else {
