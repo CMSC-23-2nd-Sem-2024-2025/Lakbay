@@ -96,50 +96,68 @@ class _ProfilePageState extends State<ProfilePage> {
                   Positioned(
                     top: 40,
                     left: 15,
-                    child: IconButton(
-                      onPressed: () async {
-                        final authProvider = Provider.of<AuthProvider>(
-                          context,
-                          listen: false,
-                        );
-                        await authProvider.signOut();
-                        if (context.mounted) {
-                          Navigator.of(context).pushReplacementNamed('/login');
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.logout,
-                        color: Color(0xFFF86400),
-                        size: 28,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        onPressed: () async {
+                          final authProvider = Provider.of<AuthProvider>(
+                            context,
+                            listen: false,
+                          );
+                          await authProvider.signOut();
+                          if (context.mounted) {
+                            Navigator.of(
+                              context,
+                            ).pushReplacementNamed('/login');
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.logout,
+                          color: Color(0xFFF86400),
+                          size: 28,
+                        ),
                       ),
                     ),
                   ),
                   // Edit button at top right, aligned with profile picture
                   Positioned(
-                    top: 40, // aligns with profile picture top
-                    right: 15, // aligns with profile picture right edge
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const EditProfilePage(),
+                    top: 40,
+                    right: 15,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
                           ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 22,
-                          vertical: 10,
-                        ),
-                        elevation: 0,
+                        ],
                       ),
-                      child: const Text(
-                        'Edit',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const EditProfilePage(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Colors.black,
+                          size: 28,
+                        ),
                       ),
                     ),
                   ),
@@ -206,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       padding: EdgeInsets.zero,
                                       iconSize: 18,
                                       icon: const Icon(
-                                        Icons.edit,
+                                        Icons.camera_alt_rounded,
                                         color: Colors.black,
                                       ),
                                       onPressed: () async {
@@ -408,15 +426,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                 // Contact Information Container
                                 Container(
                                   width: double.infinity,
-                                  padding: const EdgeInsets.all(16),
+                                  padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(16),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.05),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
+                                        color: Colors.black.withOpacity(0.08),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
                                       ),
                                     ],
                                   ),
@@ -424,19 +442,50 @@ class _ProfilePageState extends State<ProfilePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        'Contact Information',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 17,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
                                       Row(
                                         children: [
-                                          const Icon(
-                                            Icons.email,
-                                            color: Colors.grey,
+                                          Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: const Color(
+                                                0xFFF97419,
+                                              ).withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: const Icon(
+                                              Icons.contact_mail,
+                                              color: Color(0xFFF97419),
+                                              size: 24,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          const Text(
+                                            'Contact Information',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.withOpacity(
+                                                0.1,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: const Icon(
+                                              Icons.email,
+                                              color: Colors.grey,
+                                              size: 20,
+                                            ),
                                           ),
                                           const SizedBox(width: 12),
                                           Text(
@@ -449,12 +498,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 12),
+                                      const SizedBox(height: 16),
                                       Row(
                                         children: [
-                                          const Icon(
-                                            Icons.phone,
-                                            color: Colors.grey,
+                                          Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.withOpacity(
+                                                0.1,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: const Icon(
+                                              Icons.phone,
+                                              color: Colors.grey,
+                                              size: 20,
+                                            ),
                                           ),
                                           const SizedBox(width: 12),
                                           Text(
@@ -470,19 +530,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 20),
                                 // Interests
                                 Container(
                                   width: double.infinity,
-                                  padding: const EdgeInsets.all(16),
+                                  padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(16),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.05),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
+                                        color: Colors.black.withOpacity(0.08),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
                                       ),
                                     ],
                                   ),
@@ -490,14 +550,34 @@ class _ProfilePageState extends State<ProfilePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        'Interests',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 17,
-                                        ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: const Color(
+                                                0xFFF97419,
+                                              ).withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: const Icon(
+                                              Icons.interests,
+                                              color: Color(0xFFF97419),
+                                              size: 24,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          const Text(
+                                            'Interests',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(height: 16),
+                                      const SizedBox(height: 20),
                                       (details['interests'] as List<dynamic>?)
                                                   ?.isNotEmpty ==
                                               true
@@ -505,39 +585,57 @@ class _ProfilePageState extends State<ProfilePage> {
                                             spacing: 10,
                                             runSpacing: 10,
                                             children:
-                                                (details['interests']
-                                                        as List<dynamic>)
-                                                    .map<Widget>((interest) {
-                                                      return Container(
-                                                        padding:
-                                                            const EdgeInsets.symmetric(
-                                                              horizontal: 16,
-                                                              vertical: 8,
-                                                            ),
-                                                        decoration: BoxDecoration(
+                                                (details['interests'] as List<dynamic>).map<
+                                                  Widget
+                                                >((interest) {
+                                                  return Container(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 16,
+                                                          vertical: 10,
+                                                        ),
+                                                    decoration: BoxDecoration(
+                                                      gradient:
+                                                          const LinearGradient(
+                                                            colors: [
+                                                              Color(0xFFF97419),
+                                                              Color(0xFFFF8F3F),
+                                                            ],
+                                                            begin:
+                                                                Alignment
+                                                                    .topLeft,
+                                                            end:
+                                                                Alignment
+                                                                    .bottomRight,
+                                                          ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            25,
+                                                          ),
+                                                      boxShadow: [
+                                                        BoxShadow(
                                                           color: const Color(
                                                             0xFFF97419,
+                                                          ).withOpacity(0.3),
+                                                          blurRadius: 8,
+                                                          offset: const Offset(
+                                                            0,
+                                                            2,
                                                           ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                20,
-                                                              ),
                                                         ),
-                                                        child: Text(
-                                                          interest,
-                                                          style:
-                                                              const TextStyle(
-                                                                color:
-                                                                    Colors
-                                                                        .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                              ),
-                                                        ),
-                                                      );
-                                                    })
-                                                    .toList(),
+                                                      ],
+                                                    ),
+                                                    child: Text(
+                                                      interest,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
                                           )
                                           : const Text(
                                             'No interests added yet',
@@ -549,19 +647,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 20),
                                 // Travel Styles
                                 Container(
                                   width: double.infinity,
-                                  padding: const EdgeInsets.all(16),
+                                  padding: const EdgeInsets.all(20),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(16),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.05),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
+                                        color: Colors.black.withOpacity(0.08),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
                                       ),
                                     ],
                                   ),
@@ -569,14 +667,34 @@ class _ProfilePageState extends State<ProfilePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        'Travel Styles',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 17,
-                                        ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: const Color(
+                                                0xFFF97419,
+                                              ).withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: const Icon(
+                                              Icons.directions_walk,
+                                              color: Color(0xFFF97419),
+                                              size: 24,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          const Text(
+                                            'Travel Styles',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(height: 16),
+                                      const SizedBox(height: 20),
                                       (details['styles'] as List<dynamic>?)
                                                   ?.isNotEmpty ==
                                               true
@@ -591,21 +709,33 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     padding:
                                                         const EdgeInsets.symmetric(
                                                           horizontal: 16,
-                                                          vertical: 8,
+                                                          vertical: 10,
                                                         ),
                                                     decoration: BoxDecoration(
                                                       color: Colors.black,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                            20,
+                                                            25,
                                                           ),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.black
+                                                              .withOpacity(0.2),
+                                                          blurRadius: 8,
+                                                          offset: const Offset(
+                                                            0,
+                                                            2,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                     child: Text(
                                                       style,
                                                       style: const TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
-                                                            FontWeight.w500,
+                                                            FontWeight.w600,
+                                                        fontSize: 14,
                                                       ),
                                                     ),
                                                   );

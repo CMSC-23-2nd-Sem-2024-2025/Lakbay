@@ -128,10 +128,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
+      backgroundColor: const Color(0xFFF6F6F6),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body:
           _isLoading
-              ? const Center(child: CircularProgressIndicator(color: Color(0xFFF97419),))
+              ? const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFF97419)),
+                ),
+              )
               : SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Form(
@@ -140,211 +156,485 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 24),
-                      TextFormField(
-                        controller: _fullNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Full Name',
-                          border: OutlineInputBorder(),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        validator:
-                            (value) =>
-                                value == null || value.isEmpty
-                                    ? 'Enter your full name'
-                                    : null,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _interestsController,
-                        readOnly: true,
-                        onTap: () async {
-                          final result =
-                              await showModalBottomSheet<List<String>>(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (context) {
-                                  List<String> tempSelected = List.from(
-                                    _selectedInterests,
-                                  );
-                                  return StatefulBuilder(
-                                    builder: (context, setModalState) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 24,
-                                          vertical: 32,
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Text(
-                                              'Select Interests',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Edit Profile',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            TextFormField(
+                              controller: _fullNameController,
+                              decoration: InputDecoration(
+                                labelText: 'Full Name',
+                                labelStyle: const TextStyle(color: Colors.grey),
+                                prefixIcon: const Icon(
+                                  Icons.person,
+                                  color: Color(0xFFF97419),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xFFF97419),
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
+                              ),
+                              validator:
+                                  (value) =>
+                                      value == null || value.isEmpty
+                                          ? 'Enter your full name'
+                                          : null,
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              controller: _phoneNumberController,
+                              decoration: InputDecoration(
+                                labelText: 'Phone Number',
+                                labelStyle: const TextStyle(color: Colors.grey),
+                                prefixIcon: const Icon(
+                                  Icons.phone,
+                                  color: Color(0xFFF97419),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xFFF97419),
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
+                              ),
+                              validator: _phoneValidator,
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              controller: _interestsController,
+                              readOnly: true,
+                              onTap: () async {
+                                final result = await showModalBottomSheet<
+                                  List<String>
+                                >(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) {
+                                    List<String> tempSelected = List.from(
+                                      _selectedInterests,
+                                    );
+                                    return StatefulBuilder(
+                                      builder: (context, setModalState) {
+                                        return Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20),
                                             ),
-                                            const SizedBox(height: 16),
-                                            ..._interestOptions.map(
-                                              (option) => CheckboxListTile(
-                                                title: Text(option),
-                                                value: tempSelected.contains(
-                                                  option,
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 32,
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                width: 40,
+                                                height: 4,
+                                                margin: const EdgeInsets.only(
+                                                  bottom: 20,
                                                 ),
-                                                checkColor: Colors.white,
-                                                activeColor: Color(0xFFF97419),
-                                                onChanged: (checked) {
-                                                  setModalState(() {
-                                                    if (checked == true) {
-                                                      tempSelected.add(option);
-                                                    } else {
-                                                      tempSelected.remove(
-                                                        option,
-                                                      );
-                                                    }
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(
-                                                  context,
-                                                  tempSelected,
-                                                );
-                                              },
-                                              child: const Text('Done', style: TextStyle(color: Colors.black),),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                          if (result != null) {
-                            setState(() {
-                              _selectedInterests = result;
-                              _interestsController.text = _selectedInterests
-                                  .join(', ');
-                            });
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Interests',
-                          hintText: 'Select your interests',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _stylesController,
-                        readOnly: true,
-                        onTap: () async {
-                          final result =
-                              await showModalBottomSheet<List<String>>(
-                                context: context,
-                                isScrollControlled: true,
-                                builder: (context) {
-                                  List<String> tempSelected = List.from(
-                                    _selectedStyles,
-                                  );
-                                  return StatefulBuilder(
-                                    builder: (context, setModalState) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 24,
-                                          vertical: 32,
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Text(
-                                              'Select Travel Styles',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            ..._styleOptions.map(
-                                              (option) => CheckboxListTile(
-                                                title: Text(option),
-                                                value: tempSelected.contains(
-                                                  option,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade300,
+                                                  borderRadius:
+                                                      BorderRadius.circular(2),
                                                 ),
-                                                checkColor: Colors.white,
-                                                activeColor: Color(0xFFF97419),
-                                                onChanged: (checked) {
-                                                  setModalState(() {
-                                                    if (checked == true) {
-                                                      tempSelected.add(option);
-                                                    } else {
-                                                      tempSelected.remove(
-                                                        option,
-                                                      );
-                                                    }
-                                                  });
-                                                },
                                               ),
+                                              const Text(
+                                                'Select Interests',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 20),
+                                              Flexible(
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount:
+                                                      _interestOptions.length,
+                                                  itemBuilder: (
+                                                    context,
+                                                    index,
+                                                  ) {
+                                                    final option =
+                                                        _interestOptions[index];
+                                                    return CheckboxListTile(
+                                                      title: Text(
+                                                        option,
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                      value: tempSelected
+                                                          .contains(option),
+                                                      checkColor: Colors.white,
+                                                      activeColor: const Color(
+                                                        0xFFF97419,
+                                                      ),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              8,
+                                                            ),
+                                                      ),
+                                                      onChanged: (checked) {
+                                                        setModalState(() {
+                                                          if (checked == true) {
+                                                            tempSelected.add(
+                                                              option,
+                                                            );
+                                                          } else {
+                                                            tempSelected.remove(
+                                                              option,
+                                                            );
+                                                          }
+                                                        });
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              const SizedBox(height: 20),
+                                              SizedBox(
+                                                width: double.infinity,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                      context,
+                                                      tempSelected,
+                                                    );
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        const Color(0xFFF97419),
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          vertical: 16,
+                                                        ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  child: const Text(
+                                                    'Done',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                                if (result != null) {
+                                  setState(() {
+                                    _selectedInterests = result;
+                                    _interestsController
+                                        .text = _selectedInterests.join(', ');
+                                  });
+                                }
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Interests',
+                                labelStyle: const TextStyle(color: Colors.grey),
+                                hintText: 'Select your interests',
+                                prefixIcon: const Icon(
+                                  Icons.interests,
+                                  color: Color(0xFFF97419),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xFFF97419),
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              controller: _stylesController,
+                              readOnly: true,
+                              onTap: () async {
+                                final result = await showModalBottomSheet<
+                                  List<String>
+                                >(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (context) {
+                                    List<String> tempSelected = List.from(
+                                      _selectedStyles,
+                                    );
+                                    return StatefulBuilder(
+                                      builder: (context, setModalState) {
+                                        return Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(20),
                                             ),
-                                            const SizedBox(height: 16),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(
-                                                  context,
-                                                  tempSelected,
-                                                );
-                                              },
-                                              child: const Text('Done', style: TextStyle(color: Colors.black),),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                          if (result != null) {
-                            setState(() {
-                              _selectedStyles = result;
-                              _stylesController.text = _selectedStyles.join(
-                                ', ',
-                              );
-                            });
-                          }
-                        },
-                        decoration: const InputDecoration(
-                          labelText: 'Travel Styles',
-                          hintText: 'Select your travel styles',
-                          border: OutlineInputBorder(),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 24,
+                                            vertical: 32,
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                width: 40,
+                                                height: 4,
+                                                margin: const EdgeInsets.only(
+                                                  bottom: 20,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade300,
+                                                  borderRadius:
+                                                      BorderRadius.circular(2),
+                                                ),
+                                              ),
+                                              const Text(
+                                                'Select Travel Styles',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 20),
+                                              Flexible(
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount:
+                                                      _styleOptions.length,
+                                                  itemBuilder: (
+                                                    context,
+                                                    index,
+                                                  ) {
+                                                    final option =
+                                                        _styleOptions[index];
+                                                    return CheckboxListTile(
+                                                      title: Text(
+                                                        option,
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                      value: tempSelected
+                                                          .contains(option),
+                                                      checkColor: Colors.white,
+                                                      activeColor: const Color(
+                                                        0xFFF97419,
+                                                      ),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              8,
+                                                            ),
+                                                      ),
+                                                      onChanged: (checked) {
+                                                        setModalState(() {
+                                                          if (checked == true) {
+                                                            tempSelected.add(
+                                                              option,
+                                                            );
+                                                          } else {
+                                                            tempSelected.remove(
+                                                              option,
+                                                            );
+                                                          }
+                                                        });
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              const SizedBox(height: 20),
+                                              SizedBox(
+                                                width: double.infinity,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                      context,
+                                                      tempSelected,
+                                                    );
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        const Color(0xFFF97419),
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          vertical: 16,
+                                                        ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                  child: const Text(
+                                                    'Done',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                                if (result != null) {
+                                  setState(() {
+                                    _selectedStyles = result;
+                                    _stylesController.text = _selectedStyles
+                                        .join(', ');
+                                  });
+                                }
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Travel Styles',
+                                labelStyle: const TextStyle(color: Colors.grey),
+                                hintText: 'Select your travel styles',
+                                prefixIcon: const Icon(
+                                  Icons.directions_walk,
+                                  color: Color(0xFFF97419),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xFFF97419),
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: _saveChanges,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFF97419),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: const Text(
+                                  'Save Changes',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _phoneNumberController,
-                        decoration: const InputDecoration(
-                          labelText: 'Phone Number',
-                          hintText: 'Enter your phone number',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.phone,
-                        validator: _phoneValidator,
-                      ),
-                      const SizedBox(height: 32),
-                      ElevatedButton(
-                        onPressed: _saveChanges,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF97419),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                        ),
-                        child: const Text(
-                          'Save Changes',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
