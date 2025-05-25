@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lakbay/screens/home-page/home_page.dart';
+import 'package:lakbay/components/scaffolds.dart';
 import 'package:lakbay/screens/intro_screens/interests.dart';
 import 'package:lakbay/screens/profle-page/profile_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -84,36 +84,21 @@ class _OnboardingState extends State<OnBoarding> {
                     child: const Text("Back", style: TextStyle(fontSize: 18)),
                   ),
 
-                  onLastPage
-                      ? GestureDetector(
-                        onTap: () {
-                          // Skip styles page and go to profile
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProfilePage(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "Skip",
-                          style: TextStyle(fontSize: 18),
+                  GestureDetector(
+                    onTap: () {
+                      // Always push to MainScaffold
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MainScaffold(),
                         ),
-                      )
-                      : 
-                      GestureDetector(
-                        onTap: () {
-                          // skip styples page
-                          _controller.nextPage(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeIn,
-                          );
-                        },
-                        child: const Text(
-                          "Skip",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
+                      );
+                    },
+                    child: Text(
+                      onLastPage ? "Done" : "Skip",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -174,7 +159,7 @@ class _OnboardingState extends State<OnBoarding> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => HomePage(),
+                              builder: (context) => MainScaffold(),
                             ),
                           );
                         } else {

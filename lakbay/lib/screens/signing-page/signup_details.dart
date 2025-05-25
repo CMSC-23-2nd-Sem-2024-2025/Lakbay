@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lakbay/screens/home-page/starting_page.dart';
@@ -30,21 +29,7 @@ class _SignupDetailsState extends State<SignupDetails> {
         child: SizedBox.expand(
           child: Stack(
             children: [
-              // Decorative Background
-              // Positioned(
-              //   bottom: 0,
-              //   left: 0,
-              //   right: 0,
-              //   child: Container(
-              //     height: 800,
-              //     decoration: const BoxDecoration(
-              //       color: Color(0xFF8DA2E6),
-              //       borderRadius: BorderRadius.only(
-              //         topLeft: Radius.circular(80),
-              //       ),
-              //     ),
-              //   ),
-              // ),
+            
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -283,8 +268,8 @@ class _SignupDetailsState extends State<SignupDetails> {
                                         firstName,
                                         lastName,
                                         username,
-                                        
-                                        friends: [], 
+
+                                        friends: [],
                                         pendingRequests: [],
                                       );
 

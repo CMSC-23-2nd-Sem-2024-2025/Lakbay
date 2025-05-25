@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lakbay/screens/signing-page/login_details.dart';
 import 'package:lakbay/screens/signing-page/signup_details.dart';
+import 'package:animations/animations.dart';
 
 // make a stateful widget of the log in page
 class StartingPage extends StatefulWidget {
@@ -19,6 +20,7 @@ class _StartingPageState extends State<StartingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Color(0xFFFFFFFF),
       // safe area as body for the widgets to not overflow outside
@@ -40,7 +42,7 @@ class _StartingPageState extends State<StartingPage> {
                   "Plan your\nnext journey with us!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: size.height * 0.030,
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
@@ -53,76 +55,61 @@ class _StartingPageState extends State<StartingPage> {
 
       // set animation for the container
       bottomNavigationBar: TweenAnimationBuilder(
-        tween: Tween<Offset>(
-          begin: Offset(0, 1), // start off screen
-          end: Offset(0, 0), // end on the current position
-        ),
-        duration: Duration(milliseconds: 700), // animation will take 2 secs
+        tween: Tween<Offset>(begin: Offset(0, 1), end: Offset(0, 0)),
+        duration: Duration(milliseconds: 700),
         builder: (context, offset, child) {
           return Transform.translate(
-            offset: Offset(
-              0,
-              offset.dy * MediaQuery.of(context).size.height,
-            ), // vertical multiplied by the size of the screen for it to go forward frame by frame
+            offset: Offset(0, offset.dy * size.height),
             child: Stack(
               children: [
                 Container(
-                  height: 395,
+                  height: size.height * 0.38, // 38% of screen height
                   width: double.infinity,
-
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(
-                      255,
-                      254,
-                      202,
-                      141,
-                    ), // add color and make the edges circular
+                    color: Color.fromARGB(255, 254, 202, 141),
                     borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(80),
+                      topRight: Radius.circular(size.width * 0.18),
                     ),
                   ),
                 ),
-
                 Positioned(
                   bottom: 0,
                   left: 0,
                   right: 0,
                   child: Container(
-                    width:
-                        double
-                            .infinity, // make the container extend to the sides
-                    height: 340, // set a height
+                    width: size.width * 0.8,
+                    height: size.height * 0.32, // 32% of screen height
                     decoration: BoxDecoration(
-                      color: Color(
-                        0xFFF86400,
-                      ), // add color and make the edges circular
+                      color: Color(0xFFF86400),
                       borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(80),
+                        topRight: Radius.circular(size.width * 0.18),
                       ),
                     ),
-
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(height: 80),
-
-                        // log in button
+                        // Log In Button
                         SizedBox(
-                          width: 315,
-                          height: 70,
+                          width: size.width * 0.8,
+                          height: size.height * 0.08,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginDetails(),
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  transitionDuration: Duration(milliseconds: 400),
+                                  pageBuilder: (context, animation, secondaryAnimation) => const LoginDetails(),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    return SharedAxisTransition(
+                                      animation: animation,
+                                      secondaryAnimation: secondaryAnimation,
+                                      transitionType: SharedAxisTransitionType.horizontal,
+                                      child: child,
+                                    );
+                                  },
                                 ),
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              // side: BorderSide(
-                              //   color: Color(),
-                              //   width: 2,
-                              // ),
                               backgroundColor: Color(0xFF020B1B),
                               elevation: 8,
                               shape: RoundedRectangleBorder(
@@ -132,44 +119,47 @@ class _StartingPageState extends State<StartingPage> {
                             child: Text(
                               "Log In",
                               style: TextStyle(
-                                fontSize: 18,
-                                color: Color(0xFFFFFFFF),
+                                fontSize: size.height * 0.025,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ),
-
-                        SizedBox(height: 20),
-
-                        // sign up button
+                        SizedBox(height: size.height * 0.025),
+                        // Sign Up Button
                         SizedBox(
-                          width: 315,
-                          height: 70,
+                          width: size.width * 0.8,
+                          height: size.height * 0.08,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SignupDetails(),
+                              Navigator.of(context).push(
+                                PageRouteBuilder(
+                                  transitionDuration: Duration(milliseconds: 400),
+                                  pageBuilder: (context, animation, secondaryAnimation) => const SignupDetails(),
+                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    return SharedAxisTransition(
+                                      animation: animation,
+                                      secondaryAnimation: secondaryAnimation,
+                                      transitionType: SharedAxisTransitionType.horizontal,
+                                      child: child,
+                                    );
+                                  },
                                 ),
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              side: BorderSide(
-                                color: Color(0xFFFFFFFF),
-                                width: 2,
-                              ),
-                              backgroundColor: Color(0xFFFFFFFF),
+                              side: BorderSide(color: Colors.white, width: 2),
+                              backgroundColor: Colors.white,
                               elevation: 8,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50),
                               ),
                             ),
                             child: Text(
-                              "Sign Up", // Capitalized "In" for consistency
+                              "Sign Up",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: size.height * 0.025,
                                 color: Color(0xFF020B1B),
                                 fontWeight: FontWeight.bold,
                               ),
