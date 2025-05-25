@@ -92,35 +92,43 @@ class _ProfilePageState extends State<ProfilePage> {
               ? const Center(child: Text("No user data available."))
               : Stack(
                 children: [
-                  // Orange header with logo and back button
-                  Container(
-                    height: 180,
-                    decoration: const BoxDecoration(color: Color(0xFFF97419)),
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 30),
-                              Image.asset('assets/logo.png', height: 150),
-                            ],
+                  // Edit button at top right, aligned with profile picture
+                  Positioned(
+                    top: 40, // aligns with profile picture top
+                    right: 15, // aligns with profile picture right edge
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const EditProfilePage(),
                           ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
                         ),
-                      ],
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 22,
+                          vertical: 10,
+                        ),
+                        elevation: 0,
+                      ),
+                      child: const Text(
+                        'Edit',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
                     ),
                   ),
                   // Main content
                   Column(
                     children: [
-                      const SizedBox(height: 160),
-                      // Fixed top section
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 22.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      const SizedBox(height: 40),
+                      // Profile picture, name, email (centered)
+                      Center(
+                        child: Column(
                           children: [
-                            // Profile picture (left)
                             Stack(
                               clipBehavior: Clip.none,
                               children: [
@@ -134,8 +142,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                   child: ClipOval(
                                     child: SizedBox(
-                                      width: 100,
-                                      height: 100,
+                                      width: 120,
+                                      height: 120,
                                       child:
                                           _profileImage != null
                                               ? Image.file(
@@ -162,7 +170,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                 ),
-                                // Camera/pencil logic
                                 Positioned(
                                   bottom: 0,
                                   right: 0,
@@ -231,47 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ],
                             ),
-                            const SizedBox(width: 16),
-                            const Spacer(),
-                            // Edit Profile button (right)
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => const EditProfilePage(),
-                                  ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 32,
-                                  vertical: 12,
-                                ),
-                                elevation: 0,
-                              ),
-                              child: const Text(
-                                'Edit Profile',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      // Name, username, email
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                            const SizedBox(height: 12),
                             Text(
                               '${details['firstName']} ${details['lastName']}',
                               style: const TextStyle(
@@ -280,17 +247,99 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: Colors.black,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Text(
-                              '@${details['userName']}',
+                              details['email'] ?? 'No email added',
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 14),
+                            // Four cards for Friends, Travel Plans, Interests, and Travel Styles
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Friends Card
+                                StreamBuilder<DocumentSnapshot>(
+                                  stream:
+                                      FirebaseFirestore.instance
+                                          .collection('appusers')
+                                          .doc(user.uid)
+                                          .snapshots(),
+                                  builder: (context, snapshot) {
+                                    final friends =
+                                        (snapshot.hasData &&
+                                                snapshot.data!.exists)
+                                            ? (snapshot.data!.data()
+                                                        as Map<
+                                                          String,
+                                                          dynamic
+                                                        >)['friends']
+                                                    as List<dynamic>? ??
+                                                []
+                                            : [];
+                                    return _ProfileStatCard(
+                                      count: friends.length,
+                                      label: 'Friends',
+                                      color: Colors.black,
+                                      width: 70,
+                                      height: 60,
+                                    );
+                                  },
+                                ),
+                                const SizedBox(width: 8),
+                                // Travel Plans Card
+                                StreamBuilder<QuerySnapshot>(
+                                  stream:
+                                      FirebaseFirestore.instance
+                                          .collection('travelplans')
+                                          .where('userId', isEqualTo: user.uid)
+                                          .snapshots(),
+                                  builder: (context, snapshot) {
+                                    final count =
+                                        snapshot.hasData
+                                            ? snapshot.data!.docs.length
+                                            : 0;
+                                    return _ProfileStatCard(
+                                      count: count,
+                                      label: 'Plans',
+                                      color: Colors.black,
+                                      width: 70,
+                                      height: 60,
+                                    );
+                                  },
+                                ),
+                                const SizedBox(width: 8),
+                                // Interests Card
+                                _ProfileStatCard(
+                                  count:
+                                      (details['interests'] as List<dynamic>?)
+                                          ?.length ??
+                                      0,
+                                  label: 'Interests',
+                                  color: Colors.black,
+                                  width: 70,
+                                  height: 60,
+                                ),
+                                const SizedBox(width: 8),
+                                // Travel Styles Card
+                                _ProfileStatCard(
+                                  count:
+                                      (details['styles'] as List<dynamic>?)
+                                          ?.length ??
+                                      0,
+                                  label: 'Styles',
+                                  color: Colors.black,
+                                  width: 70,
+                                  height: 60,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
                             // Make Profile Public Section
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   'Make Profile Public',
@@ -317,71 +366,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                     await authProvider.fetchUserDetails();
                                   },
                                   activeColor: Color(0xFFF97419),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                StreamBuilder<DocumentSnapshot>(
-                                  stream:
-                                      FirebaseFirestore.instance
-                                          .collection('appusers')
-                                          .doc(user.uid)
-                                          .snapshots(),
-                                  builder: (context, snapshot) {
-                                    final friends =
-                                        (snapshot.hasData &&
-                                                snapshot.data!.exists)
-                                            ? (snapshot.data!.data()
-                                                        as Map<
-                                                          String,
-                                                          dynamic
-                                                        >)['friends']
-                                                    as List<dynamic>? ??
-                                                []
-                                            : [];
-                                    return Text(
-                                      '${friends.length}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    );
-                                  },
-                                ),
-                                const Text(
-                                  ' Friends',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                                const SizedBox(width: 16),
-                                StreamBuilder<QuerySnapshot>(
-                                  stream:
-                                      FirebaseFirestore.instance
-                                          .collection('travelplans')
-                                          .where('userId', isEqualTo: user.uid)
-                                          .snapshots(),
-                                  builder: (context, snapshot) {
-                                    final count =
-                                        snapshot.hasData
-                                            ? snapshot.data!.docs.length
-                                            : 0;
-                                    return Row(
-                                      children: [
-                                        Text(
-                                          '$count',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        const Text(
-                                          ' Travel Plans',
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      ],
-                                    );
-                                  },
                                 ),
                               ],
                             ),
@@ -625,6 +609,53 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
+    );
+  }
+}
+
+class _ProfileStatCard extends StatelessWidget {
+  final int count;
+  final String label;
+  final Color color;
+  final double width;
+  final double height;
+  const _ProfileStatCard({
+    required this.count,
+    required this.label,
+    required this.color,
+    this.width = 100,
+    this.height = 80,
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      margin: const EdgeInsets.symmetric(horizontal: 2),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            count.toString().padLeft(2, '0'),
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 11, color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

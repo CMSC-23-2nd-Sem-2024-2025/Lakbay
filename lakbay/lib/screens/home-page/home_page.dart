@@ -220,7 +220,10 @@ class _HomePageState extends State<HomePage> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Close', style: TextStyle(color: Colors.black),),
+                        child: const Text(
+                          'Close',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ],
                   );
@@ -479,12 +482,12 @@ class _HomePageState extends State<HomePage> {
                                             vertical: 8,
                                           ),
                                           child: SizedBox(
-                                            height: 100,
+                                            height: 140,
                                             child: Row(
                                               children: [
                                                 Container(
-                                                  width: 100,
-                                                  height: 100,
+                                                  width: 120,
+                                                  height: 120,
                                                   margin: EdgeInsets.all(16),
                                                   decoration: BoxDecoration(
                                                     color: Colors.orange[100],
@@ -499,13 +502,14 @@ class _HomePageState extends State<HomePage> {
                                                     size: 32,
                                                   ),
                                                 ),
-                                                SizedBox(width: 10),
+                                                SizedBox(width: 8),
                                                 Expanded(
                                                   child: Column(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.start,
+                                                        MainAxisAlignment
+                                                            .center,
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
@@ -570,7 +574,7 @@ class _HomePageState extends State<HomePage> {
                                                       Transform.translate(
                                                         offset: const Offset(
                                                           0,
-                                                          -8,
+                                                          0,
                                                         ),
                                                         child: GestureDetector(
                                                           onTap: () {
@@ -605,6 +609,10 @@ class _HomePageState extends State<HomePage> {
                                                                           .grey[700],
                                                                   height: 1.0,
                                                                 ),
+                                                                maxLines: 2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
                                                               ),
                                                               Text(
                                                                 (() {
