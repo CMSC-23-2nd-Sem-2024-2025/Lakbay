@@ -42,19 +42,11 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-
         automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: const Icon(Icons.logout),
-          onPressed: () async {
-            await context.read<AuthProvider>().signOut();
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => StartingPage()),
-              (route) => false,
-            );
-          },
+        title: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Image.asset('assets/or.png', height: 60),
         ),
-        title: const Text(''),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications, color: Color(0xFFF86400)),

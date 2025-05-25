@@ -92,6 +92,28 @@ class _ProfilePageState extends State<ProfilePage> {
               ? const Center(child: Text("No user data available."))
               : Stack(
                 children: [
+                  // Logout button at top left
+                  Positioned(
+                    top: 40,
+                    left: 15,
+                    child: IconButton(
+                      onPressed: () async {
+                        final authProvider = Provider.of<AuthProvider>(
+                          context,
+                          listen: false,
+                        );
+                        await authProvider.signOut();
+                        if (context.mounted) {
+                          Navigator.of(context).pushReplacementNamed('/login');
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Color(0xFFF86400),
+                        size: 28,
+                      ),
+                    ),
+                  ),
                   // Edit button at top right, aligned with profile picture
                   Positioned(
                     top: 40, // aligns with profile picture top

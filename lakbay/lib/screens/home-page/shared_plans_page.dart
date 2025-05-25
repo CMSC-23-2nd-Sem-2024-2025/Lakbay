@@ -525,17 +525,18 @@ class _SharePlanDialogState extends State<SharePlanDialog>
                           }
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(color: Colors.grey.shade300),
                           ),
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               QrImageView(
                                 data: widget.planId,
-                                size: 140.0,
+                                size: 130.0,
                                 backgroundColor: Colors.white,
                                 eyeStyle: const QrEyeStyle(
                                   eyeShape: QrEyeShape.square,
@@ -546,7 +547,7 @@ class _SharePlanDialogState extends State<SharePlanDialog>
                                   color: Colors.black,
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 4),
                               const Text(
                                 'Long press to save QR code',
                                 style: TextStyle(
