@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
 
 class ItinerariesFormPage extends StatefulWidget {
   final Map<String, String>? existingItinerary;
@@ -23,6 +24,7 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
   late TextEditingController locationController;
   late TextEditingController startTimeController;
   late TextEditingController endTimeController;
+  LatLong? selectedLocation;
 
   @override
   void initState() {
@@ -42,6 +44,9 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
     endTimeController = TextEditingController(
       text: widget.existingItinerary?['endTime'] ?? '',
     );
+    locationController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -90,6 +95,44 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
         }
       });
     }
+  }
+
+  Future<void> _showLocationPicker() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => Scaffold(
+              appBar: AppBar(
+                title: Text('Pick Location'),
+                backgroundColor: Color(0xFFF97419),
+              ),
+              body: FlutterLocationPicker(
+                initPosition: LatLong(14.1657, 121.2417),
+                onPicked: (pickedData) {
+                  setState(() {
+                    selectedLocation = pickedData.latLong;
+                    locationController.text =
+                        pickedData.address ?? 'Selected Location';
+                  });
+                  Navigator.pop(context);
+                },
+                searchBarHintText: 'Search location...',
+                selectLocationButtonText: 'Select Location',
+                selectLocationButtonStyle: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Color(0xFFF97419)),
+                  foregroundColor: MaterialStateProperty.all(Colors.black),
+                ),
+                showSearchBar: true,
+                markerIcon: Icon(
+                  Icons.location_on,
+                  color: Color(0xFFF97419),
+                  size: 40,
+                ),
+              ),
+            ),
+      ),
+    );
   }
 
   bool _validateFields() {
@@ -168,13 +211,16 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
                   ),
                   filled: true,
                   fillColor: Colors.grey[50],
+                  prefixIcon: Icon(Icons.location_on_outlined),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter location';
+                    return 'Please select a location';
                   }
                   return null;
                 },
+                readOnly: true,
+                onTap: _showLocationPicker,
               ),
               SizedBox(height: 24),
               Container(
