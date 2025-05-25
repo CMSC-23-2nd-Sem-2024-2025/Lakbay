@@ -61,8 +61,7 @@ class _FindSimilarState extends State<FindSimilar> {
     final user = authProvider.userObj;
     final userDetails = authProvider.userDetails;
 
-    print('DEBUG: user = $user');
-    print('DEBUG: userDetails = $userDetails');
+
     if (isLoading || user == null || userDetails == null) {
       return const Scaffold(
         body: Center(
@@ -201,6 +200,7 @@ class _FindSimilarState extends State<FindSimilar> {
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black
+                                                      // ignore: deprecated_member_use
                                                       .withOpacity(0.1),
                                                   blurRadius: 8,
                                                   offset: const Offset(0, 4),
@@ -316,6 +316,7 @@ class _FindSimilarState extends State<FindSimilar> {
                                         shape: BoxShape.circle,
                                         boxShadow: [
                                           BoxShadow(
+                                            // ignore: deprecated_member_use
                                             color: Colors.black.withOpacity(
                                               0.1,
                                             ),
