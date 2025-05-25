@@ -39,6 +39,10 @@ class _HomePageState extends State<HomePage> {
     // this is the main scaffold of the home page. it contains the app bar, body, and bottom navigation bar
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.logout),
