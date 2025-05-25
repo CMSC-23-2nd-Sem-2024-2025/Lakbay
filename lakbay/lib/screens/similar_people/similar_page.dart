@@ -177,9 +177,12 @@ class _FindSimilarState extends State<FindSimilar> {
 
                         return GestureDetector(
                           onTap: () {
-                            showDialog(
+                            showGeneralDialog(
                               context: context,
-                              builder: (context) {
+                              barrierDismissible: true,
+                              barrierLabel: 'Similar User Details',
+                              transitionDuration: const Duration(milliseconds: 300),
+                              pageBuilder: (context, anim1, anim2) {
                                 return Dialog(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(24),
@@ -276,6 +279,15 @@ class _FindSimilarState extends State<FindSimilar> {
                                       ],
                                     ),
                                   ),
+                                );
+                              },
+                              transitionBuilder: (context, anim1, anim2, child) {
+                                return ScaleTransition(
+                                  scale: CurvedAnimation(
+                                    parent: anim1,
+                                    curve: Curves.easeOutBack,
+                                  ),
+                                  child: FadeTransition(opacity: anim1, child: child),
                                 );
                               },
                             );

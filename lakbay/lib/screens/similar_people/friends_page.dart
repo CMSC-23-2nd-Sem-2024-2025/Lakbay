@@ -153,140 +153,281 @@ class _FriendsPageState extends State<FriendsPage> {
                                 final friendEmail = u['email'] as String?;
                                 return GestureDetector(
                                   onTap: () {
-                                    showDialog(
+                                    showGeneralDialog(
                                       context: context,
-                                      builder: (context) {
-                                        return Dialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              24,
-                                            ),
-                                          ),
-                                          child: Container(
-                                            padding: const EdgeInsets.all(24),
+                                      barrierDismissible: true,
+                                      barrierLabel: 'Friend Details',
+                                      transitionDuration: const Duration(milliseconds: 300),
+                                      pageBuilder: (context, anim1, anim2) {
+                                        return AlertDialog(
+                                          content: SizedBox(
+                                            width: 300,
                                             child: Column(
-                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisSize:
+                                                  MainAxisSize.min,
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                  CrossAxisAlignment
+                                                      .start,
                                               children: [
                                                 Center(
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.black
-                                                              .withOpacity(0.1),
-                                                          blurRadius: 8,
-                                                          offset: const Offset(
-                                                            0,
-                                                            4,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: _buildProfileImage(
-                                                      u,
-                                                    ),
-                                                  ),
+                                                  child:
+                                                      _buildProfileImage(
+                                                        u,
+                                                      ),
                                                 ),
-                                                const SizedBox(height: 20),
+                                                const SizedBox(
+                                                  height: 16,
+                                                ),
                                                 Center(
                                                   child: Text(
                                                     '@${u['userName']}',
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color(0xFFF86400),
-                                                      fontSize: 20,
-                                                    ),
+                                                    style:
+                                                        const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight
+                                                                  .bold,
+                                                          color:
+                                                              Colors
+                                                                  .grey,
+                                                          fontSize: 15,
+                                                        ),
+                                                    textAlign:
+                                                        TextAlign.left,
                                                   ),
                                                 ),
-                                                const SizedBox(height: 24),
-                                                _buildDetailSection(
+                                                const SizedBox(
+                                                  height: 20,
+                                                ),
+                                                Text(
                                                   'Name',
-                                                  '${u['firstName']} ${u['lastName']}',
-                                                ),
-                                                const SizedBox(height: 16),
-                                                _buildDetailSection(
-                                                  'Email',
-                                                  u['email'] ?? 'Not available',
-                                                ),
-                                                const SizedBox(height: 16),
-                                                _buildDetailSection(
-                                                  'Interests',
-                                                  ((u['interests']
-                                                                  as List<
-                                                                    dynamic
-                                                                  >?) ==
-                                                              null ||
-                                                          (u['interests']
-                                                                  as List<
-                                                                    dynamic
-                                                                  >?)!
-                                                              .isEmpty)
-                                                      ? 'None'
-                                                      : (u['interests']
-                                                              as List<dynamic>)
-                                                          .join(", "),
-                                                ),
-                                                const SizedBox(height: 16),
-                                                _buildDetailSection(
-                                                  'Travel Styles',
-                                                  ((u['styles']
-                                                                  as List<
-                                                                    dynamic
-                                                                  >?) ==
-                                                              null ||
-                                                          (u['styles']
-                                                                  as List<
-                                                                    dynamic
-                                                                  >?)!
-                                                              .isEmpty)
-                                                      ? 'None'
-                                                      : (u['styles']
-                                                              as List<dynamic>)
-                                                          .join(", "),
-                                                ),
-                                                const SizedBox(height: 24),
-                                                Center(
-                                                  child: TextButton(
-                                                    onPressed:
-                                                        () =>
-                                                            Navigator.of(
-                                                              context,
-                                                            ).pop(),
-                                                    style: TextButton.styleFrom(
-                                                      backgroundColor:
-                                                          const Color(
-                                                            0xFFF86400,
-                                                          ),
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 32,
-                                                            vertical: 12,
-                                                          ),
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              12,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                    child: const Text(
-                                                      'Close',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
+                                                  style:
+                                                      const TextStyle(
                                                         fontSize: 16,
                                                         fontWeight:
-                                                            FontWeight.bold,
+                                                            FontWeight
+                                                                .bold,
                                                       ),
-                                                    ),
+                                                  textAlign:
+                                                      TextAlign.center,
+                                                ),
+                                                TextField(
+                                                  controller:
+                                                      TextEditingController(
+                                                        text:
+                                                            '${u['firstName']} ${u['lastName']}',
+                                                      ),
+                                                  readOnly: true,
+                                                  enabled: false,
+                                                  textAlign:
+                                                      TextAlign.left,
+                                                  style:
+                                                      const TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Colors
+                                                                .black,
+                                                      ),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                        border:
+                                                            UnderlineInputBorder(),
+                                                        isDense: true,
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .zero,
+                                                      ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 14,
+                                                ),
+                                                Text(
+                                                  'Contact info',
+                                                  style:
+                                                      const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight
+                                                                .bold,
+                                                      ),
+                                                  textAlign:
+                                                      TextAlign.center,
+                                                ),
+                                                TextField(
+                                                  controller:
+                                                      TextEditingController(
+                                                        text:
+                                                            u['email'] ??
+                                                            '',
+                                                      ),
+                                                  readOnly: true,
+                                                  enabled: false,
+                                                  textAlign:
+                                                      TextAlign.left,
+                                                  style:
+                                                      const TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Colors
+                                                                .black,
+                                                      ),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                        border:
+                                                            UnderlineInputBorder(),
+                                                        isDense: true,
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .zero,
+                                                      ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 14,
+                                                ),
+                                                Text(
+                                                  'Interests',
+                                                  style:
+                                                      const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight
+                                                                .bold,
+                                                      ),
+                                                  textAlign:
+                                                      TextAlign.center,
+                                                ),
+                                                TextField(
+                                                  controller: TextEditingController(
+                                                    text:
+                                                        ((u['interests']
+                                                                                as List<
+                                                                                  dynamic
+                                                                                >?) ==
+                                                                            null ||
+                                                                        (u['interests']
+                                                                                as List<
+                                                                                  dynamic
+                                                                                >?)!
+                                                                            .isEmpty)
+                                                                    ? 'None'
+                                                                    : (u['interests']
+                                                                            as List<
+                                                                              dynamic
+                                                                            >)
+                                                                        .join(
+                                                                          ", ",
+                                                                        ),
                                                   ),
+                                                  readOnly: true,
+                                                  enabled: false,
+                                                  maxLines: null,
+                                                  textAlign:
+                                                      TextAlign.left,
+                                                  style:
+                                                      const TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Colors
+                                                                .black,
+                                                      ),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                        border:
+                                                            UnderlineInputBorder(),
+                                                        isDense: true,
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .zero,
+                                                      ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 14,
+                                                ),
+                                                Text(
+                                                  'Styles',
+                                                  style:
+                                                      const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight
+                                                                .bold,
+                                                      ),
+                                                  textAlign:
+                                                      TextAlign.center,
+                                                ),
+                                                TextField(
+                                                  controller: TextEditingController(
+                                                    text:
+                                                        ((u['styles']
+                                                                                as List<
+                                                                                  dynamic
+                                                                                >?) ==
+                                                                            null ||
+                                                                        (u['styles']
+                                                                                as List<
+                                                                                  dynamic
+                                                                                >?)!
+                                                                            .isEmpty)
+                                                                    ? 'None'
+                                                                    : (u['styles']
+                                                                            as List<
+                                                                              dynamic
+                                                                            >)
+                                                                        .join(
+                                                                          ", ",
+                                                                        ),
+                                                  ),
+                                                  readOnly: true,
+                                                  enabled: false,
+                                                  maxLines: null,
+                                                  textAlign:
+                                                      TextAlign.left,
+                                                  style:
+                                                      const TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Colors
+                                                                .black,
+                                                      ),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                        border:
+                                                            UnderlineInputBorder(),
+                                                        isDense: true,
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .zero,
+                                                      ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 16,
                                                 ),
                                               ],
                                             ),
                                           ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed:
+                                                  () =>
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop(),
+                                              child: const Text(
+                                                'Back',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                      transitionBuilder: (context, anim1, anim2, child) {
+                                        return ScaleTransition(
+                                          scale: CurvedAnimation(
+                                            parent: anim1,
+                                            curve: Curves.easeOutBack,
+                                          ),
+                                          child: FadeTransition(opacity: anim1, child: child),
                                         );
                                       },
                                     );
