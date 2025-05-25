@@ -626,7 +626,7 @@ class _HomePageState extends State<HomePage> {
                                                                     final date =
                                                                         dateValue
                                                                             .toDate();
-                                                                    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                                    return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
                                                                   }
                                                                   try {
                                                                     final date =
@@ -634,7 +634,7 @@ class _HomePageState extends State<HomePage> {
                                                                           dateValue
                                                                               .toString(),
                                                                         );
-                                                                    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                                                                    return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
                                                                   } catch (_) {
                                                                     return dateValue
                                                                         .toString();
@@ -676,5 +676,23 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1];
   }
 }

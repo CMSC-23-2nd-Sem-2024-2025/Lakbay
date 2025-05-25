@@ -332,11 +332,11 @@ class SharedPlans extends StatelessWidget {
                             if (dateValue == null) return 'No Date';
                             if (dateValue is Timestamp) {
                               final date = dateValue.toDate();
-                              return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                              return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
                             }
                             try {
                               final date = DateTime.parse(dateValue.toString());
-                              return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                              return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
                             } catch (_) {
                               return dateValue.toString();
                             }
@@ -356,6 +356,24 @@ class SharedPlans extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1];
   }
 }
 
@@ -618,7 +636,7 @@ class _SharePlanDialogState extends State<SharePlanDialog>
       final file = File(filePath);
       await file.writeAsBytes(buffer);
 
-      // Share the image with a white background
+      // Share the image
       await Share.shareXFiles([
         XFile(filePath),
       ], text: 'Share QR Code for Travel Plan');
