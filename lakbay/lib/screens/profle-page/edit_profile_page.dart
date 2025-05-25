@@ -114,6 +114,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  String? _phoneValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Phone number is required';
+    }
+    final phoneRegExp = RegExp(r'^\d{11}$');
+    if (!phoneRegExp.hasMatch(value)) {
+      return 'Phone number is invalid';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -316,6 +327,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           hintText: 'Enter your phone number',
                           border: OutlineInputBorder(),
                         ),
+                        keyboardType: TextInputType.phone,
+                        validator: _phoneValidator,
                       ),
                       const SizedBox(height: 32),
                       ElevatedButton(
