@@ -249,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              details['email'] ?? 'No email added',
+                              '@${details['userName'] ?? 'No username'}',
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey,

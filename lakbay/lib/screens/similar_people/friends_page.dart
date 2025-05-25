@@ -612,7 +612,7 @@ class _FriendsPageState extends State<FriendsPage> {
             ),
           ),
 
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: FloatingActionButton.extended(
             backgroundColor: Color(0xFFF97419),
             onPressed: () {
               final emailController = TextEditingController();
@@ -697,7 +697,11 @@ class _FriendsPageState extends State<FriendsPage> {
                 },
               );
             },
-            child: const Icon(Icons.person_add, color: Colors.white),
+            icon: const Icon(Icons.person_add, color: Colors.white),
+            label: const Text(
+              'Add Friend',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
           ),
         );
       },
@@ -727,9 +731,16 @@ class _FriendsPageState extends State<FriendsPage> {
       }
       return;
     }
-    final userDoc = await FirebaseFirestore.instance.collection('appusers').doc(user.uid).get();
+    final userDoc =
+        await FirebaseFirestore.instance
+            .collection('appusers')
+            .doc(user.uid)
+            .get();
     final userData = userDoc.data() as Map<String, dynamic>?;
-    final List<dynamic> friends = userData != null && userData['friends'] != null ? List.from(userData['friends']) : [];
+    final List<dynamic> friends =
+        userData != null && userData['friends'] != null
+            ? List.from(userData['friends'])
+            : [];
     if (friends.contains(enteredEmail)) {
       if (context.mounted) {
         Navigator.of(context).pop();
@@ -757,7 +768,10 @@ class _FriendsPageState extends State<FriendsPage> {
       } else {
         if (context.mounted) {
           Navigator.of(context).pop();
-          showCustomSnackbar(context, 'You have already sent a request to this user.');
+          showCustomSnackbar(
+            context,
+            'You have already sent a request to this user.',
+          );
         }
       }
     } else {
@@ -771,27 +785,28 @@ class _FriendsPageState extends State<FriendsPage> {
   void showCustomSnackbar(BuildContext context, String message) {
     final overlay = Overlay.of(context);
     final overlayEntry = OverlayEntry(
-      builder: (context) => Center(
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            width: 280,
-            height: 80,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Center(
-              child: Text(
-                message,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-                textAlign: TextAlign.center,
+      builder:
+          (context) => Center(
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: 280,
+                height: 80,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.black87,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child: Text(
+                    message,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
     );
     overlay.insert(overlayEntry);
     Future.delayed(const Duration(seconds: 2), () {

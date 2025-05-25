@@ -520,7 +520,7 @@ class _HomePageState extends State<HomePage> {
                                                                 .spaceBetween,
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
-                                                                .start,
+                                                                .center,
                                                         children: [
                                                           Expanded(
                                                             child: GestureDetector(
