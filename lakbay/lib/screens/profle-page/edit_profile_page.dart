@@ -120,7 +120,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       appBar: AppBar(title: const Text('Edit Profile')),
       body:
           _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator(color: Color(0xFFF97419),))
               : SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Form(
@@ -178,6 +178,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                                 value: tempSelected.contains(
                                                   option,
                                                 ),
+                                                checkColor: Colors.white,
+                                                activeColor: Color(0xFFF97419),
                                                 onChanged: (checked) {
                                                   setModalState(() {
                                                     if (checked == true) {
@@ -199,7 +201,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                                   tempSelected,
                                                 );
                                               },
-                                              child: const Text('Done'),
+                                              child: const Text('Done', style: TextStyle(color: Colors.black),),
                                             ),
                                           ],
                                         ),
@@ -259,6 +261,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                                 value: tempSelected.contains(
                                                   option,
                                                 ),
+                                                checkColor: Colors.white,
+                                                activeColor: Color(0xFFF97419),
                                                 onChanged: (checked) {
                                                   setModalState(() {
                                                     if (checked == true) {
@@ -280,7 +284,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                                   tempSelected,
                                                 );
                                               },
-                                              child: const Text('Done'),
+                                              child: const Text('Done', style: TextStyle(color: Colors.black),),
                                             ),
                                           ],
                                         ),
