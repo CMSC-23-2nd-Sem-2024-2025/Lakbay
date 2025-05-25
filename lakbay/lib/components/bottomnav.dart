@@ -34,15 +34,14 @@ class CustomBottomNav extends StatelessWidget {
             IconButton(
               icon: Icon(
                 Icons.home,
-                color: orange,
+                color: selectedIndex == 0 ? orange : Colors.grey,
               ),
               onPressed: () => onTabSelected(0),
             ),
-
             IconButton(
               icon: Icon(
                 Icons.person_search,
-                color: orange,
+                color: selectedIndex == 3 ? orange : Colors.grey,
               ),
               onPressed: () => onTabSelected(3),
             ),
@@ -57,24 +56,20 @@ class CustomBottomNav extends StatelessWidget {
                 onPressed: () => onTabSelected(1),
               ),
             ),
-
             IconButton(
               icon: Icon(
                 Icons.group,
-                color: orange,
+                color: selectedIndex == 4 ? orange : Colors.grey,
               ),
-              onPressed: () {onTabSelected(4);},
+              onPressed: () => onTabSelected(4),
             ),
             IconButton(
               icon: Icon(
                 Icons.person,
-                color: orange,
+                color: selectedIndex == 2 ? orange : Colors.grey,
               ),
               onPressed: () => onTabSelected(2),
             ),
-
-            
-            
           ],
         ),
       ),

@@ -328,7 +328,7 @@ class _FindSimilarState extends State<FindSimilar> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      '${u['userName'] ?? ''}',
+                                      u['userName'] ?? '',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -338,27 +338,17 @@ class _FindSimilarState extends State<FindSimilar> {
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                     ),
-                                    const SizedBox(height: 6),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      matchText,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFFF86400),
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange[100],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        matchText,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Color(0xFFF86400),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 3,
-                                      ),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
                                     ),
                                   ],
                                 ),
@@ -392,6 +382,7 @@ class _FindSimilarState extends State<FindSimilar> {
         ),
         const SizedBox(height: 8),
         Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.orange[50],
