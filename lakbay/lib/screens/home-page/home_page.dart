@@ -49,7 +49,11 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications, color: Color(0xFFF86400)),
+            icon: const Icon(
+              Icons.notifications,
+              color: Color(0xFFF86400),
+              size: 32,
+            ),
             onPressed: () {
               if (user == null) return;
               showDialog(
@@ -249,12 +253,12 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.bold,
                         ),
                         children: [
-                          TextSpan(text: "Hi, $username!\n"),
+                          TextSpan(text: "Hello, $username!\n"),
                           const TextSpan(
                             text: "LAKBAY",
                             style: TextStyle(
                               color: Color(0xFFF86400),
-                              fontSize: 28,
+                              fontSize: 32,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
@@ -262,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                             text: "IN NATIN!",
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 28,
+                              fontSize: 32,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
@@ -274,69 +278,95 @@ class _HomePageState extends State<HomePage> {
 
                     // this makes the row for the tab selection
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              _selectedTab =
-                                  0; //updates the value of the selected (will be used later)
+                              _selectedTab = 0;
                             });
                           },
-                          child: Column(
-                            children: [
-                              Text(
-                                "Travel Plan",
-                                style: TextStyle(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  _selectedTab == 0
+                                      ? const Color(0xFFF86400)
+                                      : Colors.transparent,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.map,
                                   color:
                                       _selectedTab == 0
-                                          ? Color(0xFFF86400)
+                                          ? Colors.white
                                           : Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
+                                  size: 20,
                                 ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(top: 2),
-                                height: 2,
-                                width: 70,
-                                color:
-                                    _selectedTab == 0
-                                        ? Color(0xFFF86400)
-                                        : Colors.transparent,
-                              ),
-                            ],
+                                const SizedBox(width: 8),
+                                Text(
+                                  "Travel Plan",
+                                  style: TextStyle(
+                                    color:
+                                        _selectedTab == 0
+                                            ? Colors.white
+                                            : Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 24),
+                        const SizedBox(width: 16),
                         GestureDetector(
                           onTap: () {
                             setState(() {
                               _selectedTab = 1;
                             });
                           },
-                          child: Column(
-                            children: [
-                              Text(
-                                "Shared Plans",
-                                style: TextStyle(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  _selectedTab == 1
+                                      ? const Color(0xFFF86400)
+                                      : Colors.transparent,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.people_alt,
                                   color:
                                       _selectedTab == 1
-                                          ? Color(0xFFF86400)
+                                          ? Colors.white
                                           : Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
+                                  size: 20,
                                 ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.only(top: 2),
-                                height: 2,
-                                width: 90,
-                                color:
-                                    _selectedTab == 1
-                                        ? Color(0xFFF86400)
-                                        : Colors.transparent,
-                              ),
-                            ],
+                                const SizedBox(width: 8),
+                                Text(
+                                  "Shared Plans",
+                                  style: TextStyle(
+                                    color:
+                                        _selectedTab == 1
+                                            ? Colors.white
+                                            : Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
