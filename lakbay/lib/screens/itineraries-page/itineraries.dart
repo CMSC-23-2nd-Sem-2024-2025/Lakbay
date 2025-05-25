@@ -389,7 +389,9 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                           ),
                                           SizedBox(width: 8),
                                           Text(
-                                            _formatTime(
+                                            _formatDate(itinerary['date']) +
+                                                ' ' +
+                                                _formatTime(
                                                   itinerary['startTime'] ?? '',
                                                 ) +
                                                 ' - ' +
