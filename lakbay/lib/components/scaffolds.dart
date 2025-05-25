@@ -6,7 +6,7 @@ import 'package:lakbay/screens/profle-page/profile_page.dart';
 import 'package:lakbay/screens/similar_people/friends_page.dart';
 import 'package:lakbay/screens/similar_people/similar_page.dart';
 import 'package:lakbay/screens/travel-page/travel_form.dart';
-
+import 'package:lakbay/screens/home-page/onboarding.dart';
 
 
 class MainScaffold extends StatefulWidget {
