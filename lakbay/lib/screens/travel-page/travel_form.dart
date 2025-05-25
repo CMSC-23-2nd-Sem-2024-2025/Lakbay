@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:lakbay/models/travel_plans_model.dart';
-
 import 'package:lakbay/screens/travel-page/travel_add_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
 
 class TravelFormPage extends StatefulWidget {
   const TravelFormPage({super.key});
@@ -19,6 +18,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
   final locationController = TextEditingController();
   final departureController = TextEditingController();
   final returnController = TextEditingController();
+  LatLong? selectedLocation;
 
   @override
   void initState() {
@@ -50,6 +50,45 @@ class _TravelFormPageState extends State<TravelFormPage> {
     return true;
   }
 
+  Future<void> _showLocationPicker() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => Scaffold(
+              appBar: AppBar(
+                title: Text('Pick Location'),
+                backgroundColor: Color(0xFFF97419),
+              ),
+              body: FlutterLocationPicker(
+                initPosition: LatLong(14.1657, 121.2417),
+                onPicked: (pickedData) {
+                  setState(() {
+                    selectedLocation = pickedData.latLong;
+                    // use the address from the picked data instead of coordinates
+                    locationController.text =
+                        pickedData.address ?? 'Selected Location';
+                  });
+                  Navigator.pop(context);
+                },
+                searchBarHintText: 'Search location...',
+                selectLocationButtonText: 'Select Location',
+                selectLocationButtonStyle: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Color(0xFFF97419)),
+                  foregroundColor: MaterialStateProperty.all(Colors.black),
+                ),
+                showSearchBar: true,
+                markerIcon: Icon(
+                  Icons.location_on,
+                  color: Color(0xFFF97419),
+                  size: 40,
+                ),
+              ),
+            ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final orange = Color(0xFFF97419);
@@ -65,8 +104,6 @@ class _TravelFormPageState extends State<TravelFormPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // for back button
-                
-
                 const SizedBox(height: 16),
 
                 // RichText is used to control the design or style of each word
@@ -111,14 +148,16 @@ class _TravelFormPageState extends State<TravelFormPage> {
                 _Label('Location *'),
                 _ShadowedTextField(
                   controller: locationController,
-                  hintText: 'Enter Location',
+                  hintText: 'Tap to select location on map',
                   icon: Icons.location_on_outlined,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter location';
+                      return 'Please select a location';
                     }
                     return null;
                   },
+                  onTap: _showLocationPicker,
+                  readOnly: true,
                 ),
 
                 const SizedBox(height: 40),
@@ -267,11 +306,12 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                       // Go to add info page, pass planId
                       Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => TravelAddInfoPage(planId: docRef.id),
-  ),
-);
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => TravelAddInfoPage(planId: docRef.id),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: orange,
@@ -327,6 +367,7 @@ class _ShadowedTextField extends StatelessWidget {
   final TextEditingController controller;
   final VoidCallback? onTap;
   final String? Function(String?)? validator;
+  final bool readOnly;
 
   const _ShadowedTextField({
     super.key,
@@ -335,6 +376,7 @@ class _ShadowedTextField extends StatelessWidget {
     required this.controller,
     this.onTap,
     this.validator,
+    this.readOnly = false,
   });
 
   @override
@@ -353,7 +395,7 @@ class _ShadowedTextField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: controller,
-        readOnly: onTap != null,
+        readOnly: readOnly,
         onTap: onTap,
         validator: validator,
         decoration: InputDecoration(
