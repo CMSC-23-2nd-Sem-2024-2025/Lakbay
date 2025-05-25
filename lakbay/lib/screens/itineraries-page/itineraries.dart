@@ -69,10 +69,10 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                   ),
                   Text('Location: ${widget.plan['location'] ?? 'No Location'}'),
                   Text(
-                    'Departure Time: ${widget.plan['departureDate'] ?? 'No Date'}',
+                    'Departure Time: ${_formatDate(widget.plan['departureDate'])}',
                   ),
                   Text(
-                    'Return Date: ${widget.plan['returnDate'] ?? 'No Date'}',
+                    'Return Date: ${_formatDate(widget.plan['returnDate'])}',
                   ),
                   Text(
                     'Flight Details: ${widget.plan['flightDetails'] ?? 'No Flight details'}',
@@ -256,5 +256,37 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
         ),
       ),
     );
+  }
+
+  String _formatDate(dynamic dateValue) {
+    if (dateValue == null) return 'No Date';
+    if (dateValue is Timestamp) {
+      final date = dateValue.toDate();
+      return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
+    }
+    try {
+      final date = DateTime.parse(dateValue.toString());
+      return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
+    } catch (_) {
+      return dateValue.toString();
+    }
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1];
   }
 }
