@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/plan_provider.dart';
 import '../../providers/auth_provider.dart';
-import 'starting_page.dart';
 import 'package:lakbay/screens/itineraries-page/itineraries.dart';
 import 'shared_plans_page.dart';
 

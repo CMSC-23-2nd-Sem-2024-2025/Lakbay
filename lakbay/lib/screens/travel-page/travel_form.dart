@@ -67,7 +67,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
                     selectedLocation = pickedData.latLong;
                     // use the address from the picked data instead of coordinates
                     locationController.text =
-                        pickedData.address ?? 'Selected Location';
+                        pickedData.address;
                   });
                   Navigator.pop(context);
                 },

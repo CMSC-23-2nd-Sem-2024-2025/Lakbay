@@ -16,7 +16,6 @@ class _StartingPageState extends State<StartingPage> {
   // text editing controller for email and password
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {

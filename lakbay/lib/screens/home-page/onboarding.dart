@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lakbay/components/scaffolds.dart';
 import 'package:lakbay/screens/intro_screens/interests.dart';
-import 'package:lakbay/screens/profle-page/profile_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:lakbay/screens/intro_screens/stylers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
