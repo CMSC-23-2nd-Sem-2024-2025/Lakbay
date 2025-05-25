@@ -64,7 +64,7 @@ class _FindSimilarState extends State<FindSimilar> {
     print('DEBUG: user = $user');
     print('DEBUG: userDetails = $userDetails');
     if (isLoading || user == null || userDetails == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Color(0xFFF86400)),)));
     }
 
     return Scaffold(

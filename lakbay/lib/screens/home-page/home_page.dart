@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Close'),
+                        child: const Text('Close', style: TextStyle(color: Colors.black),),
                       ),
                     ],
                   );
