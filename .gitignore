@@ -4,3 +4,5 @@ lakbay/windows/flutter/generated_plugins.cmake
 *.cmake
 *.cc
 *.swift
+config.bat
+node_modules

@@ -702,6 +702,9 @@ class _SharePlanDialogState extends State<SharePlanDialog>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
@@ -840,18 +843,25 @@ class _SharePlanDialogState extends State<SharePlanDialog>
           onPressed: _isLoading ? null : () => Navigator.pop(context),
           child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
         ),
-        if (_tabController.index == 0)
-          ElevatedButton(
-            onPressed: _isLoading ? null : _handleShare,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: const Text('Share'),
-          ),
+        Builder(
+          builder: (context) {
+            if (_tabController.index == 0) {
+              return ElevatedButton(
+                onPressed: _isLoading ? null : _handleShare,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text('Share'),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
       ],
     );
   }
