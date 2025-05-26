@@ -242,11 +242,18 @@ class _TravelFormPageState extends State<TravelFormPage> {
                     return null;
                   },
                   onTap: () async {
+                    final DateTime now = DateTime.now();
+                    final DateTime firstDate = DateTime(
+                      now.year,
+                      now.month,
+                      now.day,
+                    );
+
                     final DateTime? pickedDate = await showDatePicker(
                       context: context,
-                      firstDate: DateTime(2000),
+                      firstDate: firstDate,
                       lastDate: DateTime(2100),
-                      initialDate: DateTime.now(),
+                      initialDate: firstDate,
                       builder: (context, child) {
                         return Theme(
                           data: Theme.of(context).copyWith(
@@ -299,10 +306,16 @@ class _TravelFormPageState extends State<TravelFormPage> {
                     return null;
                   },
                   onTap: () async {
+                    final DateTime now = DateTime.now();
+                    final DateTime firstDate =
+                        departureController.text.isNotEmpty
+                            ? DateTime.parse(departureController.text)
+                            : DateTime(now.year, now.month, now.day);
+
                     final DateTime? pickedDate = await showDatePicker(
                       context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
+                      initialDate: firstDate,
+                      firstDate: firstDate,
                       lastDate: DateTime(2100),
                       builder: (context, child) {
                         return Theme(
