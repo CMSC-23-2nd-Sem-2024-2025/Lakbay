@@ -1,8 +1,8 @@
-📍 Lakbay
+📍 ## Lakbay
 A Travel Planner App made with Flutter
 
 
-🚀 Key Features
+🚀 ## Key Features
 Collaborative travel planning
 
 Itinerary creation and sharing
