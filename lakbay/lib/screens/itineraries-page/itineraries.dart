@@ -126,7 +126,9 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                       controller: travelNameController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         contentPadding: EdgeInsets.symmetric(
                                           horizontal: 12,
@@ -170,15 +172,17 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                           SizedBox(height: 4),
                                           InkWell(
                                             onTap: () async {
-                                              final picked = await showDatePicker(
-                                                context: context,
-                                                initialDate:
-                                                    _departureDate ??
-                                                    DateTime.now(),
-                                                firstDate: DateTime(2000),
-                                                lastDate:
-                                                    _returnDate ?? DateTime(2100),
-                                              );
+                                              final picked =
+                                                  await showDatePicker(
+                                                    context: context,
+                                                    initialDate:
+                                                        _departureDate ??
+                                                        DateTime.now(),
+                                                    firstDate: DateTime(2000),
+                                                    lastDate:
+                                                        _returnDate ??
+                                                        DateTime(2100),
+                                                  );
                                               if (picked != null) {
                                                 if (earliestItineraryDate !=
                                                         null &&
@@ -192,12 +196,14 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                                       content: Text(
                                                         'Departure date cannot be after the earliest itinerary date',
                                                       ),
-                                                      backgroundColor: Colors.red,
+                                                      backgroundColor:
+                                                          Colors.red,
                                                     ),
                                                   );
                                                 } else {
                                                   setState(
-                                                    () => _departureDate = picked,
+                                                    () =>
+                                                        _departureDate = picked,
                                                   );
                                                 }
                                               }
@@ -216,7 +222,9 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                               ),
                                               child: Text(
                                                 _departureDate != null
-                                                    ? _formatDate(_departureDate)
+                                                    ? _formatDate(
+                                                      _departureDate,
+                                                    )
                                                     : 'Select departure date',
                                                 style: TextStyle(
                                                   fontSize: 14,
@@ -262,15 +270,17 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                           SizedBox(height: 4),
                                           InkWell(
                                             onTap: () async {
-                                              final picked = await showDatePicker(
-                                                context: context,
-                                                initialDate:
-                                                    _returnDate ?? DateTime.now(),
-                                                firstDate:
-                                                    _departureDate ??
-                                                    DateTime(2000),
-                                                lastDate: DateTime(2100),
-                                              );
+                                              final picked =
+                                                  await showDatePicker(
+                                                    context: context,
+                                                    initialDate:
+                                                        _returnDate ??
+                                                        DateTime.now(),
+                                                    firstDate:
+                                                        _departureDate ??
+                                                        DateTime(2000),
+                                                    lastDate: DateTime(2100),
+                                                  );
                                               if (picked != null) {
                                                 setState(
                                                   () => _returnDate = picked,
@@ -326,7 +336,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Flight Details',
@@ -371,7 +382,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Accommodation',
@@ -416,7 +428,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Notes',
@@ -461,7 +474,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Emergency Contact',
@@ -599,8 +613,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Travel Plan Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Travel Plan Details",
@@ -610,27 +624,31 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                       color: Colors.black,
                     ),
                   ),
-                  ElevatedButton.icon(
-                    onPressed: _showEditPlanModal,
-                    icon: Icon(Icons.edit, color: Colors.white, size: 20),
-                    label: Text(
-                      'Edit Plan',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: ElevatedButton.icon(
+                      onPressed: _showEditPlanModal,
+                      icon: Icon(Icons.edit, color: Colors.white, size: 20),
+                      label: Text(
+                        'Edit Plan',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFF97419),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFF97419),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        minimumSize: Size(0, 40),
                       ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      minimumSize: Size(0, 40),
                     ),
                   ),
                 ],
@@ -709,8 +727,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
               SizedBox(height: 32),
 
               // Itineraries Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Your Itineraries',
@@ -720,42 +738,45 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(width: 16),
-                  ElevatedButton.icon(
-                    onPressed:
-                        _isAdding
-                            ? null
-                            : () async {
-                              final newItinerary = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => ItinerariesFormPage(
-                                        travelPlanId:
-                                            widget.plan['id'].toString(),
-                                      ),
-                                ),
-                              );
-                            },
-                    icon: Icon(Icons.add, color: Colors.white, size: 20),
-                    label: Text(
-                      'Add Itinerary',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: ElevatedButton.icon(
+                      onPressed:
+                          _isAdding
+                              ? null
+                              : () async {
+                                final newItinerary = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => ItinerariesFormPage(
+                                          travelPlanId:
+                                              widget.plan['id'].toString(),
+                                        ),
+                                  ),
+                                );
+                              },
+                      icon: Icon(Icons.add, color: Colors.white, size: 20),
+                      label: Text(
+                        'Add Itinerary',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFF97419),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFF97419),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        minimumSize: Size(0, 40),
                       ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      minimumSize: Size(0, 40),
                     ),
                   ),
                 ],
