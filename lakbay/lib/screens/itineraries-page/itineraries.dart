@@ -3,6 +3,9 @@ import 'package:lakbay/screens/itineraries-page/itineraries_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lakbay/components/scaffolds.dart';
+import 'package:lakbay/providers/plan_provider.dart';
+import 'package:lakbay/models/travel_plans_model.dart';
+import 'package:provider/provider.dart';
 
 class ItinerariesPage extends StatefulWidget {
   final Map<String, dynamic> plan;
@@ -126,7 +129,9 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                       controller: travelNameController,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         contentPadding: EdgeInsets.symmetric(
                                           horizontal: 12,
@@ -170,15 +175,17 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                           SizedBox(height: 4),
                                           InkWell(
                                             onTap: () async {
-                                              final picked = await showDatePicker(
-                                                context: context,
-                                                initialDate:
-                                                    _departureDate ??
-                                                    DateTime.now(),
-                                                firstDate: DateTime(2000),
-                                                lastDate:
-                                                    _returnDate ?? DateTime(2100),
-                                              );
+                                              final picked =
+                                                  await showDatePicker(
+                                                    context: context,
+                                                    initialDate:
+                                                        _departureDate ??
+                                                        DateTime.now(),
+                                                    firstDate: DateTime(2000),
+                                                    lastDate:
+                                                        _returnDate ??
+                                                        DateTime(2100),
+                                                  );
                                               if (picked != null) {
                                                 if (earliestItineraryDate !=
                                                         null &&
@@ -192,12 +199,14 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                                       content: Text(
                                                         'Departure date cannot be after the earliest itinerary date',
                                                       ),
-                                                      backgroundColor: Colors.red,
+                                                      backgroundColor:
+                                                          Colors.red,
                                                     ),
                                                   );
                                                 } else {
                                                   setState(
-                                                    () => _departureDate = picked,
+                                                    () =>
+                                                        _departureDate = picked,
                                                   );
                                                 }
                                               }
@@ -216,7 +225,9 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                               ),
                                               child: Text(
                                                 _departureDate != null
-                                                    ? _formatDate(_departureDate)
+                                                    ? _formatDate(
+                                                      _departureDate,
+                                                    )
                                                     : 'Select departure date',
                                                 style: TextStyle(
                                                   fontSize: 14,
@@ -262,15 +273,17 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                           SizedBox(height: 4),
                                           InkWell(
                                             onTap: () async {
-                                              final picked = await showDatePicker(
-                                                context: context,
-                                                initialDate:
-                                                    _returnDate ?? DateTime.now(),
-                                                firstDate:
-                                                    _departureDate ??
-                                                    DateTime(2000),
-                                                lastDate: DateTime(2100),
-                                              );
+                                              final picked =
+                                                  await showDatePicker(
+                                                    context: context,
+                                                    initialDate:
+                                                        _returnDate ??
+                                                        DateTime.now(),
+                                                    firstDate:
+                                                        _departureDate ??
+                                                        DateTime(2000),
+                                                    lastDate: DateTime(2100),
+                                                  );
                                               if (picked != null) {
                                                 setState(
                                                   () => _returnDate = picked,
@@ -326,7 +339,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Flight Details',
@@ -371,7 +385,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Accommodation',
@@ -416,7 +431,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Notes',
@@ -461,7 +477,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Emergency Contact',
@@ -499,61 +516,132 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      child: Text('Cancel'),
                     ),
-                    SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (_departureDate == null || _returnDate == null) {
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          final planProvider = Provider.of<PlanProvider>(
+                            context,
+                            listen: false,
+                          );
+
+                          // Create updated TravelPlan object
+                          final updatedPlan = TravelPlan(
+                            id: widget.plan['id'],
+                            userId: user.uid,
+                            travelName: travelNameController.text,
+                            location: widget.plan['location'],
+                            departureDate: _departureDate!,
+                            returnDate: _returnDate!,
+                            flightDetails:
+                                flightDetailsController.text.isNotEmpty
+                                    ? flightDetailsController.text
+                                    : null,
+                            accommodation:
+                                accommodationController.text.isNotEmpty
+                                    ? accommodationController.text
+                                    : null,
+                            notes:
+                                notesController.text.isNotEmpty
+                                    ? notesController.text
+                                    : null,
+                            emerContact:
+                                emerContactController.text.isNotEmpty
+                                    ? emerContactController.text
+                                    : null,
+                            enableNotifications:
+                                widget.plan['enableNotifications'] ?? false,
+                            notificationTime:
+                                widget.plan['notificationTime'] != null
+                                    ? DateTime.parse(
+                                      widget.plan['notificationTime']
+                                          .toString(),
+                                    )
+                                    : null,
+                            imageUrl: widget.plan['imageUrl'],
+                          );
+
+                          // Use PlanProvider to update the plan
+                          await planProvider.editPlan(
+                            widget.plan['id'],
+                            updatedPlan,
+                          );
+
+                          if (context.mounted) {
+                            // Update the local plan data
+                            setState(() {
+                              widget.plan['travelName'] =
+                                  travelNameController.text;
+                              widget.plan['departureDate'] = Timestamp.fromDate(
+                                _departureDate!,
+                              );
+                              widget.plan['returnDate'] = Timestamp.fromDate(
+                                _returnDate!,
+                              );
+                              widget.plan['flightDetails'] =
+                                  flightDetailsController.text.isNotEmpty
+                                      ? flightDetailsController.text
+                                      : null;
+                              widget.plan['accommodation'] =
+                                  accommodationController.text.isNotEmpty
+                                      ? accommodationController.text
+                                      : null;
+                              widget.plan['notes'] =
+                                  notesController.text.isNotEmpty
+                                      ? notesController.text
+                                      : null;
+                              widget.plan['emerContact'] =
+                                  emerContactController.text.isNotEmpty
+                                      ? emerContactController.text
+                                      : null;
+                            });
+
+                            // Force rebuild the entire widget
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => ItinerariesPage(
+                                      plan: Map<String, dynamic>.from(
+                                        widget.plan,
+                                      ),
+                                    ),
+                              ),
+                            );
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  'Please select both departure and return dates',
+                                  'Travel plan updated successfully!',
                                 ),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error updating travel plan: $e'),
                                 backgroundColor: Colors.red,
                               ),
                             );
-                            return;
                           }
-
-                          await FirebaseFirestore.instance
-                              .collection('travelPlans')
-                              .doc(widget.plan['id'])
-                              .update({
-                                'travelName': travelNameController.text,
-                                'departureDate': Timestamp.fromDate(
-                                  _departureDate!,
-                                ),
-                                'returnDate': Timestamp.fromDate(_returnDate!),
-                                'flightDetails': flightDetailsController.text,
-                                'accommodation': accommodationController.text,
-                                'notes': notesController.text,
-                                'emerContact': emerContactController.text,
-                              });
-
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFF97419),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(32),
-                          ),
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFF97419),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
                         ),
-                        child: Text(
-                          'Save Changes',
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      ),
+                      child: Text(
+                        'Save Changes',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -599,8 +687,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Travel Plan Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Travel Plan Details",
@@ -610,27 +698,31 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                       color: Colors.black,
                     ),
                   ),
-                  ElevatedButton.icon(
-                    onPressed: _showEditPlanModal,
-                    icon: Icon(Icons.edit, color: Colors.white, size: 20),
-                    label: Text(
-                      'Edit Plan',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: ElevatedButton.icon(
+                      onPressed: _showEditPlanModal,
+                      icon: Icon(Icons.edit, color: Colors.white, size: 20),
+                      label: Text(
+                        'Edit Plan',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFF97419),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFF97419),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        minimumSize: Size(0, 40),
                       ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      minimumSize: Size(0, 40),
                     ),
                   ),
                 ],
@@ -709,8 +801,8 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
               SizedBox(height: 32),
 
               // Itineraries Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Your Itineraries',
@@ -720,42 +812,45 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(width: 16),
-                  ElevatedButton.icon(
-                    onPressed:
-                        _isAdding
-                            ? null
-                            : () async {
-                              final newItinerary = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => ItinerariesFormPage(
-                                        travelPlanId:
-                                            widget.plan['id'].toString(),
-                                      ),
-                                ),
-                              );
-                            },
-                    icon: Icon(Icons.add, color: Colors.white, size: 20),
-                    label: Text(
-                      'Add Itinerary',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: ElevatedButton.icon(
+                      onPressed:
+                          _isAdding
+                              ? null
+                              : () async {
+                                final newItinerary = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => ItinerariesFormPage(
+                                          travelPlanId:
+                                              widget.plan['id'].toString(),
+                                        ),
+                                  ),
+                                );
+                              },
+                      icon: Icon(Icons.add, color: Colors.white, size: 20),
+                      label: Text(
+                        'Add Itinerary',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFF97419),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFF97419),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        minimumSize: Size(0, 40),
                       ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      minimumSize: Size(0, 40),
                     ),
                   ),
                 ],
