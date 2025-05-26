@@ -20,10 +20,12 @@ class _TravelFormPageState extends State<TravelFormPage> {
   final returnController = TextEditingController();
   final notificationDateController = TextEditingController();
   final notificationTimeController = TextEditingController();
+  final imageUrlController = TextEditingController();
   LatLong? selectedLocation;
   bool enableNotifications = false;
   DateTime? notificationDate;
   TimeOfDay? notificationTime;
+  String? imageUrl;
 
   @override
   void initState() {
@@ -41,11 +43,14 @@ class _TravelFormPageState extends State<TravelFormPage> {
     returnController.dispose();
     notificationDateController.dispose();
     notificationTimeController.dispose();
+    imageUrlController.dispose();
     super.dispose();
   }
 
   bool _validateFields() {
+    print('Validating fields...'); // Debug print
     if (!_formKey.currentState!.validate()) {
+      print('Form validation failed'); // Debug print
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please fill in all required fields'),
@@ -54,6 +59,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
       );
       return false;
     }
+    print('Form validation passed'); // Debug print
     return true;
   }
 
@@ -156,6 +162,39 @@ class _TravelFormPageState extends State<TravelFormPage> {
     }
   }
 
+  Future<void> _showImageUrlDialog() async {
+    imageUrlController.text = imageUrl ?? '';
+    return showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('Add Image URL'),
+            content: TextField(
+              controller: imageUrlController,
+              decoration: InputDecoration(
+                hintText: 'Enter image URL',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    imageUrl = imageUrlController.text;
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text('Add'),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final orange = Color(0xFFF97419);
@@ -197,7 +236,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                 const SizedBox(height: 42),
 
-                _Label('Travel Name *'),
+                _Label('Travel Name'),
                 _ShadowedTextField(
                   controller: nameController,
                   hintText: 'Enter Travel Name',
@@ -212,7 +251,75 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                 const SizedBox(height: 40),
 
-                _Label('Location *'),
+                _Label('Travel Image'),
+                GestureDetector(
+                  onTap: _showImageUrlDialog,
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.12),
+                          blurRadius: 6,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child:
+                        imageUrl != null && imageUrl!.isNotEmpty
+                            ? ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                imageUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.error_outline,
+                                          color: Colors.red,
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text('Invalid image URL'),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                            : Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_photo_alternate,
+                                    size: 48,
+                                    color: orange,
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Add Travel Image',
+                                    style: TextStyle(
+                                      color: orange,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                  ),
+                ),
+
+                const SizedBox(height: 40),
+
+                _Label('Location'),
                 _ShadowedTextField(
                   controller: locationController,
                   hintText: 'Tap to select location on map',
@@ -229,7 +336,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
 
                 const SizedBox(height: 40),
 
-                _Label('Departure Date *'),
+                _Label('Departure Date'),
                 _ShadowedTextField(
                   controller: departureController,
                   hintText: 'Select Departure Date',
@@ -279,11 +386,12 @@ class _TravelFormPageState extends State<TravelFormPage> {
                       });
                     }
                   },
+                  readOnly: true,
                 ),
 
                 const SizedBox(height: 40),
 
-                _Label('Return Date *'),
+                _Label('Return Date'),
                 _ShadowedTextField(
                   controller: returnController,
                   hintText: 'Select Return Date',
@@ -342,6 +450,7 @@ class _TravelFormPageState extends State<TravelFormPage> {
                       });
                     }
                   },
+                  readOnly: true,
                 ),
 
                 const SizedBox(height: 40),
@@ -455,8 +564,13 @@ class _TravelFormPageState extends State<TravelFormPage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
+                      print('Next button pressed'); // Debug print
                       if (_validateFields()) {
+                        print('Creating travel plan...'); // Debug print
                         final travelPlan = _createTravelPlan();
+                        print(
+                          'Travel plan created, navigating to next page...',
+                        ); // Debug print
 
                         Navigator.push(
                           context,
@@ -512,14 +626,13 @@ class _TravelFormPageState extends State<TravelFormPage> {
       // Verify the time is in the future
       final now = DateTime.now();
       if (combinedNotificationTime.isBefore(now)) {
-       
         // Set to 1 minute in the future for testing
         combinedNotificationTime = now.add(Duration(minutes: 1));
-        
       }
     }
 
-    return TravelPlan(
+    print('Creating travel plan with image URL: $imageUrl'); // Add debug print
+    final plan = TravelPlan(
       userId: FirebaseAuth.instance.currentUser!.uid,
       travelName: nameController.text,
       location: locationController.text,
@@ -527,7 +640,10 @@ class _TravelFormPageState extends State<TravelFormPage> {
       returnDate: DateTime.parse(returnController.text),
       enableNotifications: enableNotifications,
       notificationTime: combinedNotificationTime,
+      imageUrl: imageUrl,
     );
+    print('Created plan with image URL: ${plan.imageUrl}'); // Add debug print
+    return plan;
   }
 }
 
@@ -560,6 +676,7 @@ class _ShadowedTextField extends StatelessWidget {
   final VoidCallback? onTap;
   final String? Function(String?)? validator;
   final bool readOnly;
+  final TextInputType? keyboardType;
 
   const _ShadowedTextField({
     super.key,
@@ -569,6 +686,7 @@ class _ShadowedTextField extends StatelessWidget {
     this.onTap,
     this.validator,
     this.readOnly = false,
+    this.keyboardType,
   });
 
   @override
@@ -590,6 +708,7 @@ class _ShadowedTextField extends StatelessWidget {
         readOnly: readOnly,
         onTap: onTap,
         validator: validator,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: Colors.black),
           hintText: hintText,
@@ -608,6 +727,7 @@ class _ShadowedTextField extends StatelessWidget {
           filled: true,
           fillColor: Colors.white,
           contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          errorStyle: TextStyle(color: Colors.red),
         ),
         style: TextStyle(fontSize: 16),
       ),

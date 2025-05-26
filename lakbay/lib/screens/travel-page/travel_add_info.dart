@@ -14,6 +14,15 @@ class TravelAddInfoPage extends StatefulWidget {
 }
 
 class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
+  @override
+  void initState() {
+    super.initState();
+    print('TravelAddInfoPage initialized with plan:'); // Debug print
+    print('Travel Name: ${widget.travelPlan.travelName}'); // Debug print
+    print('Location: ${widget.travelPlan.location}'); // Debug print
+    print('Image URL: ${widget.travelPlan.imageUrl}'); // Debug print
+  }
+
   // add the controllers for the text fields
   final flightController = TextEditingController();
   final accommodationController = TextEditingController();
@@ -34,6 +43,11 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
   Future<void> _saveAdditionalInfoAndGoHome() async {
     try {
       print('Starting to save additional info...');
+      print('Original plan image URL: ${widget.travelPlan.imageUrl}');
+      print('Original plan ID: ${widget.travelPlan.id}');
+      print('Original plan userId: ${widget.travelPlan.userId}');
+
+      // Create the updated plan with the original data
       final updatedPlan = TravelPlan(
         id: widget.travelPlan.id,
         userId: widget.travelPlan.userId,
@@ -41,45 +55,65 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
         location: widget.travelPlan.location,
         departureDate: widget.travelPlan.departureDate,
         returnDate: widget.travelPlan.returnDate,
+        // Only add optional fields if they have content
         flightDetails:
-            flightController.text.isNotEmpty ? flightController.text : null,
-        accommodation:
-            accommodationController.text.isNotEmpty
-                ? accommodationController.text
+            flightController.text.trim().isNotEmpty
+                ? flightController.text.trim()
                 : null,
-        notes: notesController.text.isNotEmpty ? notesController.text : null,
+        accommodation:
+            accommodationController.text.trim().isNotEmpty
+                ? accommodationController.text.trim()
+                : null,
+        notes:
+            notesController.text.trim().isNotEmpty
+                ? notesController.text.trim()
+                : null,
         emerContact:
-            emergencyContactController.text.isNotEmpty
-                ? emergencyContactController.text
+            emergencyContactController.text.trim().isNotEmpty
+                ? emergencyContactController.text.trim()
                 : null,
         enableNotifications: widget.travelPlan.enableNotifications,
         notificationTime: widget.travelPlan.notificationTime,
+        imageUrl: widget.travelPlan.imageUrl,
       );
 
-      print('Created updated plan, now saving to provider...');
-      // Add the plan using the provider
-      await Provider.of<PlanProvider>(
-        context,
-        listen: false,
-      ).addPlan(updatedPlan);
+      print('Updated plan created with data:');
+      print('Travel Name: ${updatedPlan.travelName}');
+      print('Location: ${updatedPlan.location}');
+      print('Image URL: ${updatedPlan.imageUrl}');
+      print('User ID: ${updatedPlan.userId}');
+      print('Flight Details: ${updatedPlan.flightDetails}');
+      print('Accommodation: ${updatedPlan.accommodation}');
+      print('Notes: ${updatedPlan.notes}');
+      print('Emergency Contact: ${updatedPlan.emerContact}');
 
-      print('Plan saved successfully, attempting navigation...');
+      print('Getting PlanProvider...');
+      final planProvider = Provider.of<PlanProvider>(context, listen: false);
+      print('PlanProvider obtained, adding plan...');
+
+      // Add the plan using the provider
+      await planProvider.addPlan(updatedPlan);
+      print('Plan added successfully');
+
       if (!mounted) {
         print('Widget is not mounted, cannot navigate');
         return;
       }
 
+      print('Setting navigation index to 0...');
       // Set the navigation index to 0 (home page)
       MainScaffold.navIndexNotifier.value = 0;
 
+      print('Navigating to MainScaffold...');
       // Navigate to main scaffold and remove all previous routes
       await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => MainScaffold()),
         (route) => false,
       );
       print('Navigation completed');
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('Error in _saveAdditionalInfoAndGoHome: $e');
+      print('Stack trace: $stackTrace');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

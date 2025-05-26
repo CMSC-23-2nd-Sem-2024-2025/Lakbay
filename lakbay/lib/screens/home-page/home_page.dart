@@ -102,7 +102,6 @@ class _HomePageState extends State<HomePage> {
           child: Image.asset('assets/or.png', height: 60),
         ),
         actions: [
-         
           IconButton(
             icon: const Icon(
               Icons.notifications,
@@ -577,11 +576,50 @@ class _HomePageState extends State<HomePage> {
                                                           12,
                                                         ),
                                                   ),
-                                                  child: Icon(
-                                                    Icons.image,
-                                                    color: Colors.orange,
-                                                    size: 32,
-                                                  ),
+                                                  child:
+                                                      (() {
+                                                        print(
+                                                          'Home page: Plan image URL: ${plan['imageUrl']}',
+                                                        );
+                                                        return plan['imageUrl'] !=
+                                                                    null &&
+                                                                plan['imageUrl']
+                                                                    .isNotEmpty
+                                                            ? ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    12,
+                                                                  ),
+                                                              child: Image.network(
+                                                                plan['imageUrl'],
+                                                                fit:
+                                                                    BoxFit
+                                                                        .cover,
+                                                                errorBuilder: (
+                                                                  context,
+                                                                  error,
+                                                                  stackTrace,
+                                                                ) {
+                                                                  print(
+                                                                    'Home page: Error loading image: $error',
+                                                                  );
+                                                                  return Icon(
+                                                                    Icons.image,
+                                                                    color:
+                                                                        Colors
+                                                                            .orange,
+                                                                    size: 32,
+                                                                  );
+                                                                },
+                                                              ),
+                                                            )
+                                                            : Icon(
+                                                              Icons.image,
+                                                              color:
+                                                                  Colors.orange,
+                                                              size: 32,
+                                                            );
+                                                      })(),
                                                 ),
                                                 SizedBox(width: 8),
                                                 Expanded(

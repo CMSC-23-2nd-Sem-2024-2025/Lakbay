@@ -777,7 +777,6 @@ class _ProfileStatCard extends StatelessWidget {
     required this.color,
     this.width = 100,
     this.height = 80,
-    super.key,
   });
   @override
   Widget build(BuildContext context) {

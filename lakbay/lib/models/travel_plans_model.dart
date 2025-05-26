@@ -13,6 +13,7 @@ class TravelPlan {
   String? emerContact;
   bool enableNotifications;
   DateTime? notificationTime;
+  String? imageUrl;
 
   TravelPlan({
     this.id,
@@ -27,6 +28,7 @@ class TravelPlan {
     this.emerContact,
     this.enableNotifications = false,
     this.notificationTime,
+    this.imageUrl,
   });
 
   factory TravelPlan.fromJson(Map<String, dynamic> json) {
@@ -46,23 +48,29 @@ class TravelPlan {
           json['notificationTime'] != null
               ? DateTime.parse(json['notificationTime'])
               : null,
+      imageUrl: json['imageUrl'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
+    print('Converting TravelPlan to JSON');
+    final map = {
       'userId': userId,
       'travelName': travelName,
       'location': location,
       'departureDate': departureDate.toIso8601String(),
       'returnDate': returnDate.toIso8601String(),
-      'flightDetails': flightDetails,
-      'accommodation': accommodation,
-      'notes': notes,
-      'emerContact': emerContact,
       'enableNotifications': enableNotifications,
-      'notificationTime': notificationTime?.toIso8601String(),
+      if (id != null) 'id': id,
+      if (flightDetails != null) 'flightDetails': flightDetails,
+      if (accommodation != null) 'accommodation': accommodation,
+      if (notes != null) 'notes': notes,
+      if (emerContact != null) 'emerContact': emerContact,
+      if (notificationTime != null)
+        'notificationTime': notificationTime!.toIso8601String(),
+      if (imageUrl != null) 'imageUrl': imageUrl,
     };
+    print('Generated JSON map: $map');
+    return map;
   }
 }

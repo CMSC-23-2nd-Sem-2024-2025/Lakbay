@@ -18,7 +18,8 @@ class _SignupDetailsState extends State<SignupDetails> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   String? prompt;
 
   @override
@@ -81,9 +82,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                         decoration: const InputDecoration(
                           hintText: 'First Name',
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0xFFF86400),
-                            ),
+                            borderSide: BorderSide(color: Color(0xFFF86400)),
                           ),
                         ),
                         validator: (value) {
@@ -101,9 +100,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                         decoration: const InputDecoration(
                           hintText: 'Last Name',
                           enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0xFFF86400),
-                            ),
+                            borderSide: BorderSide(color: Color(0xFFF86400)),
                           ),
                         ),
                         validator: (value) {
@@ -122,9 +119,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                   decoration: const InputDecoration(
                     hintText: 'Username',
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFF86400),
-                      ),
+                      borderSide: BorderSide(color: Color(0xFFF86400)),
                     ),
                   ),
                   validator: (value) {
@@ -140,9 +135,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                   decoration: const InputDecoration(
                     hintText: 'Email',
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFF86400),
-                      ),
+                      borderSide: BorderSide(color: Color(0xFFF86400)),
                     ),
                   ),
                   validator: (value) {
@@ -156,7 +149,35 @@ class _SignupDetailsState extends State<SignupDetails> {
                       return 'Enter a valid email address';
                     }
                     final validTLDs = [
-                      'com','org','net','edu','gov','mil','io','co','ai','app','dev','me','info','biz','name','pro','xyz','ph','uk','us','ca','au','nz','jp','kr','cn','in','sg','my',
+                      'com',
+                      'org',
+                      'net',
+                      'edu',
+                      'gov',
+                      'mil',
+                      'io',
+                      'co',
+                      'ai',
+                      'app',
+                      'dev',
+                      'me',
+                      'info',
+                      'biz',
+                      'name',
+                      'pro',
+                      'xyz',
+                      'ph',
+                      'uk',
+                      'us',
+                      'ca',
+                      'au',
+                      'nz',
+                      'jp',
+                      'kr',
+                      'cn',
+                      'in',
+                      'sg',
+                      'my',
                     ];
                     final tld = value.trim().split('.').last.toLowerCase();
                     if (!validTLDs.contains(tld)) {
@@ -177,9 +198,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                   decoration: const InputDecoration(
                     hintText: 'Password',
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFF86400),
-                      ),
+                      borderSide: BorderSide(color: Color(0xFFF86400)),
                     ),
                   ),
                   validator: passwordValidator,
@@ -191,9 +210,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                   decoration: const InputDecoration(
                     hintText: 'Confirm Password',
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFFF86400),
-                      ),
+                      borderSide: BorderSide(color: Color(0xFFF86400)),
                     ),
                   ),
                   validator: (value) {
@@ -225,29 +242,22 @@ class _SignupDetailsState extends State<SignupDetails> {
                             );
                           },
                         );
-                        String? result = await context.read<AuthProvider>().signUp(
-                          email,
-                          password,
-                          firstName,
-                          lastName,
-                          username,
-                          friends: [],
-                          pendingRequests: [],
-                        );
+                        String? result = await context
+                            .read<AuthProvider>()
+                            .signUp(
+                              email,
+                              password,
+                              firstName,
+                              lastName,
+                              username,
+                              friends: [],
+                              pendingRequests: [],
+                            );
                         if (context.mounted) Navigator.pop(context);
-                        if (result != null) {
-                          setState(() {
-                            prompt = result;
-                          });
-                          _formKey.currentState!.validate();
-                        } else if (context.mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const OnBoarding(),
-                            ),
-                          );
-                        }
+                        setState(() {
+                          prompt = result;
+                        });
+                        _formKey.currentState!.validate();
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -271,12 +281,13 @@ class _SignupDetailsState extends State<SignupDetails> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () => Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const StartingPage(),
-                      ),
-                    ),
+                    onPressed:
+                        () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const StartingPage(),
+                          ),
+                        ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
@@ -286,10 +297,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                     ),
                     child: const Text(
                       "Back",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
+                      style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
                   ),
                 ),
