@@ -1,14 +1,17 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebasePlanApi {
+
+  // create instance of firebase firestore
   final FirebaseFirestore db = FirebaseFirestore.instance;
 
+  // stream function to get all entries for a user
   Stream<QuerySnapshot> getAllEntries(String userId) {
     return db.collection('travelplans').where('userId', isEqualTo: userId).snapshots();
   }
 
+
+  // function to interact directly with firebase firestore to add entry. returns string
   Future<String> addEntry(Map<String, dynamic> entry) async {
     try {
       
@@ -23,6 +26,7 @@ class FirebasePlanApi {
     }
   }
 
+  // delete entry function, takes id as parameter. returns string
   Future<String> deleteEntry(String id) async {
     try {
       await db.collection('travelplans').doc(id).delete();
@@ -32,6 +36,7 @@ class FirebasePlanApi {
     }
   }
 
+  // update entry function, takes id and updated data as parameters. returns string
   Future<String> updateEntry(
     String id,
     Map<String, dynamic> updatedData,

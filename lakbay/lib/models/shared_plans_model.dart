@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// shared plan model
 class SharedPlan {
   final String? id;
   final String planId;

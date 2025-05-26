@@ -2,14 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthAPI {
+
+  // make instance of firebase auth
   static final FirebaseAuth auth = FirebaseAuth.instance;
-  final FirebaseFirestore db =
-      FirebaseFirestore
-          .instance; // for addtional user information (first and last name)
+
+  // make instance of firebase firestore
+  final FirebaseFirestore db = FirebaseFirestore.instance; 
 
   Stream<User?> getUser() {
     return auth.authStateChanges();
   }
+
+  // future function to sign in user. takes email and password as parameters
 
   Future<String?> signIn(String email, String password) async {
     try {
@@ -17,10 +21,12 @@ class FirebaseAuthAPI {
       return null; // null means success
     } on FirebaseAuthException catch (e) {
       
+      // return the errror
       return "Failed with error '${e.code}': ${e.message}";
     }
   }
 
+  // future function to sign up user. takes email, password, first name, last name, username, phone number, friends, pending requests as parameters
   Future<String?> signUp(
     String email,
     String password,
@@ -28,7 +34,7 @@ class FirebaseAuthAPI {
     String lastName,
     String username, {
     String? phoneNumber,
-    List<String> friends = const [],
+    List<String> friends = const [], 
     List<String> pendingRequests = const [],
   }) async {
     try {
@@ -73,6 +79,9 @@ class FirebaseAuthAPI {
     return "Successfully signed out!";
   }
 
+
+  // return the user's information
+
   Future<Map<String, dynamic>?> getNewUserInfo(String uid) async {
     try {
       DocumentSnapshot newUserDoc =
@@ -89,6 +98,8 @@ class FirebaseAuthAPI {
       return null;
     }
   }
+
+  // future function to update user information 
 
   Future<String?> updateUserInfo(
     String uid,
