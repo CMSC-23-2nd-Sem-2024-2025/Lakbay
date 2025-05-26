@@ -61,7 +61,6 @@ class _FindSimilarState extends State<FindSimilar> {
     final user = authProvider.userObj;
     final userDetails = authProvider.userDetails;
 
-
     if (isLoading || user == null || userDetails == null) {
       return const Scaffold(
         body: Center(
@@ -138,7 +137,7 @@ class _FindSimilarState extends State<FindSimilar> {
                             crossAxisCount: 2,
                             crossAxisSpacing: 16,
                             mainAxisSpacing: 16,
-                            childAspectRatio: 0.72,
+                            childAspectRatio: 0.62,
                           ),
                       itemCount: similarUsers.length,
                       itemBuilder: (context, index) {
@@ -180,7 +179,9 @@ class _FindSimilarState extends State<FindSimilar> {
                               context: context,
                               barrierDismissible: true,
                               barrierLabel: 'Similar User Details',
-                              transitionDuration: const Duration(milliseconds: 300),
+                              transitionDuration: const Duration(
+                                milliseconds: 300,
+                              ),
                               pageBuilder: (context, anim1, anim2) {
                                 return Dialog(
                                   shape: RoundedRectangleBorder(
@@ -200,8 +201,8 @@ class _FindSimilarState extends State<FindSimilar> {
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black
-                                                      // ignore: deprecated_member_use
-                                                      .withOpacity(0.1),
+                                                  // ignore: deprecated_member_use
+                                                  .withOpacity(0.1),
                                                   blurRadius: 8,
                                                   offset: const Offset(0, 4),
                                                 ),
@@ -281,13 +282,21 @@ class _FindSimilarState extends State<FindSimilar> {
                                   ),
                                 );
                               },
-                              transitionBuilder: (context, anim1, anim2, child) {
+                              transitionBuilder: (
+                                context,
+                                anim1,
+                                anim2,
+                                child,
+                              ) {
                                 return ScaleTransition(
                                   scale: CurvedAnimation(
                                     parent: anim1,
                                     curve: Curves.easeOutBack,
                                   ),
-                                  child: FadeTransition(opacity: anim1, child: child),
+                                  child: FadeTransition(
+                                    opacity: anim1,
+                                    child: child,
+                                  ),
                                 );
                               },
                             );
@@ -307,7 +316,12 @@ class _FindSimilarState extends State<FindSimilar> {
                                 ),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(12),
+                                padding: const EdgeInsets.fromLTRB(
+                                  12,
+                                  12,
+                                  12,
+                                  18,
+                                ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -316,7 +330,6 @@ class _FindSimilarState extends State<FindSimilar> {
                                         shape: BoxShape.circle,
                                         boxShadow: [
                                           BoxShadow(
-                                            // ignore: deprecated_member_use
                                             color: Colors.black.withOpacity(
                                               0.1,
                                             ),
@@ -340,16 +353,18 @@ class _FindSimilarState extends State<FindSimilar> {
                                       maxLines: 1,
                                     ),
                                     const SizedBox(height: 20),
-                                    Text(
-                                      matchText,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFFF86400),
-                                        fontWeight: FontWeight.w500,
+                                    Flexible(
+                                      child: Text(
+                                        matchText,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFFF86400),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
                                       ),
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
                                     ),
                                   ],
                                 ),
