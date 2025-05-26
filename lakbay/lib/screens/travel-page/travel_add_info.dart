@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lakbay/components/scaffolds.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
 import 'package:lakbay/providers/plan_provider.dart';
@@ -31,39 +32,63 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
 
   // save info function
   Future<void> _saveAdditionalInfoAndGoHome() async {
-    final updatedPlan = TravelPlan(
-      id: widget.travelPlan.id,
-      userId: widget.travelPlan.userId,
-      travelName: widget.travelPlan.travelName,
-      location: widget.travelPlan.location,
-      departureDate: widget.travelPlan.departureDate,
-      returnDate: widget.travelPlan.returnDate,
-      flightDetails:
-          flightController.text.isNotEmpty ? flightController.text : null,
-      accommodation:
-          accommodationController.text.isNotEmpty
-              ? accommodationController.text
-              : null,
-      notes: notesController.text.isNotEmpty ? notesController.text : null,
-      emerContact:
-          emergencyContactController.text.isNotEmpty
-              ? emergencyContactController.text
-              : null,
-      enableNotifications: widget.travelPlan.enableNotifications,
-      notificationTime: widget.travelPlan.notificationTime,
-    );
+    try {
+      print('Starting to save additional info...');
+      final updatedPlan = TravelPlan(
+        id: widget.travelPlan.id,
+        userId: widget.travelPlan.userId,
+        travelName: widget.travelPlan.travelName,
+        location: widget.travelPlan.location,
+        departureDate: widget.travelPlan.departureDate,
+        returnDate: widget.travelPlan.returnDate,
+        flightDetails:
+            flightController.text.isNotEmpty ? flightController.text : null,
+        accommodation:
+            accommodationController.text.isNotEmpty
+                ? accommodationController.text
+                : null,
+        notes: notesController.text.isNotEmpty ? notesController.text : null,
+        emerContact:
+            emergencyContactController.text.isNotEmpty
+                ? emergencyContactController.text
+                : null,
+        enableNotifications: widget.travelPlan.enableNotifications,
+        notificationTime: widget.travelPlan.notificationTime,
+      );
 
-    // Add the plan using the provider
-    await Provider.of<PlanProvider>(
-      context,
-      listen: false,
-    ).addPlan(updatedPlan);
+      print('Created updated plan, now saving to provider...');
+      // Add the plan using the provider
+      await Provider.of<PlanProvider>(
+        context,
+        listen: false,
+      ).addPlan(updatedPlan);
 
-    // Navigate to main scaffold and remove all previous routes
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => MainScaffold()),
-      (route) => false,
-    );
+      print('Plan saved successfully, attempting navigation...');
+      if (!mounted) {
+        print('Widget is not mounted, cannot navigate');
+        return;
+      }
+
+      // Set the navigation index to 0 (home page)
+      MainScaffold.navIndexNotifier.value = 0;
+
+      // Navigate to main scaffold and remove all previous routes
+      await Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MainScaffold()),
+        (route) => false,
+      );
+      print('Navigation completed');
+    } catch (e) {
+      print('Error in _saveAdditionalInfoAndGoHome: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving plan: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -184,7 +209,7 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
 
 class _Label extends StatelessWidget {
   final String text;
-  const _Label(this.text, {super.key});
+  const _Label(this.text);
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +232,6 @@ class _ShadowedTextField extends StatelessWidget {
   final TextInputType? keyboardType;
 
   const _ShadowedTextField({
-    super.key,
     required this.hintText,
     required this.icon,
     required this.controller,
