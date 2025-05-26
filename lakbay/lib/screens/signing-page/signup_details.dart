@@ -54,7 +54,6 @@ class _SignupDetailsState extends State<SignupDetails> {
           padding: const EdgeInsets.all(24),
           child: Form(
             key: _formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: ListView(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               children: [
@@ -79,6 +78,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: firstnameController,
                         decoration: const InputDecoration(
                           hintText: 'First Name',
@@ -97,6 +97,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: lastnameController,
                         decoration: const InputDecoration(
                           hintText: 'Last Name',
@@ -116,6 +117,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: usernameController,
                   decoration: const InputDecoration(
                     hintText: 'Username',
@@ -137,6 +139,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: emailController,
                   decoration: const InputDecoration(
                     hintText: 'Email',
@@ -199,6 +202,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(
@@ -211,6 +215,7 @@ class _SignupDetailsState extends State<SignupDetails> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: confirmPasswordController,
                   obscureText: true,
                   decoration: const InputDecoration(
