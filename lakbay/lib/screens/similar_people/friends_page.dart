@@ -197,37 +197,112 @@ class _FriendsPageState extends State<FriendsPage> {
                                                 const SizedBox(height: 16),
                                                 _buildDetailSection(
                                                   'Interests',
-                                                  ((u['interests'] as List<dynamic>?) == null || (u['interests'] as List<dynamic>?)!.isEmpty)
+                                                  ((u['interests']
+                                                                  as List<
+                                                                    dynamic
+                                                                  >?) ==
+                                                              null ||
+                                                          (u['interests']
+                                                                  as List<
+                                                                    dynamic
+                                                                  >?)!
+                                                              .isEmpty)
                                                       ? 'None'
-                                                      : (u['interests'] as List<dynamic>).join(", "),
+                                                      : (u['interests']
+                                                              as List<dynamic>)
+                                                          .join(", "),
                                                 ),
                                                 const SizedBox(height: 16),
                                                 _buildDetailSection(
                                                   'Travel Styles',
-                                                  ((u['styles'] as List<dynamic>?) == null || (u['styles'] as List<dynamic>?)!.isEmpty)
+                                                  ((u['styles']
+                                                                  as List<
+                                                                    dynamic
+                                                                  >?) ==
+                                                              null ||
+                                                          (u['styles']
+                                                                  as List<
+                                                                    dynamic
+                                                                  >?)!
+                                                              .isEmpty)
                                                       ? 'None'
-                                                      : (u['styles'] as List<dynamic>).join(", "),
+                                                      : (u['styles']
+                                                              as List<dynamic>)
+                                                          .join(", "),
                                                 ),
                                                 const SizedBox(height: 24),
-                                                Center(
-                                                  child: TextButton(
-                                                    onPressed: () => Navigator.of(context).pop(),
-                                                    style: TextButton.styleFrom(
-                                                      backgroundColor: const Color(0xFFF86400),
-                                                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(12),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    TextButton(
+                                                      onPressed:
+                                                          () =>
+                                                              _showUnfriendConfirmation(
+                                                                friendEmail!,
+                                                                u['userName'] ??
+                                                                    'User',
+                                                              ),
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor:
+                                                            Colors.red[400],
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal: 24,
+                                                              vertical: 12,
+                                                            ),
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                      child: const Text(
+                                                        'Unfriend',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
-                                                    child: const Text(
-                                                      'Close',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
+                                                    TextButton(
+                                                      onPressed:
+                                                          () =>
+                                                              Navigator.of(
+                                                                context,
+                                                              ).pop(),
+                                                      style: TextButton.styleFrom(
+                                                        backgroundColor:
+                                                            const Color(
+                                                              0xFFF86400,
+                                                            ),
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal: 24,
+                                                              vertical: 12,
+                                                            ),
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12,
+                                                              ),
+                                                        ),
+                                                      ),
+                                                      child: const Text(
+                                                        'Close',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
@@ -514,6 +589,85 @@ class _FriendsPageState extends State<FriendsPage> {
         showCustomSnackbar(context, 'User not found.');
       }
     }
+  }
+
+  Future<void> _handleUnfriend(String friendEmail) async {
+    final user = Provider.of<AuthProvider>(context, listen: false).userObj;
+    if (user == null) return;
+
+    try {
+      // Get current user's document
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('appusers')
+              .doc(user.uid)
+              .get();
+
+      // Get friend's document
+      final friendQuery =
+          await FirebaseFirestore.instance
+              .collection('appusers')
+              .where('email', isEqualTo: friendEmail)
+              .limit(1)
+              .get();
+
+      if (friendQuery.docs.isEmpty) {
+        showCustomSnackbar(context, 'Friend not found.');
+        return;
+      }
+
+      final friendDoc = friendQuery.docs.first.reference;
+      final friendData = friendQuery.docs.first.data();
+      final userData = userDoc.data() as Map<String, dynamic>;
+
+      // Update current user's friends list
+      final userFriends = List<String>.from(userData['friends'] ?? []);
+      userFriends.remove(friendEmail);
+      await userDoc.reference.update({'friends': userFriends});
+
+      // Update friend's friends list
+      final friendFriends = List<String>.from(friendData['friends'] ?? []);
+      friendFriends.remove(user.email);
+      await friendDoc.update({'friends': friendFriends});
+
+      if (context.mounted) {
+        Navigator.of(context).pop(); // Close the friend details dialog
+        showCustomSnackbar(context, 'Friend removed successfully.');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showCustomSnackbar(context, 'Error removing friend: $e');
+      }
+    }
+  }
+
+  Future<void> _showUnfriendConfirmation(
+    String friendEmail,
+    String friendName,
+  ) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Unfriend User'),
+          content: Text('Are you sure you want to unfriend @$friendName?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _handleUnfriend(friendEmail);
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('Unfriend'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void showCustomSnackbar(BuildContext context, String message) {
