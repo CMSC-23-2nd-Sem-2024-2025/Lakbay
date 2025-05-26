@@ -2,12 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthAPI {
-
   // make instance of firebase auth
   static final FirebaseAuth auth = FirebaseAuth.instance;
 
   // make instance of firebase firestore
-  final FirebaseFirestore db = FirebaseFirestore.instance; 
+  final FirebaseFirestore db = FirebaseFirestore.instance;
 
   Stream<User?> getUser() {
     return auth.authStateChanges();
@@ -20,9 +19,10 @@ class FirebaseAuthAPI {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       return null; // null means success
     } on FirebaseAuthException catch (e) {
-      
-      // return the errror
-      return "Failed with error '${e.code}': ${e.message}";
+      print('FULL ERROR OBJECT: $e'); // Debug print
+      print('ERROR CODE: ${e.code}'); // Debug print
+      print('ERROR MESSAGE: ${e.message}'); // Debug print
+      return e.code; // Return just the error code
     }
   }
 
@@ -34,7 +34,7 @@ class FirebaseAuthAPI {
     String lastName,
     String username, {
     String? phoneNumber,
-    List<String> friends = const [], 
+    List<String> friends = const [],
     List<String> pendingRequests = const [],
   }) async {
     try {
@@ -79,7 +79,6 @@ class FirebaseAuthAPI {
     return "Successfully signed out!";
   }
 
-
   // return the user's information
 
   Future<Map<String, dynamic>?> getNewUserInfo(String uid) async {
@@ -90,16 +89,14 @@ class FirebaseAuthAPI {
       if (newUserDoc.exists) {
         return newUserDoc.data() as Map<String, dynamic>;
       } else {
-        
         return null;
       }
     } catch (e) {
-      
       return null;
     }
   }
 
-  // future function to update user information 
+  // future function to update user information
 
   Future<String?> updateUserInfo(
     String uid,
@@ -109,9 +106,7 @@ class FirebaseAuthAPI {
       await db.collection("appusers").doc(uid).update(updatedData);
       return null; // null means success
     } catch (e) {
-      
       return "Error updating user details: $e";
     }
   }
 }
-

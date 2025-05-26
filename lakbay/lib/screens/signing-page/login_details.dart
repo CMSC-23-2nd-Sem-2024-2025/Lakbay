@@ -17,6 +17,7 @@ class _LoginDetailsState extends State<LoginDetails> {
   String? email;
   String? password;
   bool showSignInErrorMessage = false;
+  bool showEmailErrorMessage = false;
   bool _passwordVisible = false;
 
   @override
@@ -28,7 +29,6 @@ class _LoginDetailsState extends State<LoginDetails> {
         child: SizedBox.expand(
           child: Stack(
             children: [
-            
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -77,6 +77,17 @@ class _LoginDetailsState extends State<LoginDetails> {
                                         : null,
                             onSaved: (value) => email = value,
                           ),
+                          if (showEmailErrorMessage)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Email does not exist',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
 
                           SizedBox(width: 30, height: 30),
 
@@ -91,7 +102,6 @@ class _LoginDetailsState extends State<LoginDetails> {
                                       ? Icons.visibility
                                       : Icons.visibility_off,
                                 ),
-
                                 onPressed: () {
                                   setState(() {
                                     _passwordVisible = !_passwordVisible;
@@ -111,6 +121,17 @@ class _LoginDetailsState extends State<LoginDetails> {
                                         : null,
                             onSaved: (value) => password = value,
                           ),
+                          if (showSignInErrorMessage)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Incorrect password',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
 
                           // Spacer to push button to the bottom
                           Spacer(),
@@ -141,8 +162,21 @@ class _LoginDetailsState extends State<LoginDetails> {
                                     Navigator.of(context).pop();
                                   }
 
+                                  print('Error code: $message'); // Debug print
+
                                   setState(() {
-                                    showSignInErrorMessage = message != null;
+                                    if (message == 'user-not-found' ||
+                                        message == 'invalid-email') {
+                                      showEmailErrorMessage = true;
+                                      showSignInErrorMessage = false;
+                                    } else if (message == 'wrong-password' ||
+                                        message == 'invalid-credential') {
+                                      showEmailErrorMessage = false;
+                                      showSignInErrorMessage = true;
+                                    } else {
+                                      showEmailErrorMessage = false;
+                                      showSignInErrorMessage = false;
+                                    }
                                   });
 
                                   // Navigate to the homepage if login is successful
