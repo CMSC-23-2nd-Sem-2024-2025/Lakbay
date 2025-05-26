@@ -534,25 +534,6 @@ class _TravelFormPageState extends State<TravelFormPage> {
                           },
                         ),
                         SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton.icon(
-                              onPressed: () async {
-                                final notificationService =
-                                    NotificationService();
-                                await notificationService
-                                    .showTestNotification();
-                              },
-                              icon: Icon(Icons.notifications_active),
-                              label: Text('Test Notification'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: orange,
-                                foregroundColor: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
                       ],
                     ],
                   ),
