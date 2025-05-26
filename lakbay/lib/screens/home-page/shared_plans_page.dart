@@ -324,6 +324,8 @@ class SharedPlans extends StatelessWidget {
                             fontSize: 12,
                             color: Colors.grey[700],
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 8),
                         Text(
