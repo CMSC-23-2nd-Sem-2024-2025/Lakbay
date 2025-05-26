@@ -25,60 +25,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Future<void> _showNotificationDebugInfo() async {
-  //   final notificationService = NotificationService();
-
-  //   // Ensure the notification service is initialized
-  //   await notificationService.ensureInitialized();
-
-  //   final status = await notificationService.getNotificationStatus();
-  //   final pendingNotifications =
-  //       await notificationService.getPendingNotifications();
-
-  //   if (!mounted) return;
-
-  //   showDialog(
-  //     context: context,
-  //     builder:
-  //         (context) => AlertDialog(
-  //           title: Text('Notification Debug Info'),
-  //           content: SingleChildScrollView(
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisSize: MainAxisSize.min,
-  //               children: [
-  //                 Text('Service Status:'),
-  //                 Text('• Initialized: ${status['initialized']}'),
-  //                 Text('• Permission Status: ${status['permissionStatus']}'),
-  //                 if (status['error'] != null)
-  //                   Text('• Error: ${status['error']}'),
-  //                 SizedBox(height: 16),
-  //                 Text('Pending Notifications: ${pendingNotifications.length}'),
-  //                 if (pendingNotifications.isNotEmpty) ...[
-  //                   SizedBox(height: 8),
-  //                   Text('Scheduled Notifications:'),
-  //                   ...pendingNotifications.map(
-  //                     (notification) => Padding(
-  //                       padding: const EdgeInsets.only(left: 8.0),
-  //                       child: Text('• ${notification.title}'),
-  //                     ),
-  //                   ),
-  //                 ],
-  //                 SizedBox(height: 8),
-  //                 Text('Current Time: ${DateTime.now()}'),
-  //               ],
-  //             ),
-  //           ),
-  //           actions: [
-  //             TextButton(
-  //               onPressed: () => Navigator.pop(context),
-  //               child: Text('Close'),
-  //             ),
-  //           ],
-  //         ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     // make an instance of the auth provider to get the user object and obtain the details of auth user
