@@ -94,403 +94,406 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                   ),
                   content: Container(
                     width: double.maxFinite,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Travel Name
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.flight_takeoff,
-                              size: 20,
-                              color: Color(0xFFF97419),
-                            ),
-                            SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Travel Name',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  TextField(
-                                    controller: travelNameController,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      contentPadding: EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 8,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Travel Name
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.flight_takeoff,
+                                size: 20,
+                                color: Color(0xFFF97419),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12),
-
-                        // Dates Row
-                        Row(
-                          children: [
-                            // Departure Date
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.calendar_today,
-                                    size: 20,
-                                    color: Color(0xFFF97419),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Departure',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[600],
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Travel Name',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    TextField(
+                                      controller: travelNameController,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
-                                        SizedBox(height: 4),
-                                        InkWell(
-                                          onTap: () async {
-                                            final picked = await showDatePicker(
-                                              context: context,
-                                              initialDate:
-                                                  _departureDate ??
-                                                  DateTime.now(),
-                                              firstDate: DateTime(2000),
-                                              lastDate:
-                                                  _returnDate ?? DateTime(2100),
-                                            );
-                                            if (picked != null) {
-                                              if (earliestItineraryDate !=
-                                                      null &&
-                                                  picked.isAfter(
-                                                    earliestItineraryDate,
-                                                  )) {
-                                                ScaffoldMessenger.of(
-                                                  context,
-                                                ).showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Departure date cannot be after the earliest itinerary date',
+                                        contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 8,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 12),
+
+                          // Dates Row
+                          Row(
+                            children: [
+                              // Departure Date
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.calendar_today,
+                                      size: 20,
+                                      color: Color(0xFFF97419),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Departure',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[600],
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          InkWell(
+                                            onTap: () async {
+                                              final picked = await showDatePicker(
+                                                context: context,
+                                                initialDate:
+                                                    _departureDate ??
+                                                    DateTime.now(),
+                                                firstDate: DateTime(2000),
+                                                lastDate:
+                                                    _returnDate ?? DateTime(2100),
+                                              );
+                                              if (picked != null) {
+                                                if (earliestItineraryDate !=
+                                                        null &&
+                                                    picked.isAfter(
+                                                      earliestItineraryDate,
+                                                    )) {
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        'Departure date cannot be after the earliest itinerary date',
+                                                      ),
+                                                      backgroundColor: Colors.red,
                                                     ),
-                                                    backgroundColor: Colors.red,
-                                                  ),
-                                                );
-                                              } else {
+                                                  );
+                                                } else {
+                                                  setState(
+                                                    () => _departureDate = picked,
+                                                  );
+                                                }
+                                              }
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 8,
+                                                horizontal: 12,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Colors.grey[300]!,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Text(
+                                                _departureDate != null
+                                                    ? _formatDate(_departureDate)
+                                                    : 'Select departure date',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color:
+                                                      _departureDate != null
+                                                          ? Colors.black87
+                                                          : Colors.grey[400],
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              // Return Date
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.calendar_month,
+                                      size: 20,
+                                      color: Color(0xFFF97419),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Return',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[600],
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          InkWell(
+                                            onTap: () async {
+                                              final picked = await showDatePicker(
+                                                context: context,
+                                                initialDate:
+                                                    _returnDate ?? DateTime.now(),
+                                                firstDate:
+                                                    _departureDate ??
+                                                    DateTime(2000),
+                                                lastDate: DateTime(2100),
+                                              );
+                                              if (picked != null) {
                                                 setState(
-                                                  () => _departureDate = picked,
+                                                  () => _returnDate = picked,
                                                 );
                                               }
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 8,
-                                              horizontal: 12,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.grey[300]!,
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 8,
+                                                horizontal: 12,
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Text(
-                                              _departureDate != null
-                                                  ? _formatDate(_departureDate)
-                                                  : 'Select departure date',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color:
-                                                    _departureDate != null
-                                                        ? Colors.black87
-                                                        : Colors.grey[400],
-                                                fontWeight: FontWeight.w500,
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Colors.grey[300]!,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Text(
+                                                _returnDate != null
+                                                    ? _formatDate(_returnDate)
+                                                    : 'Select return date',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color:
+                                                      _returnDate != null
+                                                          ? Colors.black87
+                                                          : Colors.grey[400],
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
+                            ],
+                          ),
+                          SizedBox(height: 12),
+
+                          // Flight Details
+                          if (widget.plan['flightDetails'] != null) ...[
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.flight,
+                                  size: 20,
+                                  color: Color(0xFFF97419),
+                                ),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Flight Details',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      TextField(
+                                        controller: flightDetailsController,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 8,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(width: 12),
-                            // Return Date
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.calendar_month,
-                                    size: 20,
-                                    color: Color(0xFFF97419),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Return',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[600],
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                            SizedBox(height: 12),
+                          ],
+
+                          // Accommodation
+                          if (widget.plan['accommodation'] != null) ...[
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.hotel,
+                                  size: 20,
+                                  color: Color(0xFFF97419),
+                                ),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Accommodation',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                        SizedBox(height: 4),
-                                        InkWell(
-                                          onTap: () async {
-                                            final picked = await showDatePicker(
-                                              context: context,
-                                              initialDate:
-                                                  _returnDate ?? DateTime.now(),
-                                              firstDate:
-                                                  _departureDate ??
-                                                  DateTime(2000),
-                                              lastDate: DateTime(2100),
-                                            );
-                                            if (picked != null) {
-                                              setState(
-                                                () => _returnDate = picked,
-                                              );
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 8,
-                                              horizontal: 12,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.grey[300]!,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Text(
-                                              _returnDate != null
-                                                  ? _formatDate(_returnDate)
-                                                  : 'Select return date',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color:
-                                                    _returnDate != null
-                                                        ? Colors.black87
-                                                        : Colors.grey[400],
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      TextField(
+                                        controller: accommodationController,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
                                             ),
                                           ),
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 8,
+                                          ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12),
+                          ],
+
+                          // Notes
+                          if (widget.plan['notes'] != null) ...[
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.note,
+                                  size: 20,
+                                  color: Color(0xFFF97419),
+                                ),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Notes',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      TextField(
+                                        controller: notesController,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 8,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12),
+                          ],
+
+                          // Emergency Contact
+                          if (widget.plan['emerContact'] != null) ...[
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.emergency,
+                                  size: 20,
+                                  color: Color(0xFFF97419),
+                                ),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Emergency Contact',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      TextField(
+                                        controller: emerContactController,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 8,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
-                        ),
-                        SizedBox(height: 12),
-
-                        // Flight Details
-                        if (widget.plan['flightDetails'] != null) ...[
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.flight,
-                                size: 20,
-                                color: Color(0xFFF97419),
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Flight Details',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    TextField(
-                                      controller: flightDetailsController,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 8,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 12),
                         ],
-
-                        // Accommodation
-                        if (widget.plan['accommodation'] != null) ...[
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.hotel,
-                                size: 20,
-                                color: Color(0xFFF97419),
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Accommodation',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    TextField(
-                                      controller: accommodationController,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 8,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 12),
-                        ],
-
-                        // Notes
-                        if (widget.plan['notes'] != null) ...[
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.note,
-                                size: 20,
-                                color: Color(0xFFF97419),
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Notes',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    TextField(
-                                      controller: notesController,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 8,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 12),
-                        ],
-
-                        // Emergency Contact
-                        if (widget.plan['emerContact'] != null) ...[
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.emergency,
-                                size: 20,
-                                color: Color(0xFFF97419),
-                              ),
-                              SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Emergency Contact',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    TextField(
-                                      controller: emerContactController,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 8,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ],
+                      ),
                     ),
                   ),
                   actions: [
@@ -504,48 +507,53 @@ class _ItinerariesPageState extends State<ItinerariesPage> {
                         ),
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_departureDate == null || _returnDate == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Please select both departure and return dates',
+                    SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_departureDate == null || _returnDate == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Please select both departure and return dates',
+                                ),
+                                backgroundColor: Colors.red,
                               ),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
+                            );
+                            return;
+                          }
 
-                        await FirebaseFirestore.instance
-                            .collection('travelPlans')
-                            .doc(widget.plan['id'])
-                            .update({
-                              'travelName': travelNameController.text,
-                              'departureDate': Timestamp.fromDate(
-                                _departureDate!,
-                              ),
-                              'returnDate': Timestamp.fromDate(_returnDate!),
-                              'flightDetails': flightDetailsController.text,
-                              'accommodation': accommodationController.text,
-                              'notes': notesController.text,
-                              'emerContact': emerContactController.text,
-                            });
+                          await FirebaseFirestore.instance
+                              .collection('travelPlans')
+                              .doc(widget.plan['id'])
+                              .update({
+                                'travelName': travelNameController.text,
+                                'departureDate': Timestamp.fromDate(
+                                  _departureDate!,
+                                ),
+                                'returnDate': Timestamp.fromDate(_returnDate!),
+                                'flightDetails': flightDetailsController.text,
+                                'accommodation': accommodationController.text,
+                                'notes': notesController.text,
+                                'emerContact': emerContactController.text,
+                              });
 
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFF97419),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32),
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFF97419),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        'Save Changes',
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
+                        child: Text(
+                          'Save Changes',
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),

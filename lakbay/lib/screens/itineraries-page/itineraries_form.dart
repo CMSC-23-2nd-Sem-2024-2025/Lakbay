@@ -285,9 +285,10 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
           widget.existingItinerary == null ? 'New Itinerary' : 'Edit Itinerary',
         ),
       ),
+      resizeToAvoidBottomInset: true,
       body: Form(
         key: _formKey,
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
@@ -504,7 +505,7 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
                   ],
                 ),
               ),
-              Spacer(),
+              SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -591,6 +592,7 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
                   ),
                 ),
               ),
+              SizedBox(height: 16),
             ],
           ),
         ),
