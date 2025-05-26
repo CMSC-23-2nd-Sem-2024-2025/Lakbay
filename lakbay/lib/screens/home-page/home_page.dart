@@ -103,10 +103,54 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.notifications,
-              color: Color(0xFFF86400),
-              size: 32,
+            icon: Stack(
+              children: [
+                const Icon(
+                  Icons.notifications,
+                  color: Color(0xFFF86400),
+                  size: 32,
+                ),
+                StreamBuilder<DocumentSnapshot>(
+                  stream:
+                      FirebaseFirestore.instance
+                          .collection('appusers')
+                          .doc(user?.uid)
+                          .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const SizedBox.shrink();
+                    }
+                    final data = snapshot.data!.data() as Map<String, dynamic>?;
+                    final pending = (data?['pendingRequests'] ?? []) as List;
+                    if (pending.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+                    return Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          '${pending.length}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
             onPressed: () {
               if (user == null) return;
@@ -130,6 +174,7 @@ class _HomePageState extends State<HomePage> {
                               child: CircularProgressIndicator(),
                             );
                           }
+
                           final data =
                               snapshot.data!.data() as Map<String, dynamic>?;
                           final pending =
@@ -144,7 +189,35 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               final requesterEmail = pending[index];
                               return ListTile(
-                                leading: Row(
+                                title: StreamBuilder<QuerySnapshot>(
+                                  stream:
+                                      FirebaseFirestore.instance
+                                          .collection('appusers')
+                                          .where(
+                                            'email',
+                                            isEqualTo: requesterEmail,
+                                          )
+                                          .limit(1)
+                                          .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData ||
+                                        snapshot.data!.docs.isEmpty) {
+                                      return Text(
+                                        'Someone sent you a friend request',
+                                      );
+                                    }
+                                    final requesterData =
+                                        snapshot.data!.docs.first.data()
+                                            as Map<String, dynamic>;
+                                    final requesterUsername =
+                                        requesterData['userName'] ??
+                                        requesterEmail;
+                                    return Text(
+                                      '$requesterUsername sent you a friend request',
+                                    );
+                                  },
+                                ),
+                                trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
@@ -237,49 +310,12 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ],
                                 ),
-                                title: StreamBuilder<QuerySnapshot>(
-                                  stream:
-                                      FirebaseFirestore.instance
-                                          .collection('appusers')
-                                          .where(
-                                            'email',
-                                            isEqualTo: requesterEmail,
-                                          )
-                                          .limit(1)
-                                          .snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData ||
-                                        snapshot.data!.docs.isEmpty) {
-                                      return Text(
-                                        'Someone sent you a friend request',
-                                      );
-                                    }
-                                    final requesterData =
-                                        snapshot.data!.docs.first.data()
-                                            as Map<String, dynamic>;
-                                    final requesterUsername =
-                                        requesterData['userName'] ??
-                                        requesterEmail;
-                                    return Text(
-                                      '$requesterUsername sent you a friend request',
-                                    );
-                                  },
-                                ),
                               );
                             },
                           );
                         },
                       ),
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text(
-                          'Close',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    ],
                   );
                 },
               );
