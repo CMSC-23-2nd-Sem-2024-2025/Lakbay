@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:lakbay/screens/home-page/starting_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -118,7 +119,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           if (context.mounted) {
                             Navigator.of(
                               context,
-                            ).pushReplacementNamed('/login');
+                            ).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (context) => const StartingPage()),
+                              (route) => false,
+                            );
                           }
                         },
                         icon: const Icon(
