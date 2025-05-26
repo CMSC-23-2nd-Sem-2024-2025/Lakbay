@@ -24,7 +24,11 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
   late TextEditingController locationController;
   late TextEditingController startTimeController;
   late TextEditingController endTimeController;
+  late TextEditingController dateController;
   LatLong? selectedLocation;
+  DateTime? selectedDate;
+  DateTime? travelPlanStartDate;
+  DateTime? travelPlanEndDate;
 
   @override
   void initState() {
@@ -44,9 +48,44 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
     endTimeController = TextEditingController(
       text: widget.existingItinerary?['endTime'] ?? '',
     );
+    dateController = TextEditingController(
+      text: widget.existingItinerary?['date'] ?? '',
+    );
+
+    // Initialize selectedDate from existing itinerary
+    final existingDate = widget.existingItinerary?['date'];
+    if (existingDate != null && existingDate.isNotEmpty) {
+      try {
+        selectedDate = DateTime.parse(existingDate);
+        dateController.text =
+            "${_getMonthName(selectedDate!.month)} ${selectedDate!.day}, ${selectedDate!.year}";
+      } catch (e) {
+        print('Error parsing date: $e');
+      }
+    }
+
     locationController.addListener(() {
       setState(() {});
     });
+
+    // Fetch travel plan dates
+    _fetchTravelPlanDates();
+  }
+
+  Future<void> _fetchTravelPlanDates() async {
+    final doc =
+        await FirebaseFirestore.instance
+            .collection('travelplans')
+            .doc(widget.travelPlanId)
+            .get();
+
+    if (doc.exists) {
+      final data = doc.data()!;
+      setState(() {
+        travelPlanStartDate = DateTime.parse(data['departureDate']);
+        travelPlanEndDate = DateTime.parse(data['returnDate']);
+      });
+    }
   }
 
   @override
@@ -56,7 +95,48 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
     locationController.dispose();
     startTimeController.dispose();
     endTimeController.dispose();
+    dateController.dispose();
     super.dispose();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    if (travelPlanStartDate == null || travelPlanEndDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unable to load travel plan dates'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? travelPlanStartDate!,
+      firstDate: travelPlanStartDate!,
+      lastDate: travelPlanEndDate!,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Color(0xFFF97419),
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedDate = DateTime(picked.year, picked.month, picked.day);
+        dateController.text =
+            "${_getMonthName(picked.month)} ${picked.day}, ${picked.year}";
+      });
+    }
   }
 
   Future<void> _selectTime(BuildContext context, bool isStartTime) async {
@@ -152,6 +232,51 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
     return true;
   }
 
+  Future<bool> _checkOverlappingItineraries() async {
+    if (selectedDate == null ||
+        startTimeController.text.isEmpty ||
+        endTimeController.text.isEmpty) {
+      return false;
+    }
+
+    // Get all itineraries for the selected date
+    final itineraries =
+        await FirebaseFirestore.instance
+            .collection('itineraries')
+            .where('travelPlanId', isEqualTo: widget.travelPlanId)
+            .where(
+              'date',
+              isEqualTo: selectedDate!.toIso8601String().split('T')[0],
+            )
+            .get();
+
+    final newStartTime = startTimeController.text;
+    final newEndTime = endTimeController.text;
+
+    for (var doc in itineraries.docs) {
+      final data = doc.data();
+      // Skip current itinerary when editing
+      if (widget.existingItinerary != null &&
+          widget.existingItinerary!['id'] == doc.id) {
+        continue;
+      }
+
+      final existingStartTime = data['startTime'] as String;
+      final existingEndTime = data['endTime'] as String;
+
+      // Check for overlap
+      if ((newStartTime.compareTo(existingStartTime) >= 0 &&
+              newStartTime.compareTo(existingEndTime) < 0) ||
+          (newEndTime.compareTo(existingStartTime) > 0 &&
+              newEndTime.compareTo(existingEndTime) <= 0) ||
+          (newStartTime.compareTo(existingStartTime) <= 0 &&
+              newEndTime.compareTo(existingEndTime) >= 0)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,6 +346,27 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
                 },
                 readOnly: true,
                 onTap: _showLocationPicker,
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: dateController,
+                decoration: InputDecoration(
+                  labelText: 'Date *',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[50],
+                  prefixIcon: Icon(Icons.calendar_today),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select a date';
+                  }
+                  return null;
+                },
+                readOnly: true,
+                onTap: () => _selectDate(context),
               ),
               SizedBox(height: 24),
               Container(
@@ -386,10 +532,24 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
                       }
                     }
 
+                    // Check for overlapping itineraries
+                    if (await _checkOverlappingItineraries()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'This time slot overlaps with an existing itinerary',
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
                     final itineraryData = {
                       'itineraryName': itineraryNameController.text,
                       'activities': activitiesController.text,
                       'location': locationController.text,
+                      'date': selectedDate?.toIso8601String().split('T')[0],
                       'startTime': startTimeController.text,
                       'endTime': endTimeController.text,
                       'travelPlanId': widget.travelPlanId,
@@ -436,5 +596,23 @@ class _ItinerariesFormPageState extends State<ItinerariesFormPage> {
         ),
       ),
     );
+  }
+
+  String _getMonthName(int month) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1];
   }
 }
