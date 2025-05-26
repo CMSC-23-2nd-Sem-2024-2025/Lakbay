@@ -1,17 +1,34 @@
-📍 ## Lakbay
-A Travel Planner App made with Flutter
+# 📍 Lakbay
+*A Travel Planner App made with Flutter*  
 
+---
 
-🚀 ## Key Features
-Collaborative travel planning
+## 🚀 Key Features  
+- Collaborative travel planning  
+- Itinerary creation and sharing  
+- Friend system with QR integration  
+- Reusable design system and component library  
+- Firebase-based authentication and cloud services  
+- Social feed for upcoming travel plans  
 
-Itinerary creation and sharing
+---
 
-Friend system with QR integration
+## 📱 How To Use  
 
-Reusable design system and component library
+To clone and run this application, you'll need **Git**, **Flutter**, and **Android Studio Meerkat** installed on your computer.
 
-Firebase-based authentication and cloud services
+```bash
+# Clone this repository
+$ git clone https://github.com/CMSC-23-2nd-Sem-2024-2025/project-cmsc23-tabelisma-tadeja-tiamzon-velasco.git
 
-Social feed for upcoming travel plans
+# Go into the repository
+$ cd lakbay
 
+# Install dependencies
+$ flutter pub get
+
+# Point the android sdk path in your local machine using --android-sdk
+$ flutter config --android-sdk "C:\Users\User\AppData\Local\Android\Sdk"
+
+# Run the app
+$ flutter run
