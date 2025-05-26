@@ -48,6 +48,12 @@ class SharedPlansProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Remove a user from a shared plan
+  Future<void> removeSharedUser(String sharedPlanId) async {
+    await _sharedPlansApi.deleteSharedPlan(sharedPlanId);
+    notifyListeners();
+  }
+
   // Get a single shared plan by ID
   Future<SharedPlan?> getSharedPlanById(String sharedPlanId) async {
     return await _sharedPlansApi.getSharedPlanById(sharedPlanId);
