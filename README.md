@@ -114,6 +114,13 @@ This document outlines the **Main Features** and **Optional Features** of the **
 
 ---
 
+## 🔥 How Firestore Works
+Lakbay uses Firebase Cloud Firestore as its backend database to store and manage user data, travel plans, itineraries, and friends. When the app runs, it fetches data in real time through StreamBuilder and Firebase services—ensuring updates are instantly reflected across all connected devices. Firestore's document-based structure allows us to organize data efficiently into collections like appusers, travelplans, itineraries, and sharedplans.
+
+<img src="https://github.com/user-attachments/assets/0868b87c-53ad-4bde-964e-62d45419899b" width="600"/>
+
+---
+
 > Tip: Use the app on multiple devices to sync your data seamlessly via Firebase.
 
 
