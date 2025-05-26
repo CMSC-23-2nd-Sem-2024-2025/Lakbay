@@ -246,66 +246,32 @@ class SharedPlans extends StatelessWidget {
     required bool isOwner,
     String? recipientName,
   }) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final isPlanOwner = currentUser?.uid == plan['userId'];
+
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      child: SizedBox(
-        height: 100,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 100,
-              height: 100,
-              margin: const EdgeInsets.all(16),
+              width: 80,
+              height: 80,
+              margin: const EdgeInsets.only(right: 16),
               decoration: BoxDecoration(
                 color: Colors.orange[100],
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(Icons.image, color: Colors.orange, size: 32),
             ),
-            const SizedBox(width: 10),
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => ItinerariesPage(plan: plan),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            plan['travelName'] ?? 'No Name',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                      if (isOwner) ...[
-                        const SizedBox(width: 8),
-                        Text(
-                          'Shared with: $recipientName',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(
@@ -351,6 +317,81 @@ class SharedPlans extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 6),
+                  Text(
+                    plan['location'] ?? 'No Location',
+                    style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    (() {
+                      final dateValue = plan['departureDate'];
+                      if (dateValue == null) return 'No Date';
+                      if (dateValue is Timestamp) {
+                        final date = dateValue.toDate();
+                        return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
+                      }
+                      try {
+                        final date = DateTime.parse(dateValue.toString());
+                        return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
+                      } catch (_) {
+                        return dateValue.toString();
+                      }
+                    })(),
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                  ),
+                  if (isPlanOwner) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 12,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Shared with: $recipientName',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey[800],
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Tooltip(
+                            message: 'View all shared users',
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.orange[50],
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.people_outline,
+                                  color: Colors.orange,
+                                  size: 20,
+                                ),
+                                onPressed:
+                                    () => _showSharedUsersDialog(
+                                      context,
+                                      plan['id'],
+                                    ),
+                                padding: EdgeInsets.zero,
+                                constraints: BoxConstraints(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -358,6 +399,227 @@ class SharedPlans extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _showRemoveUserDialog(
+    BuildContext context,
+    String sharedPlanId,
+    String recipientName,
+  ) async {
+    return showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Remove User'),
+            content: Text(
+              'Are you sure you want to remove $recipientName from this travel plan?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    final sharedPlansProvider =
+                        Provider.of<SharedPlansProvider>(
+                          context,
+                          listen: false,
+                        );
+                    await sharedPlansProvider.removeSharedUser(sharedPlanId);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('User removed successfully'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error removing user: ${e.toString()}'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Remove'),
+              ),
+            ],
+          ),
+    );
+  }
+
+  Future<void> _showSharedUsersDialog(
+    BuildContext context,
+    String planId,
+  ) async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    // Get the plan details to verify ownership
+    final planDoc =
+        await FirebaseFirestore.instance
+            .collection('travelplans')
+            .doc(planId)
+            .get();
+
+    if (!planDoc.exists) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Travel plan not found'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    final planData = planDoc.data();
+    final isOwner = planData?['userId'] == currentUser.uid;
+
+    // Get all shared plans for this travel plan
+    final sharedPlans =
+        await FirebaseFirestore.instance
+            .collection('sharedplans')
+            .where('planId', isEqualTo: planId)
+            .get();
+
+    if (sharedPlans.docs.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No users have access to this plan yet'),
+          ),
+        );
+      }
+      return;
+    }
+
+    // Get user details for each shared plan
+    final userDetails = await Future.wait(
+      sharedPlans.docs.map((doc) async {
+        final sharedPlan = SharedPlan.fromJson(doc.data(), id: doc.id);
+        final userDoc =
+            await FirebaseFirestore.instance
+                .collection('appusers')
+                .doc(sharedPlan.sharedWith)
+                .get();
+        return {
+          'userId': sharedPlan.sharedWith,
+          'username': userDoc.data()?['userName'] ?? 'Unknown User',
+          'sharedPlanId': doc.id,
+        };
+      }),
+    );
+
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder:
+            (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+              title: Row(
+                children: [
+                  const Icon(Icons.people_outline, color: Color(0xFFF86400)),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Shared Users',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: userDetails.length,
+                  separatorBuilder:
+                      (context, index) =>
+                          Divider(height: 1, color: Colors.grey[200]),
+                  itemBuilder: (context, index) {
+                    final user = userDetails[index];
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 4,
+                        horizontal: 0,
+                      ),
+                      leading: CircleAvatar(
+                        backgroundColor: Color(0xFFFFE3CC),
+                        child: const Icon(
+                          Icons.person,
+                          color: Color(0xFFF86400),
+                        ),
+                      ),
+                      title: Text(
+                        user['username'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                      trailing:
+                          isOwner
+                              ? Tooltip(
+                                message: 'Remove user',
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: Ink(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFFFE3CC),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.remove_circle_outline,
+                                        color: Color.fromARGB(255, 217, 22, 22),
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        _showRemoveUserDialog(
+                                          context,
+                                          user['sharedPlanId'],
+                                          user['username'],
+                                        );
+                                      },
+                                      splashRadius: 20,
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                    ),
+                                  ),
+                                ),
+                              )
+                              : null,
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+      );
+    }
   }
 
   String _getMonthName(int month) {
