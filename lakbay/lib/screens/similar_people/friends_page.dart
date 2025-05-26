@@ -144,7 +144,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 16,
                                     mainAxisSpacing: 16,
-                                    childAspectRatio: 0.72,
+                                    childAspectRatio: 0.62,
                                   ),
                               itemCount: docs.length,
                               itemBuilder: (context, index) {
@@ -347,7 +347,12 @@ class _FriendsPageState extends State<FriendsPage> {
                                         ),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.all(12),
+                                        padding: const EdgeInsets.fromLTRB(
+                                          12,
+                                          12,
+                                          12,
+                                          18,
+                                        ),
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -379,29 +384,31 @@ class _FriendsPageState extends State<FriendsPage> {
                                               maxLines: 1,
                                             ),
                                             const SizedBox(height: 20),
-                                            Text(
-                                              ((u['styles']
-                                                              as List<
-                                                                dynamic
-                                                              >?) ==
-                                                          null ||
-                                                      (u['styles']
-                                                              as List<
-                                                                dynamic
-                                                              >?)!
-                                                          .isEmpty)
-                                                  ? 'None'
-                                                  : (u['styles']
-                                                          as List<dynamic>)
-                                                      .join(", "),
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFF86400),
-                                                fontWeight: FontWeight.w500,
+                                            Flexible(
+                                              child: Text(
+                                                ((u['styles']
+                                                                as List<
+                                                                  dynamic
+                                                                >?) ==
+                                                            null ||
+                                                        (u['styles']
+                                                                as List<
+                                                                  dynamic
+                                                                >?)!
+                                                            .isEmpty)
+                                                    ? 'None'
+                                                    : (u['styles']
+                                                            as List<dynamic>)
+                                                        .join(", "),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Color(0xFFF86400),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
                                               ),
-                                              textAlign: TextAlign.center,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
                                             ),
                                           ],
                                         ),
