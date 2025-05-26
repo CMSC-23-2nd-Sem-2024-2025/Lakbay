@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// this is the bottom navigation bar that is used to navigate between the pages
+
 class CustomBottomNav extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTabSelected;
