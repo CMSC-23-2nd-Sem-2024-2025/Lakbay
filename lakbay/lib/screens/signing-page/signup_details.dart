@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lakbay/screens/home-page/starting_page.dart';
-import 'package:lakbay/screens/home-page/onboarding.dart';
 import '../../providers/auth_provider.dart';
 
 class SignupDetails extends StatefulWidget {

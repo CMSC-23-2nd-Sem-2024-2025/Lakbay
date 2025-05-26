@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lakbay/components/scaffolds.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
 import 'package:lakbay/providers/plan_provider.dart';
@@ -17,10 +16,7 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
   @override
   void initState() {
     super.initState();
-    print('TravelAddInfoPage initialized with plan:'); // Debug print
-    print('Travel Name: ${widget.travelPlan.travelName}'); // Debug print
-    print('Location: ${widget.travelPlan.location}'); // Debug print
-    print('Image URL: ${widget.travelPlan.imageUrl}'); // Debug print
+   
   }
 
   // add the controllers for the text fields
@@ -42,10 +38,7 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
   // save info function
   Future<void> _saveAdditionalInfoAndGoHome() async {
     try {
-      print('Starting to save additional info...');
-      print('Original plan image URL: ${widget.travelPlan.imageUrl}');
-      print('Original plan ID: ${widget.travelPlan.id}');
-      print('Original plan userId: ${widget.travelPlan.userId}');
+    
 
       // Create the updated plan with the original data
       final updatedPlan = TravelPlan(
@@ -77,40 +70,30 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
         imageUrl: widget.travelPlan.imageUrl,
       );
 
-      print('Updated plan created with data:');
-      print('Travel Name: ${updatedPlan.travelName}');
-      print('Location: ${updatedPlan.location}');
-      print('Image URL: ${updatedPlan.imageUrl}');
-      print('User ID: ${updatedPlan.userId}');
-      print('Flight Details: ${updatedPlan.flightDetails}');
-      print('Accommodation: ${updatedPlan.accommodation}');
-      print('Notes: ${updatedPlan.notes}');
-      print('Emergency Contact: ${updatedPlan.emerContact}');
 
-      print('Getting PlanProvider...');
       final planProvider = Provider.of<PlanProvider>(context, listen: false);
-      print('PlanProvider obtained, adding plan...');
+
 
       // Add the plan using the provider
       await planProvider.addPlan(updatedPlan);
-      print('Plan added successfully');
+
 
       if (!mounted) {
-        print('Widget is not mounted, cannot navigate');
+ 
         return;
       }
 
-      print('Setting navigation index to 0...');
+  
       // Set the navigation index to 0 (home page)
       MainScaffold.navIndexNotifier.value = 0;
 
-      print('Navigating to MainScaffold...');
+   
       // Navigate to main scaffold and remove all previous routes
       await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => MainScaffold()),
         (route) => false,
       );
-      print('Navigation completed');
+
     } catch (e, stackTrace) {
       print('Error in _saveAdditionalInfoAndGoHome: $e');
       print('Stack trace: $stackTrace');
