@@ -37,8 +37,10 @@ class TravelPlan {
       userId: json['userId'],
       travelName: json['travelName'],
       location: json['location'],
-      departureDate: DateTime.parse(json['departureDate']),
-      returnDate: DateTime.parse(json['returnDate']),
+      departureDate: DateTime.parse(
+        json['departureDate'].toString().split('T')[0],
+      ),
+      returnDate: DateTime.parse(json['returnDate'].toString().split('T')[0]),
       flightDetails: json['flightDetails'],
       accommodation: json['accommodation'],
       notes: json['notes'],
@@ -46,7 +48,9 @@ class TravelPlan {
       enableNotifications: json['enableNotifications'] ?? false,
       notificationTime:
           json['notificationTime'] != null
-              ? DateTime.parse(json['notificationTime'])
+              ? DateTime.parse(
+                json['notificationTime'].toString().split('T')[0],
+              )
               : null,
       imageUrl: json['imageUrl'],
     );
@@ -58,8 +62,10 @@ class TravelPlan {
       'userId': userId,
       'travelName': travelName,
       'location': location,
-      'departureDate': departureDate.toIso8601String(),
-      'returnDate': returnDate.toIso8601String(),
+      'departureDate':
+          '${departureDate.year}-${departureDate.month.toString().padLeft(2, '0')}-${departureDate.day.toString().padLeft(2, '0')}',
+      'returnDate':
+          '${returnDate.year}-${returnDate.month.toString().padLeft(2, '0')}-${returnDate.day.toString().padLeft(2, '0')}',
       'enableNotifications': enableNotifications,
       if (id != null) 'id': id,
       if (flightDetails != null) 'flightDetails': flightDetails,
@@ -67,7 +73,8 @@ class TravelPlan {
       if (notes != null) 'notes': notes,
       if (emerContact != null) 'emerContact': emerContact,
       if (notificationTime != null)
-        'notificationTime': notificationTime!.toIso8601String(),
+        'notificationTime':
+            '${notificationTime!.year}-${notificationTime!.month.toString().padLeft(2, '0')}-${notificationTime!.day.toString().padLeft(2, '0')}',
       if (imageUrl != null) 'imageUrl': imageUrl,
     };
     print('Generated JSON map: $map');
