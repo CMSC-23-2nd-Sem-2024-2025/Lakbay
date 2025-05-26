@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
 import 'package:lakbay/screens/travel-page/travel_add_info.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
 import 'package:lakbay/services/notification_service.dart';
 
@@ -459,10 +458,6 @@ class _TravelFormPageState extends State<TravelFormPage> {
                       if (_validateFields()) {
                         final travelPlan = _createTravelPlan();
 
-                        print(
-                          'Creating travel plan with notification time: ${travelPlan.notificationTime}, enableNotifications: ${travelPlan.enableNotifications}',
-                        );
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -514,16 +509,13 @@ class _TravelFormPageState extends State<TravelFormPage> {
         notificationTime!.minute,
       );
 
-      // Log the combined notification time
-      print('Combined notification time: $combinedNotificationTime');
-
       // Verify the time is in the future
       final now = DateTime.now();
       if (combinedNotificationTime.isBefore(now)) {
-        print('Warning: Combined notification time is in the past');
+       
         // Set to 1 minute in the future for testing
         combinedNotificationTime = now.add(Duration(minutes: 1));
-        print('Adjusted notification time to: $combinedNotificationTime');
+        
       }
     }
 

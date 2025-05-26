@@ -117,10 +117,6 @@ class _OnboardingState extends State<OnBoarding> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (onLastPage) {
-                          // debugging
-                          print(selectedInterests);
-                          print(selectedStyles);
-
                           // make an instance of the auth provider to check the current logged in user. if there is a user,
                           // store the intersts and styles in the attributes of the user in the firebase (can also store empty) 
                           final authProvider = Provider.of<AuthProvider>(
@@ -145,12 +141,8 @@ class _OnboardingState extends State<OnBoarding> {
                                             : selectedStyles,
                                   });
 
-                              print("success");
                             } catch (e) {
-                              print("Failed to update user data: $e");
                             }
-                          } else {
-                            print("no user found");
                           }
 
                           // proceed to home page

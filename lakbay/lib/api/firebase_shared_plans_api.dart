@@ -13,7 +13,7 @@ class FirebaseSharedPlansApi {
       await docRef.set(data);
       return docRef.id;
     } catch (e) {
-      print('Error adding shared plan: $e');
+      
       rethrow;
     }
   }
@@ -54,7 +54,7 @@ class FirebaseSharedPlansApi {
     try {
       await db.collection('sharedplans').doc(sharedPlanId).update(updates);
     } catch (e) {
-      print('Error updating shared plan: $e');
+      
       rethrow;
     }
   }
@@ -64,7 +64,7 @@ class FirebaseSharedPlansApi {
     try {
       await db.collection('sharedplans').doc(sharedPlanId).delete();
     } catch (e) {
-      print('Error deleting shared plan: $e');
+      
       rethrow;
     }
   }
@@ -76,7 +76,7 @@ class FirebaseSharedPlansApi {
       if (!doc.exists) return null;
       return SharedPlan.fromJson(doc.data()!, id: doc.id);
     } catch (e) {
-      print('Error fetching shared plan: $e');
+      
       rethrow;
     }
   }
@@ -96,7 +96,7 @@ class FirebaseSharedPlansApi {
       }
       return querySnapshot.docs.first.id;
     } catch (e) {
-      print('Error looking up username: $e');
+      
       rethrow;
     }
   }
@@ -114,7 +114,7 @@ class FirebaseSharedPlansApi {
 
       return querySnapshot.docs.isNotEmpty;
     } catch (e) {
-      print('Error checking shared plan: $e');
+      
       rethrow;
     }
   }
@@ -150,7 +150,7 @@ class FirebaseSharedPlansApi {
 
       return await addSharedPlan(sharedPlan);
     } catch (e) {
-      print('Error sharing plan: $e');
+      
       rethrow;
     }
   }
@@ -179,7 +179,7 @@ class FirebaseSharedPlansApi {
 
       return await addSharedPlan(sharedPlan);
     } catch (e) {
-      print('Error sharing plan by userId: $e');
+      
       rethrow;
     }
   }

@@ -3,6 +3,7 @@ import 'package:lakbay/providers/auth_provider.dart';
 import 'package:lakbay/screens/home-page/starting_page.dart';
 import 'package:provider/provider.dart';
 import 'package:lakbay/components/scaffolds.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginDetails extends StatefulWidget {
   const LoginDetails({super.key});
@@ -27,35 +28,13 @@ class _LoginDetailsState extends State<LoginDetails> {
         child: SizedBox.expand(
           child: Stack(
             children: [
-              // Bottom layer
-              // Positioned(
-              //   bottom: 0,
-              //   left: 0,
-              //   right: 0,
-              //   child: Container(
-              //     height: 800,
-              //     decoration: const BoxDecoration(
-              //       color: Color(0xFF8DA2E6),
-              //       borderRadius: BorderRadius.only(
-              //         topLeft: Radius.circular(80),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-
-              // Top layer
+            
               Positioned(
                 bottom: 0,
                 left: 0,
                 right: 0,
                 child: SizedBox(
                   height: 750,
-                  // decoration: const BoxDecoration(
-                  //   color: Color(0xFFFBFBFB),
-                  //   borderRadius: BorderRadius.only(
-                  //     topLeft: Radius.circular(80),
-                  //   ),
-                  // ),
                   child: Padding(
                     padding: const EdgeInsets.all(50),
                     child: Form(
@@ -156,7 +135,6 @@ class _LoginDetailsState extends State<LoginDetails> {
 
                                   String? message = await context
                                       .read<AuthProvider>()
-                                      .authService
                                       .signIn(email!, password!);
 
                                   if (context.mounted) {

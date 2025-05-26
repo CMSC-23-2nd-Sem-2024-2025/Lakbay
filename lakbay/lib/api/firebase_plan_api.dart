@@ -11,14 +11,14 @@ class FirebasePlanApi {
 
   Future<String> addEntry(Map<String, dynamic> entry) async {
     try {
-      print("Attempting to add entry: $entry");
+      
       final planDoc = db.collection('travelplans').doc();
       entry['id'] = planDoc.id;
       await planDoc.set(entry);
-      print("Successfully added entry: $entry");
+      
       return "Successfully added Plan!";
     } on FirebaseException catch (e) {
-      print("Error adding plan: ${e.code} - ${e.message}");
+      
       return "Error on ${e.code}: ${e.message}";
     }
   }

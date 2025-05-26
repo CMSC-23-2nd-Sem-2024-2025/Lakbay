@@ -15,7 +15,6 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   Future<void> initialize() async {
-    print('\n=== Initializing Notification Service ===');
     tz.initializeTimeZones();
 
     try {
@@ -38,9 +37,7 @@ class NotificationService {
                 AndroidFlutterLocalNotificationsPlugin
               >();
       if (androidPlugin != null) {
-        print('Creating Android notification channel...');
         await androidPlugin.createNotificationChannel(androidChannel);
-        print('Android notification channel created successfully');
       }
 
       const androidSettings = AndroidInitializationSettings(
@@ -57,43 +54,29 @@ class NotificationService {
         iOS: iosSettings,
       );
 
-      print('Initializing notification plugin...');
       final initialized = await _notifications.initialize(
         initSettings,
         onDidReceiveNotificationResponse: _onNotificationTap,
       );
-      print('Notification plugin initialized: $initialized');
 
       // Request permissions
-      print('Requesting notification permissions...');
       final permissionStatus = await Permission.notification.request();
-      print('Notification permission status: $permissionStatus');
 
       // Request exact alarm permission for Android 12+
       if (await Permission.scheduleExactAlarm.isDenied) {
-        print('Requesting exact alarm permission...');
         final exactAlarmStatus = await Permission.scheduleExactAlarm.request();
-        print('Exact alarm permission status: $exactAlarmStatus');
       }
-
-      print('=== Notification Service Initialization Complete ===\n');
     } catch (e) {
-      print('Error initializing notification service: $e');
-      print('Stack trace: ${StackTrace.current}');
       rethrow;
     }
   }
 
   Future<bool> requestPermissions() async {
-    print('Requesting notification permissions...');
     final status = await Permission.notification.request();
-    print('Notification permission status: $status');
 
     // Request exact alarm permission for Android 12+
     if (await Permission.scheduleExactAlarm.isDenied) {
-      print('Requesting exact alarm permission...');
       final exactAlarmStatus = await Permission.scheduleExactAlarm.request();
-      print('Exact alarm permission status: $exactAlarmStatus');
       return status.isGranted && exactAlarmStatus.isGranted;
     }
 
@@ -101,23 +84,16 @@ class NotificationService {
   }
 
   Future<void> ensureInitialized() async {
-    print('\n=== Ensuring Notification Service is Initialized ===');
     try {
       // Check if notifications are initialized
       final initializationSettings =
           await _notifications.getNotificationAppLaunchDetails();
       if (!(initializationSettings?.didNotificationLaunchApp ?? false)) {
-        print('Notification service not initialized, initializing now...');
         await initialize();
-      } else {
-        print('Notification service already initialized');
       }
     } catch (e) {
-      print('Error checking initialization status: $e');
-      print('Attempting to reinitialize...');
       await initialize();
     }
-    print('=== End Initialization Check ===\n');
   }
 
   Future<void> scheduleTravelNotification({
@@ -126,8 +102,6 @@ class NotificationService {
     required String body,
     required DateTime scheduledDate,
   }) async {
-    print('\n=== Notification Service: Scheduling Notification ===');
-
     // Ensure the service is initialized before scheduling
     await ensureInitialized();
 
@@ -167,21 +141,14 @@ class NotificationService {
     try {
       // Get the current time in the local timezone
       final now = tz.TZDateTime.now(tz.local);
-      print('Current time in local timezone: $now');
 
       // Convert the scheduled date to the local timezone
       final scheduledTz = tz.TZDateTime.from(scheduledDate, tz.local);
-      print('Scheduled time in local timezone: $scheduledTz');
 
       // Verify the time is in the future
       if (scheduledTz.isBefore(now)) {
-        print(
-          'Warning: Scheduled time is in the past, adjusting to 5 minutes from now',
-        );
         final adjustedTime = now.add(Duration(minutes: 5));
-        print('Adjusted scheduled time: $adjustedTime');
 
-        print('Scheduling notification with adjusted time...');
         await _notifications.zonedSchedule(
           id,
           title,
@@ -193,9 +160,7 @@ class NotificationService {
               UILocalNotificationDateInterpretation.absoluteTime,
           matchDateTimeComponents: DateTimeComponents.time,
         );
-        print('Notification scheduled with adjusted time');
       } else {
-        print('Scheduling notification with original time...');
         await _notifications.zonedSchedule(
           id,
           title,
@@ -207,53 +172,38 @@ class NotificationService {
               UILocalNotificationDateInterpretation.absoluteTime,
           matchDateTimeComponents: DateTimeComponents.time,
         );
-        print('Notification scheduled with original time');
       }
 
       // Verify the scheduled notification
-      print('Verifying scheduled notification...');
       final pendingNotifications =
           await _notifications.pendingNotificationRequests();
-      print('Total pending notifications: ${pendingNotifications.length}');
       if (pendingNotifications.isNotEmpty) {
-        print('Pending notifications:');
         for (var notification in pendingNotifications) {
           print('- ID: ${notification.id}, Title: ${notification.title}');
         }
-      } else {
-        print('No pending notifications found');
       }
     } catch (e) {
-      print('Error scheduling notification: $e');
       if (e is PlatformException && e.code == 'exact_alarms_not_permitted') {
-        print('Prompting user to allow exact alarms in system settings...');
         await openExactAlarmSettings();
       }
-      print('Stack trace: ${StackTrace.current}');
       rethrow;
     }
-    print('=== End Notification Service: Scheduling Notification ===\n');
   }
 
   Future<void> cancelNotification(int id) async {
-    print('Cancelling notification with ID: $id');
     await _notifications.cancel(id);
   }
 
   Future<void> cancelAllNotifications() async {
-    print('Cancelling all notifications');
     await _notifications.cancelAll();
   }
 
   void _onNotificationTap(NotificationResponse response) {
-    print('Notification tapped: ${response.payload}');
     // Handle notification tap
     // You can navigate to specific screens or perform actions here
   }
 
   Future<void> showTestNotification() async {
-    print('Showing test notification...');
-
     final androidDetails = AndroidNotificationDetails(
       'travel_plan_channel',
       'Travel Plan Notifications',
@@ -289,9 +239,8 @@ class NotificationService {
         'This is a test notification to verify the system is working',
         details,
       );
-      print('Test notification shown successfully');
     } catch (e) {
-      print('Error showing test notification: $e');
+      rethrow;
     }
   }
 
@@ -300,7 +249,6 @@ class NotificationService {
   }
 
   Future<Map<String, dynamic>> getNotificationStatus() async {
-    print('\n=== Checking Notification Service Status ===');
     Map<String, dynamic> status = {};
 
     try {
@@ -310,31 +258,25 @@ class NotificationService {
       // Check notification permissions
       final permissionStatus = await Permission.notification.status;
       status['permissionStatus'] = permissionStatus.toString();
-      print('Notification permission status: ${status['permissionStatus']}');
 
       // Check exact alarm permission
       final exactAlarmStatus = await Permission.scheduleExactAlarm.status;
       status['exactAlarmStatus'] = exactAlarmStatus.toString();
-      print('Exact alarm permission status: ${status['exactAlarmStatus']}');
 
       // Get pending notifications
       final pendingNotifications =
           await _notifications.pendingNotificationRequests();
       status['pendingCount'] = pendingNotifications.length;
-      print('Pending notifications count: ${status['pendingCount']}');
 
       if (pendingNotifications.isNotEmpty) {
-        print('Pending notifications:');
         for (var notification in pendingNotifications) {
           print('- ID: ${notification.id}, Title: ${notification.title}');
         }
       }
     } catch (e) {
-      print('Error checking notification status: $e');
       status['error'] = e.toString();
     }
 
-    print('=== End Notification Service Status Check ===\n');
     return status;
   }
 }

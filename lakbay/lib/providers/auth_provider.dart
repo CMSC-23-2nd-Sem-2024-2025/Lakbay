@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import '../api/firebase_auth_api.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthProvider with ChangeNotifier {
   late FirebaseAuthAPI authService;
@@ -24,9 +25,9 @@ class AuthProvider with ChangeNotifier {
     uStream.listen((user) {
       // listens the changes in authentication state
       if (user == null) {
-        print("No user is currently signed in.");
+        // No user is currently signed in.
       } else {
-        print("Auth state changed: ${user.email}");
+        // Auth state changed: ${user.email}
       }
       if (userObj != user) {
         userObj = user; // Update the user object
@@ -49,12 +50,10 @@ class AuthProvider with ChangeNotifier {
       if (userDetails != null) {
         userObj = currentUser;
         this.userDetails = userDetails;
-        print("First Name: ${userDetails['firstName']}");
-        print("Last Name: ${userDetails['lastName']}");
-        print("Email: ${userDetails['email']}");
+
         notifyListeners(); // Add this line to notify listeners after updating userDetails
       } else {
-        print("User details not found in Firestore.");
+        debugPrint("User details not found in Firestore.");
       }
     }
   }
@@ -90,8 +89,26 @@ class AuthProvider with ChangeNotifier {
 
   Future<String?> signIn(String email, String password) async {
     final result = await authService.signIn(email, password);
+    if (result != null) {
+      // Auth failed, return error
+      notifyListeners();
+      return result;
+    }
+
+    // Auth succeeded, now check Firestore
+    final user = FirebaseAuthAPI.auth.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance.collection('appusers').doc(user.uid).get();
+      if (!doc.exists) {
+        // User not found in appusers, sign out and return error
+        await authService.signOut();
+        notifyListeners();
+        return "Account does not exist in appusers. Please contact support or sign up.";
+      }
+    }
+
     notifyListeners();
-    return result;
+    return null; // Success
   }
 
   Future<void> signOut() async {

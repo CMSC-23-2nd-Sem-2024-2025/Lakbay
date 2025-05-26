@@ -16,7 +16,7 @@ class FirebaseAuthAPI {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       return null; // null means success
     } on FirebaseAuthException catch (e) {
-      print("Sign-in error: ${e.code}, message: ${e.message}");
+      
       return "Failed with error '${e.code}': ${e.message}";
     }
   }
@@ -62,9 +62,6 @@ class FirebaseAuthAPI {
       // ensure the user is signed in
       await auth.signInWithEmailAndPassword(email: email, password: password);
 
-      print("User created in Firebase Authentication: $uid");
-      print("User details saved in Firestore.");
-
       return null;
     } on FirebaseAuthException catch (e) {
       return "Failed with error '${e.code}: ${e.message}'";
@@ -84,11 +81,11 @@ class FirebaseAuthAPI {
       if (newUserDoc.exists) {
         return newUserDoc.data() as Map<String, dynamic>;
       } else {
-        print("User document does not exist");
+        
         return null;
       }
     } catch (e) {
-      print("Error fetching user details: $e");
+      
       return null;
     }
   }
@@ -101,15 +98,9 @@ class FirebaseAuthAPI {
       await db.collection("appusers").doc(uid).update(updatedData);
       return null; // null means success
     } catch (e) {
-      print("Error updating user details: $e");
+      
       return "Error updating user details: $e";
     }
   }
 }
 
-// TODO: addtional information for user
-/*
-api for getting addtional information
-- first name 
-- last name
- */

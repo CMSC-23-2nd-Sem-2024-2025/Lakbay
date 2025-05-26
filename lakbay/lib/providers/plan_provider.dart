@@ -34,70 +34,29 @@ class PlanProvider with ChangeNotifier {
   }
 
   Future<void> _scheduleNotification(TravelPlan plan) async {
-    print('\n=== Scheduling Notification ===');
-    print('Plan Name: ${plan.travelName}');
-    print('Enable Notifications: ${plan.enableNotifications}');
-    print('Notification Time: ${plan.notificationTime}');
+    // Ensure the notification time is in the future
+    final now = DateTime.now();
+    DateTime scheduledTime = plan.notificationTime!;
 
-    if (plan.enableNotifications && plan.notificationTime != null) {
-      try {
-        // Create a unique notification ID using a combination of timestamp and plan name
-        final notificationId =
-            DateTime.now().millisecondsSinceEpoch.hashCode.abs();
-        print('Generated notification ID: $notificationId');
-
-        // Ensure the notification time is in the future
-        final now = DateTime.now();
-        DateTime scheduledTime = plan.notificationTime!;
-
-        print('Current time: $now');
-        print('Original scheduled time: $scheduledTime');
-
-        if (scheduledTime.isBefore(now)) {
-          print(
-            'Warning: Notification time is in the past, adjusting to 5 minutes from now',
-          );
-          scheduledTime = now.add(Duration(minutes: 5));
-          print('Adjusted scheduled time: $scheduledTime');
-        }
-
-        // Calculate time until notification
-        final timeUntilNotification = scheduledTime.difference(now);
-        print(
-          'Time until notification: ${timeUntilNotification.inMinutes} minutes',
-        );
-
-        print('Calling scheduleTravelNotification...');
-        await _notificationService.scheduleTravelNotification(
-          id: notificationId,
-          title: 'Upcoming Trip: ${plan.travelName}',
-          body: 'Your trip to ${plan.location} is starting soon!',
-          scheduledDate: scheduledTime,
-        );
-        print('Notification scheduled successfully with ID: $notificationId');
-
-        // Verify the notification was scheduled
-        final pendingNotifications =
-            await _notificationService.getPendingNotifications();
-        print(
-          'Total pending notifications after scheduling: ${pendingNotifications.length}',
-        );
-        if (pendingNotifications.isNotEmpty) {
-          print('Pending notifications:');
-          for (var notification in pendingNotifications) {
-            print('- ID: ${notification.id}, Title: ${notification.title}');
-          }
-        }
-      } catch (e) {
-        print('Error scheduling notification: $e');
-        print('Stack trace: ${StackTrace.current}');
-      }
-    } else {
-      print(
-        'Notifications not enabled or no notification time set for plan: ${plan.travelName}',
-      );
+    if (scheduledTime.isBefore(now)) {
+      scheduledTime = now.add(Duration(minutes: 5));
     }
-    print('=== End Scheduling Notification ===\n');
+
+    // Calculate time until notification
+    final timeUntilNotification = scheduledTime.difference(now);
+
+    await _notificationService.scheduleTravelNotification(
+      id: DateTime.now().millisecondsSinceEpoch.hashCode.abs(),
+      title: 'Upcoming Trip: ${plan.travelName}',
+      body: 'Your trip to ${plan.location} is starting soon!',
+      scheduledDate: scheduledTime,
+    );
+
+    // Verify the notification was scheduled
+    final pendingNotifications =
+        await _notificationService.getPendingNotifications();
+    if (pendingNotifications.isNotEmpty) {
+    }
   }
 
   // this is the function for adding a new travel plan. makes a new instance of the travel plan (via the model)
@@ -109,7 +68,6 @@ class PlanProvider with ChangeNotifier {
 
     // Add the plan using await. Once done, notify the listeners to update the UI
     final result = await firebaseService.addEntry(planMap);
-    print(result);
 
     // Get the document ID from the planMap (it was added by addEntry)
     final docId = planMap['id'];
@@ -142,7 +100,6 @@ class PlanProvider with ChangeNotifier {
     updatedData.remove('id'); // avoid updating the id field
 
     String message = await firebaseService.updateEntry(id, updatedData);
-    print(message);
 
     // Cancel existing notification and schedule new one if enabled
     await _notificationService.cancelNotification(id.hashCode);
@@ -159,7 +116,7 @@ class PlanProvider with ChangeNotifier {
 
     // Call the deleteEntry in the user api and delete in the firebase
     String message = await firebaseService.deleteEntry(id);
-    print(message);
+
     notifyListeners();
   }
 

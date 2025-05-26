@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lakbay/components/scaffolds.dart';
 import 'package:lakbay/models/travel_plans_model.dart';
 import 'package:lakbay/providers/plan_provider.dart';
