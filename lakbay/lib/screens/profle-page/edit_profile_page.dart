@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import 'package:flutter/services.dart'; // Add this import for TextInputFormatter
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -220,6 +221,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             const SizedBox(height: 16),
                             TextFormField(
                               controller: _phoneNumberController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                               decoration: InputDecoration(
                                 labelText: 'Phone Number',
                                 labelStyle: const TextStyle(color: Colors.grey),
