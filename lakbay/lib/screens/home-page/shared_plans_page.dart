@@ -590,14 +590,27 @@ class _SharePlanDialogState extends State<SharePlanDialog>
 
   Future<void> _saveAndShareQRCode(BuildContext context) async {
     try {
-      // Create a temporary directory
-      final directory = await getTemporaryDirectory();
-      final String filePath = '${directory.path}/qr_code.png';
+      // Request photos permission for Android
+      if (Platform.isAndroid) {
+        final status = await Permission.photos.request();
+        if (!status.isGranted) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Photos permission is required to save QR code'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+          return;
+        }
+      }
 
-      // Create a painter to draw the QR code
+      // Create a painter to draw the QR code with higher error correction
       final qrPainter = QrPainter(
         data: widget.planId,
         version: QrVersions.auto,
+        errorCorrectionLevel: QrErrorCorrectLevel.H,
         gapless: true,
         embeddedImageStyle: null,
         embeddedImage: null,
@@ -614,7 +627,7 @@ class _SharePlanDialogState extends State<SharePlanDialog>
       // Create a picture recorder with a white background
       final recorder = ui.PictureRecorder();
       final canvas = Canvas(recorder);
-      final size = const Size(200, 200);
+      final size = const Size(300, 300); // Increased size for better scanning
 
       // Draw white background
       final paint =
@@ -633,22 +646,27 @@ class _SharePlanDialogState extends State<SharePlanDialog>
       final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
       final buffer = byteData!.buffer.asUint8List();
 
-      // Save the image
-      final file = File(filePath);
-      await file.writeAsBytes(buffer);
+      // Save to gallery
+      if (Platform.isAndroid) {
+        // Get the Downloads directory
+        final downloadsDir = Directory('/storage/emulated/0/Download');
+        if (!await downloadsDir.exists()) {
+          await downloadsDir.create(recursive: true);
+        }
 
-      // Share the image
-      await Share.shareXFiles([
-        XFile(filePath),
-      ], text: 'Share QR Code for Travel Plan');
+        // Save the QR code with a timestamp
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final file = File('${downloadsDir.path}/Lakbay_QR_$timestamp.png');
+        await file.writeAsBytes(buffer);
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('QR Code saved and ready to share!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('QR Code saved to Downloads folder'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
       }
     } catch (e) {
       if (context.mounted) {
