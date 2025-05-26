@@ -42,11 +42,18 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       final picked = await ImagePicker().pickImage(
         source: source,
-        imageQuality: 85,
+        imageQuality: 30,
       );
 
       if (picked != null) {
         final file = File(picked.path);
+        final fileSize = await file.length();
+        if (fileSize > 700 * 1024) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Image is too large. Please select a smaller image.')),
+          );
+          return;
+        }
         final bytes = await file.readAsBytes();
         final base64Image = base64Encode(bytes);
 
