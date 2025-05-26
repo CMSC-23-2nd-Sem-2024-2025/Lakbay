@@ -60,6 +60,8 @@ This document outlines the **Main Features** and **Optional Features** of the **
    - Launch the app and create an account using your name, email, a unique username, and password.
    - You may optionally add your interests and travel styles during sign-up.
    - Existing users can log in using their credentials.
+   ![image](https://github.com/user-attachments/assets/797e7a9d-3e2f-4c4b-9aba-a7800fbd4590)
+
     
 
 2. **Set Up Your Profile**
