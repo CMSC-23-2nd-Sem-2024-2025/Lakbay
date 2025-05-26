@@ -25,9 +25,9 @@ class AuthProvider with ChangeNotifier {
     uStream.listen((user) {
       // listens the changes in authentication state
       if (user == null) {
-        // No user is currently signed in.
+        debugPrint('AuthProvider: No user is currently signed in.');
       } else {
-        // Auth state changed: ${user.email}
+        debugPrint('AuthProvider: Auth state changed, user signed in: \\${user.email}');
       }
       if (userObj != user) {
         userObj = user; // Update the user object
@@ -41,6 +41,7 @@ class AuthProvider with ChangeNotifier {
     User? currentUser = FirebaseAuthAPI.auth.currentUser;
 
     if (currentUser != null) {
+      debugPrint('AuthProvider: Fetching user details for: \\${currentUser.email}');
       String uid = currentUser.uid;
 
       Map<String, dynamic>? userDetails = await FirebaseAuthAPI()
@@ -91,6 +92,7 @@ class AuthProvider with ChangeNotifier {
     final result = await authService.signIn(email, password);
     if (result != null) {
       // Auth failed, return error
+      debugPrint('AuthProvider: Sign in failed for $email: $result');
       notifyListeners();
       return result;
     }
@@ -98,13 +100,17 @@ class AuthProvider with ChangeNotifier {
     // Auth succeeded, now check Firestore
     final user = FirebaseAuthAPI.auth.currentUser;
     if (user != null) {
+      debugPrint('AuthProvider: Sign in success, user: ${user.email}');
       final doc = await FirebaseFirestore.instance.collection('appusers').doc(user.uid).get();
       if (!doc.exists) {
         // User not found in appusers, sign out and return error
         await authService.signOut();
+        debugPrint('AuthProvider: User not found in appusers for $email, signed out.');
         notifyListeners();
         return "Account does not exist in appusers. Please contact support or sign up.";
       }
+      // Fetch user details after successful login
+      await fetchUserDetails();
     }
 
     notifyListeners();
@@ -112,7 +118,13 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signOut() async {
+    final user = FirebaseAuthAPI.auth.currentUser;
+    debugPrint('AuthProvider: Signing out user: \\${user?.email}');
     await authService.signOut();
+    debugPrint('AuthProvider: Sign out complete.');
+    // Clear user details and userObj after logout
+    userDetails = null;
+    userObj = null;
     notifyListeners();
   }
 
