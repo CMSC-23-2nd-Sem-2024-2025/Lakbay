@@ -140,20 +140,71 @@ class _TravelAddInfoPageState extends State<TravelAddInfoPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.black,
-                    ), // icon back button
+                    icon: Icon(Icons.arrow_back, color: Colors.black),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
                   TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => MainScaffold()),
-                        (route) => false,
-                      );
+                    onPressed: () async {
+                      print('Skip button pressed');
+                      try {
+                        // Create plan with null values for optional fields
+                        final updatedPlan = TravelPlan(
+                          id: widget.travelPlan.id,
+                          userId: widget.travelPlan.userId,
+                          travelName: widget.travelPlan.travelName,
+                          location: widget.travelPlan.location,
+                          departureDate: widget.travelPlan.departureDate,
+                          returnDate: widget.travelPlan.returnDate,
+                          flightDetails: null,
+                          accommodation: null,
+                          notes: null,
+                          emerContact: null,
+                          enableNotifications:
+                              widget.travelPlan.enableNotifications,
+                          notificationTime: widget.travelPlan.notificationTime,
+                          imageUrl: widget.travelPlan.imageUrl,
+                        );
+
+                        print('Saving plan with skipped fields:');
+                        print('Travel Name: ${updatedPlan.travelName}');
+                        print('Location: ${updatedPlan.location}');
+                        print('Image URL: ${updatedPlan.imageUrl}');
+                        print('User ID: ${updatedPlan.userId}');
+
+                        final planProvider = Provider.of<PlanProvider>(
+                          context,
+                          listen: false,
+                        );
+                        await planProvider.addPlan(updatedPlan);
+                        print('Plan saved successfully with skipped fields');
+
+                        if (!mounted) return;
+
+                        // Set the navigation index to 0 (home page)
+                        MainScaffold.navIndexNotifier.value = 0;
+
+                        // Navigate to main scaffold and remove all previous routes
+                        await Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => MainScaffold(),
+                          ),
+                          (route) => false,
+                        );
+                        print('Navigation completed after skip');
+                      } catch (e, stackTrace) {
+                        print('Error in skip button: $e');
+                        print('Stack trace: $stackTrace');
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error saving plan: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
                     },
                     child: Text(
                       'Skip',
