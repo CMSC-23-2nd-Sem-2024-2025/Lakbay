@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:lakbay/screens/home-page/starting_page.dart';
-import 'package:lakbay/screens/home-page/onboarding.dart';
 import '../../providers/auth_provider.dart';
 
 class SignupDetails extends StatefulWidget {
@@ -20,7 +19,9 @@ class _SignupDetailsState extends State<SignupDetails> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-  String? prompt;
+
+  String? emailError;
+  String? usernameError;
 
   @override
   void dispose() {
@@ -126,6 +127,11 @@ class _SignupDetailsState extends State<SignupDetails> {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please input a username!';
                     }
+                    if (usernameError != null) {
+                      final error = usernameError;
+                      usernameError = null;
+                      return error;
+                    }
                     return null;
                   },
                 ),
@@ -183,9 +189,9 @@ class _SignupDetailsState extends State<SignupDetails> {
                     if (!validTLDs.contains(tld)) {
                       return 'Please use a valid email domain';
                     }
-                    if (prompt != null) {
-                      final error = prompt;
-                      prompt = null;
+                    if (emailError != null) {
+                      final error = emailError;
+                      emailError = null;
                       return error;
                     }
                     return null;
@@ -228,6 +234,10 @@ class _SignupDetailsState extends State<SignupDetails> {
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () async {
+                      setState(() {
+                        emailError = null;
+                        usernameError = null;
+                      });
                       if (_formKey.currentState!.validate()) {
                         String email = emailController.text.trim();
                         String password = passwordController.text.trim();
@@ -255,7 +265,18 @@ class _SignupDetailsState extends State<SignupDetails> {
                             );
                         if (context.mounted) Navigator.pop(context);
                         setState(() {
-                          prompt = result;
+                          if (result != null) {
+                            if (result.toLowerCase().contains('email')) {
+                              emailError = result;
+                            } else if (result.toLowerCase().contains('username')) {
+                              usernameError = result;
+                            } else {
+                              // fallback: show as a snackbar
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(result)),
+                              );
+                            }
+                          }
                         });
                         _formKey.currentState!.validate();
                       }

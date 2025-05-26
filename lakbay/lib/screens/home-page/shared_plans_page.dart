@@ -281,14 +281,40 @@ class SharedPlans extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Text(
-                      plan['travelName'] ?? 'No Name',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          plan['location'] ?? 'No Location',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[700],
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          (() {
+                            final dateValue = plan['departureDate'];
+                            if (dateValue == null) return 'No Date';
+                            if (dateValue is Timestamp) {
+                              final date = dateValue.toDate();
+                              return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
+                            }
+                            try {
+                              final date = DateTime.parse(dateValue.toString());
+                              return "${_getMonthName(date.month)} ${date.day}, ${date.year}";
+                            } catch (_) {
+                              return dateValue.toString();
+                            }
+                          })(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 6),
